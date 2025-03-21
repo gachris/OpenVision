@@ -1,0 +1,80 @@
+﻿@inject IViewLocalizer Localizer
+@inject AppConfiguration AdminConfiguration
+
+@{
+    string? name = null;
+    string? email = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+        email = Context.User?.FindFirst("email")?.Value;
+    }
+}
+
+<header>
+    <div class="navbar-container">
+        <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark bottom_border" data-sticky="top">
+            <div class="container">
+                <a asp-controller="Home" asp-action="Index" class="sidebar-brand">
+                    @AdminConfiguration.PageTitle
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <img class="icon navbar-toggler-open" src="/images/icons/menu.svg" />
+                    <img class="icon navbar-toggler-close" src="/images/icons/cross.svg" />
+                </button>
+                <div class="collapse navbar-collapse justify-content-end">
+                    <ul class="navbar-nav navbar-align">
+                        <li class="nav-item">
+                            <a class="nav-link d-inline-block" asp-controller="Home" asp-action="Index">
+                                <span class="text-light ml-2">@Localizer["Home"]</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-inline-block" asp-controller="Develop" asp-action="Databases">
+                                <span class="text-light ml-2">@Localizer["Develop"]</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-inline-block" asp-controller="Home" asp-action="Support">
+                                <span class="text-light ml-2">@Localizer["Support"]</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav navbar-align">
+                        @{
+                            if (Context.User.IsAuthenticated())
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-inline-block" data-bs-toggle="dropdown">
+                                        <img-gravatar email="@email" class="avatar img-fluid rounded me-1" /><span class="text-light ml-2">@name</span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link d-inline-block" asp-controller="Account" asp-action="Logout">
+                                        <span class="text-light ml-2">@Localizer["Log_out"]</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link d-inline-block" asp-controller="Account" asp-action="Login">
+                                        <span class="text-light ml-2">@Localizer["Log_In"]</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link d-inline-block" asp-controller="Account" asp-action="Register">
+                                        <span class="text-light ml-0">@Localizer["Register"]</span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

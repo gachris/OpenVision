@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Me",
+  "classifications": [ "Web", "Solution" ],
+  "identity": "OpenVision.Web",
+  "name": "OpenVision.Web",
+  "shortName": "OpenVision.Web",
+  "sourceName": "OpenVision.Web",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  }
+}

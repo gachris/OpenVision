@@ -1,0 +1,49 @@
+﻿@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Localizer["Support"];
+}
+
+@section styles{
+    <style>
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+    </style>
+}
+
+<section>
+    <div class="container">
+        <div>
+            <h1 class="mb-4">@ViewData["Title"]</h1>
+            <h2>Frequently Asked Questions</h2>
+            <p>Here are some of the most common questions we receive:</p>
+            <h3>How do I create an AR experience?</h3>
+            <p>Creating an AR experience is easy with Vision. Simply sign up for an account, and use our intuitive interface to upload your own 3D models, animations, and images. You can then add interactivity and other features to your AR experience to create a truly immersive experience.</p>
+            <h3>How do I integrate AR into my website or app?</h3>
+            <p>We offer a variety of integration options for our platform, including APIs and SDKs that make it easy to incorporate AR into your website or app. Our team of experts is available to provide guidance and support throughout the integration process.</p>
+            <h3>What kind of support do you offer?</h3>
+            <p>We offer comprehensive support to our users, including resources such as documentation, tutorials, and FAQs. Our team of experts is also available to provide personalized support via email or live chat.</p>
+            <h2>Contact Us</h2>
+            <p>If you have any questions or concerns, please don't hesitate to contact us. You can reach us via email, phone, or live chat:</p>
+            <ul>
+                <li><strong>Email:</strong> support@vision.com</li>
+                <li><strong>Phone:</strong> 1-800-123-4567</li>
+                <li><strong>Live Chat:</strong> Click on the chat icon in the lower-right corner of your screen to start a conversation with one of our support team members.</li>
+            </ul>
+            <p>Our support team is available Monday through Friday, from 9am to 5pm EST.</p>
+            <h2>Additional Resources</h2>
+            <p>For additional resources and information, be sure to check out our documentation and tutorials. You can also connect with our community of users on our forums and social media channels.</p>
+            <ul>
+                <li><strong>Documentation:</strong> Visit our documentation site for detailed information on our platform and its features.</li>
+                <li><strong>Tutorials:</strong> Check out our video tutorials for step-by-step guidance on creating AR experiences.</li>
+                <li><strong>Forums:</strong> Connect with other users and our support team on our forums.</li>
+                <li><strong>Social Media:</strong> Follow us on Twitter, Facebook, and Instagram for news and updates.</li>
+            </ul>
+        </div>
+    </div>
+</section>

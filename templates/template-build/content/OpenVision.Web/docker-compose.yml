@@ -1,0 +1,82 @@
+version: '3.4'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx
+    ports:
+      - '8080:80'
+      - '44380:443'
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock:ro'
+      - './shared/nginx/vhost.d:/etc/nginx/vhost.d'
+      - './shared/nginx/certs:/etc/nginx/certs:ro'
+    networks:
+      proxy: null
+      visionui:
+        aliases:
+          - portal.vision.local
+          - api.vision.local
+    restart: always
+  vision.portal:
+    image: '${DOCKER_REGISTRY-}vision-portal'
+    build:
+      context: .
+      dockerfile: src/OpenVision.Client/Dockerfile
+    container_name: vision-portal
+    environment:
+      - VIRTUAL_HOST=portal.vision.local
+      - 'AppConfiguration__CloudApiUrl=https://api.vision.local'
+      - 'AppConfiguration__IdentityAdminRedirectUri=https://portal.vision.local'
+      - 'AppConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Database=Vision;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=true'
+      - DockerConfiguration__UpdateCaCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - vision.api
+    volumes:
+      - './shared/serilog.json:/app/serilog.json'
+      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    networks:
+      visionui: null
+  vision.api:
+    image: '${DOCKER_REGISTRY-}vision-api'
+    build:
+      context: .
+      dockerfile: src/OpenVision.Server/Dockerfile
+    container_name: vision-api
+    environment:
+      - VIRTUAL_HOST=api.vision.local
+      - ApiConfiguration__RequireHttpsMetadata=false
+      - 'ApiConfiguration__Authority=https://sts.skoruba.local'
+      - 'ApiConfiguration__ApiBaseUrl=https://api.vision.local'
+      - 'ConnectionStrings__vision=Server=db;Database=vision;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=true'
+      - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Database=Vision;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=true'
+      - DockerConfiguration__UpdateCaCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+    volumes:
+      - './shared/serilog.json:/app/serilog.json'
+      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    networks:
+      visionui: null
+  db:
+    image: 'mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04'
+    ports:
+      - '7900:1433'
+    container_name: vision-db
+    environment:
+      SA_PASSWORD: '${DB_PASSWORD:-Password_123}'
+      ACCEPT_EULA: 'Y'
+    volumes:
+      - 'dbdata:/var/opt/mssql'
+    networks:
+      visionui: null
+volumes:
+  dbdata:
+    driver: local
+networks:
+  proxy:
+    driver: bridge
+  visionui:
+    driver: bridge

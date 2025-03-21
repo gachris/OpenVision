@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Web.Core", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Web.ServiceDefaults", "src\OpenVision.Web.ServiceDefaults\OpenVision.Web.ServiceDefaults.csproj", "{FD779855-5737-4B07-BA6D-998748F6EAD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Web.Template", "templates\template-build\OpenVision.Web.Template.csproj", "{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

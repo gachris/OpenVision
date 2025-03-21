@@ -1,0 +1,63 @@
+﻿@inject IViewLocalizer Localizer
+@inject AppConfiguration AppConfiguration
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="icon" type="image/x-icon" href="@UrlHelper.Content(AppConfiguration.FaviconUri)" />
+    <link rel="shortcut icon" type="image/x-icon" href="@UrlHelper.Content(AppConfiguration.FaviconUri)" />
+
+    <title>@AppConfiguration.PageTitle - @ViewData["Title"]</title>
+
+    <environment include="Development">
+        <link href="~/dist/css/bundle.min.css" asp-append-version="true" rel="stylesheet" />
+        <link href="~/dist/css/web.css" asp-append-version="true" rel="stylesheet" />
+    </environment>
+    <environment exclude="Development">
+        <link href="~/dist/css/bundle.min.css" asp-append-version="true" rel="stylesheet" />
+    </environment>
+
+    <link href="~/css/app.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    @if (!string.IsNullOrEmpty(AppConfiguration.CustomThemeCss))
+    {
+        <link href="@UrlHelper.Content(AppConfiguration.CustomThemeCss)" asp-append-version="true" rel="stylesheet" />
+    }
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    @await RenderSectionAsync("styles", required: false)
+</head>
+<body>
+    <section>
+        @await Html.PartialAsync("_Header")
+        <div class="wrapper" style="min-height:80vh">
+            <div class="main">
+                <main class="content">
+                    <div class="container-fluid p-0">
+                        @RenderBody()
+                    </div>
+                </main>
+            </div>
+        </div>
+       @await Html.PartialAsync("_Footer")
+    </section>
+
+    <environment include="Development">
+        <script src="~/dist/js/bundle.min.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/dist/js/bundle.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @await Html.PartialAsync("Common/Notification")
+
+    @await RenderSectionAsync("scripts", required: false)
+
+    <script src="~/js/app.js"></script>
+</body>
+</html>
