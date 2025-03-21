@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.Utils;
-
-namespace OpenVision.Core.Reco.DataTypes;
+﻿namespace OpenVision.Core.Reco.DataTypes;
 
 /// <summary>
 /// Represents an image with associated data and properties.

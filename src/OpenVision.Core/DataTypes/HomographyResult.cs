@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.Utils;
-
-namespace OpenVision.Core.DataTypes;
+﻿namespace OpenVision.Core.DataTypes;
 
 /// <summary>
 /// Represents the result of a homography computation.

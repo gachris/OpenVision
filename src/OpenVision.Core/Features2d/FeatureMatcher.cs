@@ -1,7 +1,4 @@
-﻿using OpenVision.Core.Configuration;
-using OpenVision.Core.DataTypes;
-using OpenVision.Core.Features2d.Factory;
-using OpenVision.Core.Utils;
+﻿using OpenVision.Core.Features2d.Factory;
 
 namespace OpenVision.Core.Features2d;
 

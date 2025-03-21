@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.Configuration;
-
-namespace OpenVision.Core.Features2d.Factory;
+﻿namespace OpenVision.Core.Features2d.Factory;
 
 internal class SimpleBlobDetectorFactory : IFeatureExtractorFactory
 {

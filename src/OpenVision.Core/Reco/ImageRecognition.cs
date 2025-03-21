@@ -1,10 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Data;
 using OpenVision.Core.Dataset;
-using OpenVision.Core.DataTypes;
 using OpenVision.Core.Features2d;
 using OpenVision.Core.Reco.DataTypes;
-using OpenVision.Core.Utils;
 
 namespace OpenVision.Core.Reco;
 

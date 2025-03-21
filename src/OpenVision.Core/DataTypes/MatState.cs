@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.Utils;
-
-namespace OpenVision.Core.DataTypes;
+﻿namespace OpenVision.Core.DataTypes;
 
 /// <summary>
 /// A helper class for modifying the state of an image represented by the <see cref="Mat"/> class.

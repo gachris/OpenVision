@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Description>A .NET library for computer vision and image processing.</Description>
+		<Tags>computer-vision image-processing opencv image-sharp</Tags>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\OpenVision.Shared\OpenVision.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.DataTypes;
-
-namespace OpenVision.Core.Utils;
+﻿namespace OpenVision.Core.Utils;
 
 /// <summary>
 /// Provides utility methods for working with homography matrices.

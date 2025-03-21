@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using OpenVision.Shared;
 
 namespace OpenVision.Shared.Responses;
 

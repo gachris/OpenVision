@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.DataTypes;
-
-namespace OpenVision.Core.Features2d;
+﻿namespace OpenVision.Core.Features2d;
 
 /// <summary>
 /// Interface for feature extraction from images.

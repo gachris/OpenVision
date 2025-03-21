@@ -1,6 +1,4 @@
-﻿using OpenVision.Core.DataTypes;
-
-namespace OpenVision.Core.Reco;
+﻿namespace OpenVision.Core.Reco;
 
 /// <summary>
 /// Interface for recognition services.

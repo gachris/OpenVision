@@ -1,5 +1,4 @@
-﻿using System;
-using Emgu.CV;
+﻿using Emgu.CV;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;

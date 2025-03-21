@@ -21,6 +21,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Wpf", "src\OpenV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Maui", "src\OpenVision.Maui\OpenVision.Maui.csproj", "{22B3A568-70E8-4C81-B2FB-F8A6F5C47206}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Api.Auth", "src\OpenVision.Api.Auth\OpenVision.Api.Auth.csproj", "{040B80C6-C715-43CC-8035-4FF9514FE905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Api.Core", "src\OpenVision.Api.Core\OpenVision.Api.Core.csproj", "{30EA4397-B02A-44F1-BA5E-305438404BFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Api.Target", "src\OpenVision.Api.Target\OpenVision.Api.Target.csproj", "{06E8AAE6-C9EA-4A1C-AEA2-F1BA2FC25351}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +53,18 @@ Global
 		{22B3A568-70E8-4C81-B2FB-F8A6F5C47206}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22B3A568-70E8-4C81-B2FB-F8A6F5C47206}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22B3A568-70E8-4C81-B2FB-F8A6F5C47206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{040B80C6-C715-43CC-8035-4FF9514FE905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{040B80C6-C715-43CC-8035-4FF9514FE905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{040B80C6-C715-43CC-8035-4FF9514FE905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{040B80C6-C715-43CC-8035-4FF9514FE905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30EA4397-B02A-44F1-BA5E-305438404BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30EA4397-B02A-44F1-BA5E-305438404BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30EA4397-B02A-44F1-BA5E-305438404BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30EA4397-B02A-44F1-BA5E-305438404BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06E8AAE6-C9EA-4A1C-AEA2-F1BA2FC25351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06E8AAE6-C9EA-4A1C-AEA2-F1BA2FC25351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06E8AAE6-C9EA-4A1C-AEA2-F1BA2FC25351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06E8AAE6-C9EA-4A1C-AEA2-F1BA2FC25351}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

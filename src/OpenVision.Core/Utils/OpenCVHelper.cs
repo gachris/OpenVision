@@ -3,7 +3,6 @@ using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using OpenVision.Core.DataTypes;
 
 namespace OpenVision.Core.Utils;
 
