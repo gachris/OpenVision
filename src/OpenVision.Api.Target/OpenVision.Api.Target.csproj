@@ -15,4 +15,16 @@
 		<ProjectReference Include="..\OpenVision.Api.Auth\OpenVision.Api.Auth.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<PropertyGroup Label="Sign Assembly">
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>$(SolutionDir)SignAssemblyKey.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
 </Project>

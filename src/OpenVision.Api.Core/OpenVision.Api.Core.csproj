@@ -16,4 +16,16 @@
 	  <ProjectReference Include="..\OpenVision.Shared\OpenVision.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<PropertyGroup Label="Sign Assembly">
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>$(SolutionDir)SignAssemblyKey.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
 </Project>
