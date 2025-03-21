@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+﻿using OpenVision.Core.Reco.Json.Converters;
+using System.Drawing;
 using System.Text.Json.Serialization;
-using OpenVision.Core.Reco.Json.Converters;
 
 namespace OpenVision.Core.Reco.DataTypes.Responses;
 

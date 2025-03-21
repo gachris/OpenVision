@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Description>A .NET library for computer vision and image processing.</Description>
+		<Tags>computer-vision image-processing opencv image-sharp</Tags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="IdentityServer4.AccessTokenValidation" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OpenVision.Core\OpenVision.Core.csproj" />
+		<ProjectReference Include="..\OpenVision.Server.EntityFramework.MySql\OpenVision.Server.EntityFramework.MySql.csproj" />
+		<ProjectReference Include="..\OpenVision.Server.EntityFramework.PostgreSQL\OpenVision.Server.EntityFramework.PostgreSQL.csproj" />
+		<ProjectReference Include="..\OpenVision.Server.EntityFramework.SqlServer\OpenVision.Server.EntityFramework.SqlServer.csproj" />
+		<ProjectReference Include="..\OpenVision.Web.Core\OpenVision.Web.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\ErrorMessages.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>ErrorMessages.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\ErrorMessages.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

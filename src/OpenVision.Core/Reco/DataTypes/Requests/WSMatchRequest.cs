@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using OpenVision.Core.Reco.Json.Converters;
+﻿using OpenVision.Core.Reco.Json.Converters;
+using System.Text.Json.Serialization;
 
 namespace OpenVision.Core.Reco.DataTypes.Requests;
 

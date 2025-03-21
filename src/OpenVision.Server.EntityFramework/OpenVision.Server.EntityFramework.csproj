@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Description>A .NET library for computer vision and image processing.</Description>
+		<Tags>computer-vision image-processing opencv image-sharp</Tags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OpenVision.Shared\OpenVision.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>
