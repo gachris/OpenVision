@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup Label="Project Configuration">
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<NeutralLanguage>en-150</NeutralLanguage>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
+		<Version>$(AssemblyVersion)-alpha</Version>
+		<Authors>gachris</Authors>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>Copyright © 2024.</Copyright>
+		<PackageId>$(MSBuildProjectName)</PackageId>
+		<Product>$(MSBuildProjectName)</Product>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/gachris/OpenVision</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/gachris/OpenVision/tree/master/src/$(MSBuildProjectName)</PackageProjectUrl>
+		<PackageOutputPath>$(SolutionDir)nupkgs</PackageOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Output" Condition="'$(GeneratePackageOnBuild)' == 'true'">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+</Project>
