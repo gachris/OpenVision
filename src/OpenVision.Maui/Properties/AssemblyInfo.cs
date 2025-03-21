@@ -1,3 +1,3 @@
-[assembly: Microsoft.Maui.Controls.XmlnsPrefix("http://vision/winfx/2021/xaml/presentation", "vision")]
-[assembly: XmlnsDefinition("http://vision/winfx/2021/xaml/presentation", "Vision.Maui")]
-[assembly: XmlnsDefinition("http://vision/winfx/2021/xaml/presentation", "Vision.Maui.Controls")]
+[assembly: Microsoft.Maui.Controls.XmlnsPrefix("http://openVision/winfx/2021/xaml/presentation", "openVision")]
+[assembly: XmlnsDefinition("http://openVision/winfx/2021/xaml/presentation", "OpenVision.Maui")]
+[assembly: XmlnsDefinition("http://openVision/winfx/2021/xaml/presentation", "OpenVision.Maui.Controls")]

@@ -1,9 +1,9 @@
 using System.Windows;
 using System.Windows.Markup;
 
-[assembly: XmlnsPrefix("http://vision/winfx/2021/xaml/presentation", "vision")]
-[assembly: XmlnsDefinition("http://vision/winfx/2021/xaml/presentation", "Vision.Wpf")]
-[assembly: XmlnsDefinition("http://vision/winfx/2021/xaml/presentation", "Vision.Wpf.Controls")]
+[assembly: XmlnsPrefix("http://openVision/winfx/2021/xaml/presentation", "openVision")]
+[assembly: XmlnsDefinition("http://openVision/winfx/2021/xaml/presentation", "OpenVision.Wpf")]
+[assembly: XmlnsDefinition("http://openVision/winfx/2021/xaml/presentation", "OpenVision.Wpf.Controls")]
 
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
