@@ -38,7 +38,7 @@ public interface IWebServerService
     /// <param name="body">The request body containing updated details of the trackable entity.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the request.</param>
     /// <returns>A task representing the asynchronous operation, returning IResponseMessage.</returns>
-    Task<IResponseMessage> UpdateAsync(Guid id, PostTrackableRequest body, CancellationToken cancellationToken = default);
+    Task<IResponseMessage> UpdateAsync(Guid id, UpdateTrackableRequest body, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes an existing trackable entity from the web server.

@@ -138,7 +138,7 @@ public class WebServerService : BaseApiService, IWebServerService
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage> UpdateAsync(Guid id, PostTrackableRequest body, CancellationToken cancellationToken = default)
+    public async Task<IResponseMessage> UpdateAsync(Guid id, UpdateTrackableRequest body, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
         apiKey.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);

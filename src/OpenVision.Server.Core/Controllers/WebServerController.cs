@@ -92,7 +92,7 @@ public class WebServerController : ControllerBase
     /// <returns>The updated web server resource.</returns>
     [HttpPut]
     [Route("{id:guid}")]
-    public async Task<IActionResult> Edit(Guid id, [FromBody] PostTrackableRequest body)
+    public async Task<IActionResult> Edit(Guid id, [FromBody] UpdateTrackableRequest body)
     {
         var response = await _webServerService.UpdateAsync(id, body, CancellationToken.None);
         return new OkObjectResult(response);
