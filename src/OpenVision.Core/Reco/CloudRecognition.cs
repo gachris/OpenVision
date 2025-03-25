@@ -28,7 +28,6 @@ public class CloudRecognition : ICloudRecognition
 
     private const int ChunkSize = 4 * 1024;
     private const string ApiKeyHeader = "X-API-KEY";
-    private static readonly string WebSocketUrl = VisionSystemConfig.WebSocketUrl;
 
     private ClientWebSocket? _client;
     private bool _isReady;
@@ -61,7 +60,7 @@ public class CloudRecognition : ICloudRecognition
 
         _client.Options.SetRequestHeader(ApiKeyHeader, apiKey);
 
-        await _client.ConnectAsync(new Uri(WebSocketUrl), CancellationToken.None);
+        await _client.ConnectAsync(new Uri(VisionSystemConfig.WebSocketUrl), CancellationToken.None);
 
         _isReady = true;
     }

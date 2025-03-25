@@ -94,8 +94,8 @@ public class WebSocketController : ControllerBase
 
         ArgumentNullException.ThrowIfNull(database, nameof(database));
 
-        await _dbContext.ImageTargets.Where(x => x.DatabaseId == database.Id)
-        .LoadAsync();
+        await _dbContext.ImageTargets.Where(x => x.DatabaseId == database.Id && x.ActiveFlag == ActiveFlag.True)
+            .LoadAsync();
 
         var targets = database.ImageTargets.Select(imageTarget => new Target(
               imageTarget.Id.ToString(),
