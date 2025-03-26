@@ -1,8 +1,8 @@
-﻿using OpenVision.Core.Dataset;
+﻿using System.Collections.Concurrent;
+using System.Data;
+using OpenVision.Core.Dataset;
 using OpenVision.Core.Features2d;
 using OpenVision.Core.Reco.DataTypes;
-using System.Collections.Concurrent;
-using System.Data;
 
 namespace OpenVision.Core.Reco;
 
@@ -15,7 +15,6 @@ public class ImageRecognition : IImageRecognition
 
     private readonly Lazy<FeatureExtractor> _featureExtractor;
     private readonly Lazy<FeatureMatcher> _featureMatcher;
-    private readonly ImageRequestBuilder _imageRequestBuilder;
 
     private TargetMatchQuery[]? _targetMatchQueries;
     private bool _isReady;
@@ -36,10 +35,6 @@ public class ImageRecognition : IImageRecognition
     {
         _featureExtractor = new Lazy<FeatureExtractor>(() => new FeatureExtractor());
         _featureMatcher = new Lazy<FeatureMatcher>(() => new FeatureMatcher());
-
-        _imageRequestBuilder = new ImageRequestBuilder().WithGrayscale()
-            .WithGaussianBlur(new System.Drawing.Size(5, 5), 0)
-            .WithLowResolution(160);
     }
 
     /// <inheritdoc/>
@@ -55,7 +50,7 @@ public class ImageRecognition : IImageRecognition
 
         TargetMatchQuery GetTargetMatchQuery(ImageData image)
         {
-            var request = _imageRequestBuilder.Build(image.Mat);
+            var request = VisionSystemConfig.ImageRequestBuilder.Build(image.Mat);
             var imageDetectionResult = _featureExtractor.Value.DetectAndCompute(request);
 
             return new TargetMatchQuery(image.Id,

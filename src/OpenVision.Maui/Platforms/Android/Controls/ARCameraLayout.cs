@@ -4,6 +4,7 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.CoordinatorLayout.Widget;
 using OpenCV.Android;
+using OpenVision.Core.Configuration;
 using OpenVision.Core.DataTypes;
 using OpenVision.Core.Reco;
 using static OpenCV.Android.CameraBridgeViewBase;
@@ -21,7 +22,6 @@ public class ARCameraLayout : CoordinatorLayout, ICvCameraViewListener2
 
     private readonly Context _context;
     private readonly ARCamera _camera;
-    private readonly ImageRequestBuilder _imageRequestBuilder;
     private readonly CameraView _javaCameraView;
     private bool _isTrackingEnabled;
     private IRecognition? _recognition;
@@ -38,10 +38,6 @@ public class ARCameraLayout : CoordinatorLayout, ICvCameraViewListener2
     {
         _context = context;
         _camera = camera;
-
-        _imageRequestBuilder = new ImageRequestBuilder().WithGrayscale()
-            .WithGaussianBlur(new System.Drawing.Size(5, 5), 0)
-            .WithLowResolution(160);
 
         SetBackgroundColor(Android.Graphics.Color.Black);
 
@@ -86,7 +82,7 @@ public class ARCameraLayout : CoordinatorLayout, ICvCameraViewListener2
             return mRgba;
         }
 
-        var request = _imageRequestBuilder.Build(mRgba);
+        var request = VisionSystemConfig.ImageRequestBuilder.Build(mRgba);
         var featureMatchingResult = _recognition?.Match(request);
         if (featureMatchingResult?.HasMatches == true)
         {

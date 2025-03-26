@@ -27,4 +27,9 @@ public class VisionSystemConfig
     /// The configuration options for the feature matcher, defining how keypoints and descriptors are matched.
     /// </summary>
     public static IFeatureMatcherOptions FeatureMatcherOptions = new BFMatcherOptions();
+
+    /// <summary>
+    /// The configuration options for the ImageRequestBuilder.
+    /// </summary>
+    public static ImageRequestBuilder ImageRequestBuilder = new ImageRequestBuilder().WithGrayscale();
 }

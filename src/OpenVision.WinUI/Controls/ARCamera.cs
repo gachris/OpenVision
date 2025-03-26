@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
+using OpenVision.Core.Configuration;
 using OpenVision.Core.DataTypes;
 using OpenVision.Core.Reco;
 
@@ -13,12 +14,6 @@ namespace OpenVision.WinUI.Controls;
 public class ARCamera : Control, IDisposable
 {
     #region Fields/Consts
-
-    private static readonly double SigmaX = 0;
-    private static readonly int ImageLowResolution = 160;
-    private static readonly System.Drawing.Size KSize = new(5, 5);
-
-    private readonly ImageRequestBuilder _imageRequestBuilder;
 
     private Image? _frameImage;
     private Grid? _grid;
@@ -65,10 +60,6 @@ public class ARCamera : Control, IDisposable
     public ARCamera()
     {
         DefaultStyleKey = typeof(ARCamera);
-
-        _imageRequestBuilder = new ImageRequestBuilder().WithGrayscale()
-            .WithGaussianBlur(KSize, SigmaX)
-            .WithLowResolution(ImageLowResolution);
 
         Loaded += CameraViewLayout_Loaded;
         Unloaded += CameraViewLayout_Unloaded;
@@ -162,7 +153,7 @@ public class ARCamera : Control, IDisposable
 
         if (_isTrackingEnabled)
         {
-            var imageRequest = _imageRequestBuilder.Build(frame);
+            var imageRequest = VisionSystemConfig.ImageRequestBuilder.Build(frame);
             var featureMatchingResult = _recognition?.Match(imageRequest);
 
             DispatcherQueue.TryEnqueue(() =>

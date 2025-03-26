@@ -3,7 +3,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using OpenVision.Core.DataTypes;
+using OpenVision.Core.Configuration;
 using OpenVision.Core.Features2d;
 using OpenVision.Core.Utils;
 using OpenVision.Server.Core.Properties;
@@ -136,10 +136,7 @@ public class TargetsService : BaseApiService, ITargetsService
 
         image.LowResolution(320);
 
-        var requestBuilder = new ImageRequestBuilder().WithGrayscale()
-                                                      .WithGaussianBlur(new System.Drawing.Size(5, 5), 0);
-
-        var request = requestBuilder.Build(image);
+        var request = VisionSystemConfig.ImageRequestBuilder.Build(image);
         var featureExtractor = new FeatureExtractor();
         var imageDetectionInfo = featureExtractor.DetectAndCompute(request);
 
@@ -192,10 +189,7 @@ public class TargetsService : BaseApiService, ITargetsService
 
             image.LowResolution(320);
 
-            var requestBuilder = new ImageRequestBuilder().WithGrayscale()
-                                                          .WithGaussianBlur(new System.Drawing.Size(5, 5), 0);
-
-            var request = requestBuilder.Build(image);
+            var request = VisionSystemConfig.ImageRequestBuilder.Build(image);
 
             var featureExtractor = new FeatureExtractor();
             var imageDetectionInfo = featureExtractor.DetectAndCompute(request);
