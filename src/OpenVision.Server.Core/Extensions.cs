@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Configuration;
@@ -33,20 +32,16 @@ public static class Extensions
     /// <param name="connectionString">Database connection string.</param>
     /// <param name="databaseProviderType">Database provider type.</param>
     /// <returns>The WebApplicationBuilder instance.</returns>
-    public static IHostApplicationBuilder AddApiServiceDefaults(this WebApplicationBuilder builder, ApiConfiguration apiConfiguration, string connectionString, DatabaseProviderType databaseProviderType)
+    public static IHostApplicationBuilder AddOpenVisionServerDefaults(this WebApplicationBuilder builder, ApiConfiguration apiConfiguration, string connectionString, DatabaseProviderType databaseProviderType)
     {
         // Add AutoMapper with MappingProfile
-        builder.Services.AddAutoMapper(typeof(MappingProfile));
+        builder.Services.AddAutoMapperConfiguration();
+
+        // Add application services
+        builder.Services.AddApplicationServices();
 
         // Register API configuration as singleton
         builder.Services.AddSingleton(apiConfiguration);
-
-        // Add transient services
-        builder.Services.AddTransient<IWebServerService, WebServerService>();
-        builder.Services.AddTransient<IDatabasesService, DatabasesService>();
-        builder.Services.AddTransient<IFilesService, FilesService>();
-        builder.Services.AddTransient<ITargetsService, TargetsService>();
-        builder.Services.AddTransient<IApiKeyGeneratorService, ApiKeyGeneratorService>();
 
         // Add DbContext based on database provider
         builder.Services.AddDbContext(connectionString, databaseProviderType);
@@ -76,6 +71,32 @@ public static class Extensions
         builder.Services.AddSwaggerGen(apiConfiguration);
 
         return builder;
+    }
+
+    /// <summary>
+    /// Registers AutoMapper with the application's mapping profile.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <returns>The IServiceCollection instance with AutoMapper configured.</returns>
+    public static IServiceCollection AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(MappingProfile));
+        return services;
+    }
+
+    /// <summary>
+    /// Registers application-level transient services for dependency injection.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <returns>The IServiceCollection instance with application services registered.</returns>
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        services.AddTransient<IWebServerService, WebServerService>();
+        services.AddTransient<IDatabasesService, DatabasesService>();
+        services.AddTransient<IFilesService, FilesService>();
+        services.AddTransient<ITargetsService, TargetsService>();
+        services.AddTransient<IApiKeyGeneratorService, ApiKeyGeneratorService>();
+        return services;
     }
 
     /// <summary>
@@ -143,11 +164,6 @@ public static class Extensions
             options.Authority = apiConfiguration.Authority;
             options.RequireHttpsMetadata = apiConfiguration.RequireHttpsMetadata;
             options.Audience = apiConfiguration.Audience;
-
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false
-            };
         })
         .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(ApiKeyDefaults.AuthenticationScheme, null);
 
@@ -162,10 +178,8 @@ public static class Extensions
     /// <returns>The IServiceCollection instance.</returns>
     public static IServiceCollection AddAuthorizationPolicy(this IServiceCollection services, ApiConfiguration apiConfiguration)
     {
-        services.AddAuthorization(options =>
-        {
-            // Bearer token policy
-            options.AddPolicy(AuthorizationConsts.BearerPolicy, policy =>
+        services.AddAuthorizationBuilder()
+            .AddPolicy(AuthorizationConsts.BearerPolicy, policy =>
             {
                 policy.RequireAuthenticatedUser();
                 policy.RequireScope();
@@ -174,26 +188,19 @@ public static class Extensions
                     policy.RequireClaim("scope", scope);
                 }
                 policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-            });
-
-            // Client API key policy
-            options.AddPolicy(AuthorizationConsts.ClientApiKeyPolicy,
-                policy => policy.RequireAssertion(context =>
+            })
+            .AddPolicy(AuthorizationConsts.ClientApiKeyPolicy, policy => policy.RequireAssertion(context =>
                 {
                     return context.User.HasClaim(c => c.Type == ApiKeyDefaults.X_API_KEY)
                            && context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Client");
                 })
-                .AddAuthenticationSchemes(ApiKeyDefaults.AuthenticationScheme));
-
-            // Server API key policy
-            options.AddPolicy(AuthorizationConsts.ServerApiKeyPolicy,
-                policy => policy.RequireAssertion(context =>
+                .AddAuthenticationSchemes(ApiKeyDefaults.AuthenticationScheme))
+            .AddPolicy(AuthorizationConsts.ServerApiKeyPolicy, policy => policy.RequireAssertion(context =>
                 {
                     return context.User.HasClaim(c => c.Type == ApiKeyDefaults.X_API_KEY)
                            && context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Server");
                 })
                 .AddAuthenticationSchemes(ApiKeyDefaults.AuthenticationScheme));
-        });
 
         return services;
     }
@@ -309,7 +316,7 @@ public static class Extensions
     /// <param name="app">The WebApplication instance.</param>
     /// <param name="apiConfiguration">API configuration settings.</param>
     /// <returns>The WebApplication instance.</returns>
-    public static IApplicationBuilder AddApplicationDefaults(this WebApplication app, ApiConfiguration apiConfiguration)
+    public static IApplicationBuilder UseOpenVisionServerDefaults(this WebApplication app, ApiConfiguration apiConfiguration)
     {
         // Configure WebSocket options
         var webSocketOptions = new WebSocketOptions

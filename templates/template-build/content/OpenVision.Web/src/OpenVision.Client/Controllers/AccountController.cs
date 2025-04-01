@@ -47,7 +47,7 @@ public class AccountController : BaseController
     /// <summary>
     /// Action method to initiate user logout.
     /// </summary>
-    /// <returns>Returns a signout result for the configured authentication and OpenID Connect schemes.</returns>
+    /// <returns>Returns a sign out result for the configured authentication and OpenID Connect schemes.</returns>
     [Authorize]
     public IActionResult Logout()
     {

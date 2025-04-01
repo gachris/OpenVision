@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using OpenVision.Core.Configuration;
+using OpenVision.Core.DataTypes;
 using OpenVision.Server.Core.Configuration;
 using OpenVision.Web.Core.Helpers;
 using Serilog;
@@ -7,9 +9,13 @@ const string ConnectionStringName = "vision";
 
 var configuration = StartupHelper.GetConfiguration<Program>(args);
 
-Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
+Log.Logger = new LoggerConfiguration().ReadFrom
+    .Configuration(configuration)
+    .CreateLogger();
+
+VisionSystemConfig.ImageRequestBuilder = new ImageRequestBuilder()
+    .WithGrayscale()
+    .WithGaussianBlur(new System.Drawing.Size(5, 5), 0);
 
 try
 {
@@ -23,11 +29,11 @@ try
     var apiConfiguration = builder.Configuration.GetSection(nameof(ApiConfiguration)).Get<ApiConfiguration>()!;
 
     builder.AddServiceDefaults();
-    builder.AddApiServiceDefaults(apiConfiguration, connectionString, databaseProviderType);
+    builder.AddOpenVisionServerDefaults(apiConfiguration, connectionString, databaseProviderType);
 
     var app = builder.Build();
 
-    app.AddApplicationDefaults(apiConfiguration);
+    app.UseOpenVisionServerDefaults(apiConfiguration);
 
     app.Run();
 }

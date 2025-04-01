@@ -2,6 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<UserSecretsId>656788e4-214a-40dc-9e99-7e8cfa07725d</UserSecretsId>
 		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -9,9 +12,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OpenVision.Client.Core" />
-		<PackageReference Include="OpenVision.Web.ServiceDefaults" />
-		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="OpenVision.Client.Core" Version="1.0.0.7-alpha" />
+		<PackageReference Include="OpenVision.Web.ServiceDefaults" Version="1.0.0.7-alpha" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 	</ItemGroup>
 
 </Project>

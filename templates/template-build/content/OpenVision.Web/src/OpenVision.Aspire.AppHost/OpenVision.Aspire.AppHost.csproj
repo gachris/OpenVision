@@ -4,14 +4,17 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<IsAspireHost>true</IsAspireHost>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<UserSecretsId>cb6b63cb-879a-45b3-8a52-bb49dace5be7</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.Hosting.AppHost" />
-		<PackageReference Include="Aspire.Hosting.MySql" />
-		<PackageReference Include="Aspire.Hosting.PostgreSQL" />
-		<PackageReference Include="Aspire.Hosting.SqlServer" />
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.1" />
+		<PackageReference Include="Aspire.Hosting.MySql" Version="8.2.1" />
+		<PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.2.1" />
+		<PackageReference Include="Aspire.Hosting.SqlServer" Version="8.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>

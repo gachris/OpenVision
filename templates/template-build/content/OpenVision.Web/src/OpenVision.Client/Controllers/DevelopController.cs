@@ -65,7 +65,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(HomeController.Index), "home");
         }
     }
@@ -85,7 +85,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Databases));
         }
     }
@@ -113,7 +113,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Databases));
         }
     }
@@ -135,7 +135,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Database), new { id = databaseId });
@@ -152,7 +152,7 @@ public class DevelopController : BaseController
 
         if (responseMessage.StatusCode == ResponseStatusCode.Failed)
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Target), new { id });
         }
 
@@ -176,7 +176,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return Redirect(nameof(Databases));
@@ -197,7 +197,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Databases));
         }
     }
@@ -260,7 +260,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Database), new { id = databaseId });
         }
     }
@@ -283,7 +283,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id });
@@ -307,7 +307,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id = targetId });
@@ -350,7 +350,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id = targetId });
@@ -385,7 +385,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id = targetId });
@@ -402,7 +402,7 @@ public class DevelopController : BaseController
 
         if (responseMessage.StatusCode == ResponseStatusCode.Failed)
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Target), new { id });
         }
 
@@ -432,7 +432,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id });
@@ -454,7 +454,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id });
@@ -476,7 +476,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
         }
 
         return RedirectToAction(nameof(Target), new { id });
@@ -502,7 +502,7 @@ public class DevelopController : BaseController
         }
         else
         {
-            ErrorNotification($"An error occured: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
             return RedirectToAction(nameof(Target), new { id = targetId });
         }
     }

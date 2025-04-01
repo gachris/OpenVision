@@ -17,6 +17,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="IdentityServer4" />
+		<PackageReference Include="NWebsec.AspNetCore.Core" />
+		<PackageReference Include="NWebsec.AspNetCore.Middleware" />
 	</ItemGroup>
 
 	<ItemGroup>
