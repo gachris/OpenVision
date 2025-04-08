@@ -17,32 +17,22 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="HotChocolate.AspNetCore" />
+		<PackageReference Include="HotChocolate.AspNetCore.Authorization" />
+		<PackageReference Include="HotChocolate.Data" />
+		<PackageReference Include="HotChocolate.Data.EntityFramework" />
 		<PackageReference Include="IdentityServer4.AccessTokenValidation" />
+		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\OpenVision.Core\OpenVision.Core.csproj" />
-		<ProjectReference Include="..\OpenVision.Server.EntityFramework.MySql\OpenVision.Server.EntityFramework.MySql.csproj" />
-		<ProjectReference Include="..\OpenVision.Server.EntityFramework.PostgreSQL\OpenVision.Server.EntityFramework.PostgreSQL.csproj" />
-		<ProjectReference Include="..\OpenVision.Server.EntityFramework.SqlServer\OpenVision.Server.EntityFramework.SqlServer.csproj" />
-		<ProjectReference Include="..\OpenVision.Web.Core\OpenVision.Web.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Properties\ErrorMessages.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>ErrorMessages.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Update="Properties\ErrorMessages.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+		<ProjectReference Include="..\OpenVision.EntityFramework.MySql\OpenVision.EntityFramework.MySql.csproj" />
+		<ProjectReference Include="..\OpenVision.EntityFramework.PostgreSQL\OpenVision.EntityFramework.PostgreSQL.csproj" />
+		<ProjectReference Include="..\OpenVision.EntityFramework.SqlServer\OpenVision.EntityFramework.SqlServer.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,6 +40,10 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Responses\" />
 	</ItemGroup>
 
 </Project>

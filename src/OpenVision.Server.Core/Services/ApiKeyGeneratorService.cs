@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
-using Microsoft.EntityFrameworkCore;
-using OpenVision.Server.EntityFramework.DbContexts;
+using OpenVision.Server.Core.Contracts;
 
 namespace OpenVision.Server.Core.Services;
 
@@ -16,50 +15,34 @@ public class ApiKeyGeneratorService : IApiKeyGeneratorService
     /// </summary>
     private const int ApiKeyLength = 32;
 
-    /// <summary>
-    /// The application database context for interacting with the API keys table.
-    /// </summary>
-    private readonly ApplicationDbContext _applicationContext;
-
     #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ApiKeyGeneratorService"/> class.
     /// </summary>
-    /// <param name="applicationContext">The application database context for interacting with the API keys table.</param>
-    public ApiKeyGeneratorService(ApplicationDbContext applicationContext)
+    public ApiKeyGeneratorService()
     {
-        _applicationContext = applicationContext;
     }
 
-    #region IApiKeyGeneratorService Implementation
+    #region Methods
 
     /// <inheritdoc/>
-    public async Task<string> GenerateAsync()
+    public string GenerateKey()
     {
-        while (true)
-        {
-            // Create a new instance of the RandomNumberGenerator class
-            using var random = RandomNumberGenerator.Create();
+        // Create a new instance of the RandomNumberGenerator class
+        using var random = RandomNumberGenerator.Create();
 
-            // Create a buffer to hold the random bytes
-            var keyBytes = new byte[ApiKeyLength];
+        // Create a buffer to hold the random bytes
+        var keyBytes = new byte[ApiKeyLength];
 
-            // Fill the buffer with random bytes
-            random.GetBytes(keyBytes);
+        // Fill the buffer with random bytes
+        random.GetBytes(keyBytes);
 
-            // Convert the random bytes to a string
-            var apiKey = Convert.ToBase64String(keyBytes);
+        // Convert the random bytes to a string
+        var apiKey = Convert.ToBase64String(keyBytes);
 
-            // Check whether the key already exists in the database
-            var keyExists = await _applicationContext.ApiKeys.AnyAsync(k => k.Key == apiKey);
-
-            if (!keyExists)
-            {
-                // If the key is unique, return it
-                return apiKey;
-            }
-        }
+        // If the key is unique, return it
+        return apiKey;
     }
 
     #endregion

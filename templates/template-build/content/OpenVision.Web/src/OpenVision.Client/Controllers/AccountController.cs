@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenVision.Client.Core.Configuration.Constants;
+using OpenVision.Client.Core.Constants;
 using OpenVision.Client.Core.Controllers;
 
 namespace OpenVision.Client.Controllers;

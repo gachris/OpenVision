@@ -1,36 +1,49 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OpenVision.Aspire.AppHost.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
 var databaseProvider = builder.Configuration.GetSection("Parameters").GetValue<string>("databaseProvider")!;
 
 IResourceBuilder<IResourceWithConnectionString> resourceBuilder;
 
-if (databaseProvider == "SqlServer")
-{
-    resourceBuilder = builder.AddSqlServer("sqlserver")
-                             .WithDataVolume()
-                             .AddDatabase("vision");
+var parameters = builder.Configuration
+    .GetSection("Parameters");
 
-}
-else if (databaseProvider == "MySql")
+var databaseProviderType = parameters
+    .GetValue<DatabaseProviderType>(nameof(DatabaseProviderType));
+
+switch (databaseProviderType)
 {
-    resourceBuilder = builder.AddMySql("mysql")
-                             .WithDataVolume()
-                             .AddDatabase("vision");
-}
-else
-{
-    resourceBuilder = builder.AddPostgres("postgres")
-                             .WithDataVolume()
-                             .AddDatabase("vision");
+    case DatabaseProviderType.MySql:
+        {
+            var resource = builder.AddMySql("mysql")
+                .WithDataVolume("openvision-mysql-data");
+            resourceBuilder = resource.AddDatabase("openvision");
+        }
+        break;
+    case DatabaseProviderType.PostgreSQL:
+        {
+            var resource = builder.AddPostgres("postgresql")
+                .WithDataVolume("openvision-postgresql-data");
+            resourceBuilder = resource.AddDatabase("openvision");
+        }
+        break;
+    default:
+        {
+            var resource = builder.AddSqlServer("sqlserver")
+                .WithDataVolume("openvision-sqlserver-data");
+            resourceBuilder = resource.AddDatabase("openvision");
+        }
+        break;
 }
 
-var databaseProviderParameter = builder.AddParameter("databaseProvider");
+var databaseProviderTypeParameter = builder.AddParameter("DatabaseProviderType");
+var usePooledDbContextParameter = builder.AddParameter("UsePooledDbContext");
 
-builder.AddProject<Projects.OpenVision_Server>("server")
-       .WithEnvironment("DatabaseProvider", databaseProviderParameter)
+builder.AddProject<Projects.OpenVision_Client>("openvision-client");
+builder.AddProject<Projects.OpenVision_Server>("openvision-server")
+       .WithEnvironment("DatabaseConfiguration:ProviderType", databaseProviderTypeParameter)
+       .WithEnvironment("DatabaseConfiguration:UsePooledDbContext", usePooledDbContextParameter)
        .WithReference(resourceBuilder);
-
-builder.AddProject<Projects.OpenVision_Client>("client");
 
 builder.Build().Run();

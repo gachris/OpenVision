@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using OpenVision.Client.Core.Requests;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
-using OpenVision.Web.Core.Filters;
 
 namespace OpenVision.Client.Core.Services;
 
@@ -69,19 +69,14 @@ public class TargetsService : ITargetsService
             new KeyValuePair<string, StringValues>("size", query.Size.ToString())
         };
 
-        if (!string.IsNullOrEmpty(query.Description))
+        if (!string.IsNullOrEmpty(query.Name))
         {
-            queryParams.Add(new KeyValuePair<string, StringValues>("description", query.Description));
+            queryParams.Add(new KeyValuePair<string, StringValues>("description", query.Name));
         }
 
         if (query.Created.HasValue)
         {
             queryParams.Add(new KeyValuePair<string, StringValues>("created", query.Created.Value.ToString("yyyy-MM-dd")));
-        }
-
-        if (!string.IsNullOrEmpty(query.SearchText))
-        {
-            queryParams.Add(new KeyValuePair<string, StringValues>("search_text", query.SearchText));
         }
 
         if (query.DatabaseId.HasValue)
@@ -112,7 +107,7 @@ public class TargetsService : ITargetsService
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage<Guid>> CreateAsync(PostTargetRequest body, CancellationToken cancellationToken = default)
+    public async Task<IResponseMessage<TargetResponse>> CreateAsync(PostTargetRequest body, CancellationToken cancellationToken = default)
     {
         using var client = _cloudHttpClientService.GetClient();
 
@@ -120,13 +115,13 @@ public class TargetsService : ITargetsService
         client.SetBearerToken(token);
 
         var response = await client.PostAsJsonAsync(Route, body, cancellationToken);
-        var result = await response.Content.ReadFromJsonAsync<ResponseMessage<Guid>>(JsonSerializerOptions, cancellationToken: cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ResponseMessage<TargetResponse>>(JsonSerializerOptions, cancellationToken: cancellationToken);
 
         return result ?? throw new ArgumentNullException(nameof(result));
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage> UpdateAsync(Guid id, UpdateTargetRequest body, CancellationToken cancellationToken = default)
+    public async Task<IResponseMessage<TargetResponse>> UpdateAsync(Guid id, UpdateTargetRequest body, CancellationToken cancellationToken = default)
     {
         using var client = _cloudHttpClientService.GetClient();
 
@@ -134,13 +129,13 @@ public class TargetsService : ITargetsService
         client.SetBearerToken(token);
 
         var response = await client.PutAsJsonAsync($"{Route}/{id}", body, cancellationToken);
-        var result = await response.Content.ReadFromJsonAsync<ResponseMessage>(JsonSerializerOptions, cancellationToken: cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ResponseMessage<TargetResponse>>(JsonSerializerOptions, cancellationToken: cancellationToken);
 
         return result ?? throw new ArgumentNullException(nameof(result));
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<IResponseMessage<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         using var client = _cloudHttpClientService.GetClient();
 
@@ -148,7 +143,7 @@ public class TargetsService : ITargetsService
         client.SetBearerToken(token);
 
         var response = await client.DeleteAsync($"{Route}/{id}", cancellationToken);
-        var result = await response.Content.ReadFromJsonAsync<ResponseMessage>(JsonSerializerOptions, cancellationToken: cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ResponseMessage<bool>>(JsonSerializerOptions, cancellationToken: cancellationToken);
 
         return result ?? throw new ArgumentNullException(nameof(result));
     }

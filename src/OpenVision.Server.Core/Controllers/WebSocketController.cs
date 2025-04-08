@@ -2,7 +2,6 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Emgu.CV;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +13,8 @@ using OpenVision.Core.Reco.DataTypes.Requests;
 using OpenVision.Core.Reco.DataTypes.Responses;
 using OpenVision.Core.Utils;
 using OpenVision.Server.Core.Auth;
-using OpenVision.Server.EntityFramework.DbContexts;
+using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Requests;
 using OpenVision.Shared;
 using OpenVision.Shared.Responses;
 using OpenVision.Shared.WebSockets;
@@ -32,9 +32,9 @@ public class WebSocketController : ControllerBase
 
     private const int ChunkSize = 4 * 1024;
 
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IDatabasesRepository _databasesRepository;
     private readonly ILogger<WebSocketController> _logger;
-    private readonly IImageRecognition _imageRecognition = new ImageRecognition();
+    private readonly ImageRecognition _imageRecognition = new ImageRecognition();
 
     private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
@@ -51,11 +51,11 @@ public class WebSocketController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="WebSocketController"/> class.
     /// </summary>
-    /// <param name="applicationDbContext">The application database context.</param>
+    /// <param name="databasesRepository">The repository for accessing databases.</param>
     /// <param name="logger">Logger instance for logging.</param>
-    public WebSocketController(ApplicationDbContext applicationDbContext, ILogger<WebSocketController> logger)
+    public WebSocketController(IDatabasesRepository databasesRepository, ILogger<WebSocketController> logger)
     {
-        _dbContext = applicationDbContext;
+        _databasesRepository = databasesRepository;
         _logger = logger;
     }
 
@@ -85,19 +85,14 @@ public class WebSocketController : ControllerBase
         _logger.LogTrace(nameof(HandleClient));
 
         var clientApiKey = HttpContext.User.Claims.First(claim => claim.Type.Equals(ApiKeyDefaults.X_API_KEY)).Value;
-
-
-        await _dbContext.Databases.Include(x => x.ApiKeys)
-                                  .LoadAsync();
-
-        var database = await _dbContext.Databases.FirstOrDefaultAsync(database => database.ApiKeys.Any(apiKey => apiKey.Key == clientApiKey && apiKey.Type == ApiKeyType.Client));
+        var databasesQueryable = await _databasesRepository.GetAsync();
+        var database = await databasesQueryable.FirstOrDefaultAsync(database => database.ApiKeys.Any(apiKey => apiKey.Key == clientApiKey && apiKey.Type == ApiKeyType.Client));
 
         ArgumentNullException.ThrowIfNull(database, nameof(database));
 
-        await _dbContext.ImageTargets.Where(x => x.DatabaseId == database.Id && x.ActiveFlag == ActiveFlag.True)
-            .LoadAsync();
-
-        var targets = database.ImageTargets.Select(imageTarget => new Target(
+        var targets = database.ImageTargets
+            .Where(x => x.DatabaseId == database.Id && x.ActiveFlag == ActiveFlag.True)
+            .Select(imageTarget => new Target(
               imageTarget.Id.ToString(),
               imageTarget.AfterProcessImage,
               imageTarget.Keypoints,

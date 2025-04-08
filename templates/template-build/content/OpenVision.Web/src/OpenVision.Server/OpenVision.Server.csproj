@@ -2,11 +2,11 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
+		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-		<UserSecretsId>58877815-5879-4519-bde2-256da2a80045</UserSecretsId>
+		<UserSecretsId>11ba2d06-65a8-4e4e-a829-d3e6c168dbdb</UserSecretsId>
 		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
@@ -17,7 +17,7 @@
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.2.1" />
 		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.2.1" />
 		<PackageReference Include="Aspire.Pomelo.EntityFrameworkCore.MySql" Version="8.2.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"  Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,8 +26,18 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="OpenVision.Server.Core" Version="1.0.0.7-alpha" />
-		<PackageReference Include="OpenVision.Web.ServiceDefaults" Version="1.0.0.7-alpha" />
+		<PackageReference Include="Serilog" Version="4.2.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+		<PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="OpenVision.Server.Core" Version="1.0.0.8-alpha" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OpenVision.ServiceDefaults\OpenVision.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 </Project>

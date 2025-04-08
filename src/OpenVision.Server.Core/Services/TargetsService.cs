@@ -1,242 +1,70 @@
-﻿using System.Data;
-using System.Security.Claims;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using OpenVision.Core.Configuration;
-using OpenVision.Core.Features2d;
-using OpenVision.Core.Utils;
-using OpenVision.Server.Core.Properties;
-using OpenVision.Server.Core.Utils;
-using OpenVision.Server.EntityFramework.DbContexts;
-using OpenVision.Server.EntityFramework.Entities;
-using OpenVision.Shared;
-using OpenVision.Shared.Requests;
-using OpenVision.Shared.Responses;
-using OpenVision.Web.Core.Filters;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using OpenVision.Server.Core.Commands;
+using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Dtos;
+using OpenVision.Server.Core.Queries;
 
 namespace OpenVision.Server.Core.Services;
 
 /// <summary>
-/// Service for handling operations related to targets.
+/// Provides implementation for target management including creation, retrieval, editing, and deletion.
 /// </summary>
-public class TargetsService : BaseApiService, ITargetsService
+public class TargetsService : ITargetsService
 {
     #region Fields/Consts
 
-    private readonly ApplicationDbContext _applicationContext;
-    private readonly HttpContext _httpContext;
-    private readonly IUriService _uriService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly ILogger<TargetsService> _logger;
 
     #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TargetsService"/> class.
     /// </summary>
-    /// <param name="applicationContext">The application database context.</param>
-    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    /// <param name="uriService">The URI service.</param>
-    /// <param name="mapper">The AutoMapper instance.</param>
-    public TargetsService(ApplicationDbContext applicationContext,
-                          IHttpContextAccessor httpContextAccessor,
-                          IUriService uriService,
-                          IMapper mapper)
+    /// <param name="mediator">The mediator instance for sending commands and queries.</param>
+    /// <param name="logger">The logger instance for logging information and errors.</param>
+    public TargetsService(IMediator mediator, ILogger<TargetsService> logger)
     {
-        _applicationContext = applicationContext;
-        _httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        _uriService = uriService;
-        _mapper = mapper;
+        _mediator = mediator;
+        _logger = logger;
     }
 
-    #region ITargetsService Implementation
+    #region Methods
 
     /// <inheritdoc/>
-    public async Task<TargetPagedResponse> GetAsync(TargetBrowserQuery query, CancellationToken cancellationToken = default)
+    public async Task<IQueryable<TargetDto>> GetAsync(CancellationToken cancellationToken)
     {
-        var userId = _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        userId.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.UserNotFound);
-
-        var route = _httpContext.Request.Path.Value;
-        route.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.RouteNotFound);
-
-        var validFilter = new PaginationFilter(query.Page, query.Size);
-        var take = validFilter.Size;
-        var skip = validFilter.Page - 1;
-
-        var targets = await _applicationContext.ImageTargets.Where(x => x.Database.UserId == userId && x.Database.Id == query.DatabaseId)
-                                                            .Include(a => a.Database)
-                                                            .OrderBy(x => x.Created)
-                                                            .Skip(skip * take)
-                                                            .Take(take)
-                                                            .ToListAsync(cancellationToken);
-
-        var totalRecords = await _applicationContext.ImageTargets.CountAsync(cancellationToken);
-        var result = targets.Select(_mapper.Map<TargetResponse>);
-
-        var totalPages = totalRecords / (double)validFilter.Size;
-        var roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
-        var nextPage =
-            validFilter.Page >= 1 && validFilter.Page < roundedTotalPages
-            ? _uriService.GetPageUri(new PaginationFilter(validFilter.Page + 1, validFilter.Size), route)
-            : null;
-
-        var previousPage =
-            validFilter.Page - 1 >= 1 && validFilter.Page <= roundedTotalPages
-            ? _uriService.GetPageUri(new PaginationFilter(validFilter.Page - 1, validFilter.Size), route)
-            : null;
-
-        var firstPage = _uriService.GetPageUri(new PaginationFilter(1, validFilter.Size), route);
-        var lastPage = _uriService.GetPageUri(new PaginationFilter(roundedTotalPages, validFilter.Size), route);
-
-        var respose = new TargetPagedResponse(totalPages == 0 ? -1 : validFilter.Page,
-                                              totalRecords == 0 ? -1 : validFilter.Size,
-                                              totalPages == 0 ? null : firstPage,
-                                              totalRecords == 0 ? null : lastPage,
-                                              roundedTotalPages,
-                                              totalRecords,
-                                              nextPage,
-                                              previousPage,
-                                              new ResponseDoc<IEnumerable<TargetResponse>>(result),
-                                              Guid.NewGuid(),
-                                              StatusCode.Success,
-                                              []);
-
-        return respose;
+        _logger.LogInformation("Dispatching GetTargetsQuery");
+        return await _mediator.Send(new GetTargetsQuery(), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage<TargetResponse>> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<TargetDto?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        userId.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.UserNotFound);
-
-        var target = await _applicationContext.ImageTargets
-                                              .Include(x => x.Database)
-                                              .SingleOrDefaultAsync(x => x.Id == id && x.Database.UserId == userId, cancellationToken);
-
-        target.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
-
-        var targetResponse = _mapper.Map<TargetResponse>(target);
-        return Success(targetResponse);
+        _logger.LogInformation("Dispatching GetTargetByIdQuery for target {TargetId}", id);
+        return await _mediator.Send(new GetTargetByIdQuery(id), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage<Guid>> CreateAsync(PostTargetRequest body, CancellationToken cancellationToken = default)
+    public async Task<TargetDto> CreateAsync(CreateTargetDto createTargetDto, CancellationToken cancellationToken)
     {
-        var targetId = Guid.NewGuid();
-
-        var userId = _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        userId.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.UserNotFound);
-
-        var database = await _applicationContext.Databases.FirstOrDefaultAsync(x => x.Id == body.DatabaseId, cancellationToken: cancellationToken);
-        database.ThrowIfNull(ResultCode.InvalidRequest, ErrorMessages.DatabaseNotFound);
-
-        var image = body.Image!.ToMat();
-
-        image.LowResolution(320);
-
-        var request = VisionSystemConfig.ImageRequestBuilder.Build(image);
-        var featureExtractor = new FeatureExtractor();
-        var imageDetectionInfo = featureExtractor.DetectAndCompute(request);
-
-        var height = UnitsHelper.CalculateYUnits(body.Width!.Value, image.Width, image.Height);
-
-        var target = new ImageTarget
-        {
-            Id = targetId,
-            DatabaseId = body.DatabaseId!.Value,
-            Name = body.Name!,
-            Type = database.Type is DatabaseType.Cloud ? TargetType.Cloud : body.Type!.Value,
-            Width = body.Width.Value,
-            Height = height,
-            Metadata = body.Metadata,
-            ActiveFlag = body.ActiveFlag ?? ActiveFlag.True,
-            PreprocessImage = image.ToArray(),
-            AfterProcessImage = imageDetectionInfo.Mat.ToArray(),
-            AfterProcessImageWithKeypoints = Features2dHelper.DrawKeypoints(imageDetectionInfo.Mat, imageDetectionInfo.Keypoints, System.Drawing.Color.Red).ToArray(),
-            Keypoints = imageDetectionInfo.Keypoints.ToByteArray(),
-            Descriptors = imageDetectionInfo.Descriptors.DescriptorToArray(),
-            DescriptorsRows = imageDetectionInfo.Descriptors.Rows,
-            DescriptorsCols = imageDetectionInfo.Descriptors.Cols,
-            Created = DateTimeOffset.Now,
-            Updated = DateTimeOffset.Now,
-            Database = database
-        };
-
-        _applicationContext.ImageTargets.Add(target);
-        _applicationContext.SaveChanges();
-
-        return Success(targetId);
+        _logger.LogInformation("Dispatching CreateTargetCommand");
+        return await _mediator.Send(new CreateTargetCommand(createTargetDto), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage> UpdateAsync(Guid id, UpdateTargetRequest body, CancellationToken cancellationToken = default)
+    public async Task<TargetDto> UpdateAsync(Guid id, UpdateTargetDto updateTargetDto, CancellationToken cancellationToken)
     {
-        var userId = _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        userId.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.UserNotFound);
-
-        var target = await _applicationContext.ImageTargets.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        target.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
-
-        target.Name = body.Name ?? target.Name;
-        target.Width = body.Width ?? target.Width;
-
-        if (body.Image is not null)
-        {
-            var image = body.Image.ToMat();
-
-            image.LowResolution(320);
-
-            var request = VisionSystemConfig.ImageRequestBuilder.Build(image);
-
-            var featureExtractor = new FeatureExtractor();
-            var imageDetectionInfo = featureExtractor.DetectAndCompute(request);
-
-            target.PreprocessImage = image.ToArray();
-            target.AfterProcessImage = imageDetectionInfo.Mat.ToArray();
-            target.AfterProcessImageWithKeypoints = Features2dHelper.DrawKeypoints(imageDetectionInfo.Mat, imageDetectionInfo.Keypoints, System.Drawing.Color.Red).ToArray();
-            target.Keypoints = imageDetectionInfo.Keypoints.ToByteArray();
-            target.Descriptors = imageDetectionInfo.Descriptors.DescriptorToArray();
-            target.DescriptorsRows = imageDetectionInfo.Descriptors.Rows;
-            target.DescriptorsCols = imageDetectionInfo.Descriptors.Cols;
-            target.Height = UnitsHelper.CalculateYUnits(target.Width, image.Width, image.Height);
-        }
-        else if (body.Width.HasValue)
-        {
-            var image = target.PreprocessImage.ToMat();
-            target.Height = UnitsHelper.CalculateYUnits(body.Width.Value, image.Width, image.Height);
-        }
-
-        target.Height = body.Width ?? target.Height;
-        target.ActiveFlag = body.ActiveFlag ?? target.ActiveFlag;
-
-        target.Metadata = string.IsNullOrWhiteSpace(body.Metadata) ? null : body.Metadata;
-
-        target.Updated = DateTimeOffset.Now;
-
-        await _applicationContext.SaveChangesAsync(cancellationToken);
-
-        return Success();
+        _logger.LogInformation("Dispatching UpdateTargetCommand for target {TargetId}", id);
+        return await _mediator.Send(new UpdateTargetCommand(id, updateTargetDto), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IResponseMessage> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        userId.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.UserNotFound);
-
-        var target = await _applicationContext.ImageTargets.Include(x => x.Database)
-                                                           .SingleOrDefaultAsync(x => x.Id == id && x.Database.UserId == userId, cancellationToken);
-
-        target.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
-
-        _applicationContext.ImageTargets.Remove(target);
-
-        await _applicationContext.SaveChangesAsync(cancellationToken);
-
-        return Success();
+        _logger.LogInformation("Dispatching DeleteTargetCommand for target {TargetId}", id);
+        return await _mediator.Send(new DeleteTargetCommand(id), cancellationToken);
     }
 
     #endregion

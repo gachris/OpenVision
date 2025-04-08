@@ -1,12 +1,12 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenVision.Shared;
-using OpenVision.Shared.Requests;
 using OpenVision.Client.Core.Controllers;
+using OpenVision.Client.Core.Requests;
 using OpenVision.Client.Core.Services;
 using OpenVision.Client.Core.ViewModels;
-using OpenVision.Web.Core.Filters;
+using OpenVision.Shared;
+using OpenVision.Shared.Requests;
 using ResponseStatusCode = OpenVision.Shared.StatusCode;
 
 namespace OpenVision.Client.Controllers;
@@ -33,10 +33,11 @@ public class DevelopController : BaseController
     /// <param name="filesService">The service for file-related actions.</param>
     /// <param name="targetsService">The service for target-related actions.</param>
     /// <param name="logger">The logger for the controller.</param>
-    public DevelopController(IDatabasesService databasesService,
-                             IFilesService filesService,
-                             ITargetsService targetsService,
-                             ILogger<DevelopController> logger) : base(logger)
+    public DevelopController(
+        IDatabasesService databasesService,
+        IFilesService filesService,
+        ITargetsService targetsService,
+        ILogger<DevelopController> logger) : base(logger)
     {
         _databasesService = databasesService;
         _filesService = filesService;
@@ -56,7 +57,7 @@ public class DevelopController : BaseController
     {
         ViewBag.Search = search;
 
-        var databaseBrowserQuery = new DatabaseBrowserQuery() { Page = page ?? 1, Size = 9, SearchText = search };
+        var databaseBrowserQuery = new DatabaseBrowserQuery() { Page = page ?? 1, Size = 9, Description = search };
         var responseMessage = await _databasesService.GetAsync(databaseBrowserQuery);
 
         if (responseMessage.StatusCode == ResponseStatusCode.Success)
@@ -109,7 +110,7 @@ public class DevelopController : BaseController
         if (responseMessage.StatusCode == ResponseStatusCode.Success)
         {
             SuccessNotification($"Database is successfully created!", "Success");
-            return RedirectToAction(nameof(Database), new { id = responseMessage.Response.Result });
+            return RedirectToAction(nameof(Database), new { id = responseMessage.Response.Result.Id });
         }
         else
         {
@@ -256,7 +257,7 @@ public class DevelopController : BaseController
         if (responseMessage.StatusCode == ResponseStatusCode.Success)
         {
             SuccessNotification($"Target is successfully created!", "Success");
-            return RedirectToAction(nameof(Target), new { id = responseMessage.Response.Result });
+            return RedirectToAction(nameof(Target), new { id = responseMessage.Response.Result.Id });
         }
         else
         {

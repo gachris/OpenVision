@@ -6,17 +6,15 @@ namespace OpenVision.Client.Core.Configuration;
 
 public class SecurityConfiguration
 {
-    public List<string> CspTrustedDomains { get; set; } = new List<string>();
-
+    public List<string> CspTrustedDomains { get; set; } = [];
 
     public bool UseDeveloperExceptionPage { get; set; }
 
     public bool UseHsts { get; set; } = true;
 
+    public Action<HstsOptions>? HstsConfigureAction { get; set; }
 
-    public Action<HstsOptions> HstsConfigureAction { get; set; }
+    public Action<AuthenticationBuilder>? AuthenticationBuilderAction { get; set; }
 
-    public Action<AuthenticationBuilder> AuthenticationBuilderAction { get; set; }
-
-    public Action<AuthorizationOptions> AuthorizationConfigureAction { get; set; }
+    public Action<AuthorizationOptions>? AuthorizationConfigureAction { get; set; }
 }

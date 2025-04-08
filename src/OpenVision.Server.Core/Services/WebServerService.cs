@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -6,21 +7,23 @@ using Microsoft.EntityFrameworkCore;
 using OpenVision.Core.Configuration;
 using OpenVision.Core.Features2d;
 using OpenVision.Core.Utils;
+using OpenVision.EntityFramework.DbContexts;
+using OpenVision.EntityFramework.Entities;
 using OpenVision.Server.Core.Auth;
-using OpenVision.Server.Core.Properties;
-using OpenVision.Server.Core.Utils;
-using OpenVision.Server.EntityFramework.DbContexts;
-using OpenVision.Server.EntityFramework.Entities;
+using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Exceptions;
+using OpenVision.Server.Core.Helpers;
 using OpenVision.Shared;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
+using Error = OpenVision.Shared.Responses.Error;
 
 namespace OpenVision.Server.Core.Services;
 
 /// <summary>
 /// Service for interacting with trackable targets with X-API-KEY.
 /// </summary>
-public class WebServerService : BaseApiService, IWebServerService
+public class WebServerService : IWebServerService
 {
     #region Fields/Consts
 
@@ -45,13 +48,28 @@ public class WebServerService : BaseApiService, IWebServerService
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WebServerService"/> class.
+    /// </summary>
+    /// <param name="applicationContext">The application database context.</param>
+    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+    /// <param name="mapper">The mapper service.</param>
+    public WebServerService(IDbContextFactory<ApplicationDbContext> applicationContextPool,
+                            IHttpContextAccessor httpContextAccessor,
+                            IMapper mapper)
+    {
+        _applicationContext = applicationContextPool.CreateDbContext();
+        _httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        _mapper = mapper;
+    }
+
     #region IWebServerService Implementation
 
     /// <inheritdoc/>
     public async Task<GetAllTrackablesResponse> GetAsync(CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        apiKey.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var targets = await _applicationContext.ImageTargets
                                                .Where(x => x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey)
@@ -67,13 +85,13 @@ public class WebServerService : BaseApiService, IWebServerService
     public async Task<TrackableRetrieveResponse> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        apiKey.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var target = await _applicationContext.ImageTargets
                                               .Include(a => a.Database.ApiKeys)
                                               .SingleOrDefaultAsync(x => x.Id == id && x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        target.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
+        ThrowIfNull(target, ResultCode.RecordNotFound, "Target not found.");
 
         var targetResponse = _mapper.Map<TargetRecordModel>(target);
         return new TrackableRetrieveResponse(new ResponseDoc<TargetRecordModel>(targetResponse), Guid.NewGuid(), StatusCode.Success, []);
@@ -83,7 +101,7 @@ public class WebServerService : BaseApiService, IWebServerService
     public async Task<PostTrackableResponse> CreateAsync(PostTrackableRequest body, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        apiKey.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var targetId = Guid.NewGuid();
 
@@ -91,7 +109,7 @@ public class WebServerService : BaseApiService, IWebServerService
                                                 .Include(a => a.ApiKeys)
                                                 .SingleOrDefaultAsync(x => x.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        database.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.DatabaseNotFound);
+        ThrowIfNull(database, ResultCode.RecordNotFound, "Database not found.");
 
         var imageData = new Regex("^data:image/[a-zA-Z]+;base64,").Replace(body.Image!, string.Empty);
         var buffer = Convert.FromBase64String(imageData);
@@ -125,7 +143,9 @@ public class WebServerService : BaseApiService, IWebServerService
             DescriptorsCols = imageDetectionInfo.Descriptors.Cols,
             Created = DateTimeOffset.Now,
             Updated = DateTimeOffset.Now,
-            Database = database
+            Database = database,
+            Rating = 5,
+            Recos = 0
         };
 
         _applicationContext.ImageTargets.Add(target);
@@ -138,12 +158,12 @@ public class WebServerService : BaseApiService, IWebServerService
     public async Task<IResponseMessage> UpdateAsync(Guid id, UpdateTrackableRequest body, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        apiKey.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var target = await _applicationContext.ImageTargets.Include(a => a.Database.ApiKeys)
                                                            .SingleOrDefaultAsync(x => x.Id == id && x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        target.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
+        ThrowIfNull(target, ResultCode.RecordNotFound, "Target not found.");
 
         target.Name = body.Name ?? target.Name;
         target.Width = body.Width ?? target.Width;
@@ -187,18 +207,90 @@ public class WebServerService : BaseApiService, IWebServerService
     public async Task<IResponseMessage> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        apiKey.ThrowIfNullOrEmpty(ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var target = await _applicationContext.ImageTargets.Include(a => a.Database.ApiKeys)
                                                            .SingleOrDefaultAsync(x => x.Id == id && x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        target.ThrowIfNull(ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
+        ThrowIfNull(target, ResultCode.RecordNotFound, "Target not found.");
 
         _applicationContext.ImageTargets.Remove(target);
 
         await _applicationContext.SaveChangesAsync(cancellationToken);
 
         return Success();
+    }
+
+    #endregion
+
+    #region Helpers
+
+    /// <summary>
+    /// Creates a success response message with no result.
+    /// </summary>
+    /// <returns>A success response message with no result.</returns>
+    protected static IResponseMessage Success()
+    {
+        return new ResponseMessage(Guid.NewGuid(), StatusCode.Success, []);
+    }
+
+    /// <summary>
+    /// Creates a success response message with a result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="result">The result.</param>
+    /// <returns>A success response message with the specified result.</returns>
+    protected static IResponseMessage<TResult> Success<TResult>(TResult result)
+    {
+        return new ResponseMessage<TResult>(new(result), Guid.NewGuid(), StatusCode.Success, []);
+    }
+
+    /// <summary>
+    /// Throws an exception with the specified result code and message if the specified value is null.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="value">The value to check.</param>
+    /// <param name="resultCode">The result code for the exception.</param>
+    /// <param name="message">The message for the exception.</param>
+    public static void ThrowIfNull<T>([NotNull] T? value, ResultCode resultCode, string message)
+    {
+        if (value is null)
+        {
+            throw ThrowHttpException(resultCode, message);
+        }
+    }
+
+    /// <summary>
+    /// Throws an exception with the specified result code and message if the specified string is null or empty.
+    /// </summary>
+    /// <param name="value">The string to check.</param>
+    /// <param name="resultCode">The result code for the exception.</param>
+    /// <param name="message">The message for the exception.</param>
+    public static void ThrowIfNullOrEmpty([NotNull] string? value, ResultCode resultCode, string message)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            throw ThrowHttpException(resultCode, message);
+        }
+    }
+
+    /// <summary>
+    /// Throws an <see cref="HttpException"/> with the specified <paramref name="resultCode"/> and <paramref name="message"/>.
+    /// </summary>
+    /// <param name="resultCode">The result code for the exception.</param>
+    /// <param name="message">The message for the exception.</param>
+    /// <returns>The <see cref="HttpException"/> with the specified <paramref name="resultCode"/> and <paramref name="message"/>.</returns>
+    private static HttpException ThrowHttpException(ResultCode resultCode, string message)
+    {
+        var errorCollection = new List<Error>();
+
+        var error = new Error(resultCode, message);
+
+        errorCollection.Add(error);
+
+        var errorResponseMessage = new ResponseMessage(Guid.NewGuid(), StatusCode.Failed, errorCollection);
+
+        return new HttpException(errorResponseMessage);
     }
 
     #endregion
