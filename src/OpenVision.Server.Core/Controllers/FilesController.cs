@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Contracts;
-using OpenVision.Shared.Responses;
 
 namespace OpenVision.Server.Core.Controllers;
 
@@ -19,7 +18,6 @@ public class FilesController : ApiControllerBase
     #region Fields/Consts
 
     private readonly IFilesService _filesService;
-    private readonly IMapper _mapper;
 
     #endregion
 
@@ -27,15 +25,12 @@ public class FilesController : ApiControllerBase
     /// Initializes a new instance of the <see cref="FilesController"/> class.
     /// </summary>
     /// <param name="filesService">The service for interacting with files.</param>
-    /// <param name="mapper">The mapper instance.</param>
     /// <param name="logger">The logger instance.</param>
     public FilesController(
         IFilesService filesService,
-        IMapper mapper,
         ILogger<FilesController> logger) : base(logger)
     {
         _filesService = filesService;
-        _mapper = mapper;
     }
 
     #region Methods
@@ -58,7 +53,7 @@ public class FilesController : ApiControllerBase
             _logger.LogInformation("Successfully retrieved database file for database id: {DatabaseId}", id);
             return File(databaseFileDto.FileContents, databaseFileDto.ContentType, databaseFileDto.Filename);
         });
-    } 
+    }
 
     #endregion
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using OpenVision.Client.Core.Configuration;
 
-namespace OpenVision.Client.Core.Middleware;
+namespace OpenVision.Client.Core.Middlewares;
 
 public class TokenRefreshMiddleware
 {

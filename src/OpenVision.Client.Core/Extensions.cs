@@ -104,7 +104,7 @@ public static class Extensions
             options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         });
-        
+
         authenticationBuilder.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
         {
             options.Cookie.Name = oidcConfiguration.CookieName;

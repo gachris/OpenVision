@@ -1,5 +1,5 @@
 using OpenVision.Client.Core.Configuration;
-using OpenVision.Client.Core.Middleware;
+using OpenVision.Client.Core.Middlewares;
 using Serilog;
 
 namespace Microsoft.Extensions.Hosting;

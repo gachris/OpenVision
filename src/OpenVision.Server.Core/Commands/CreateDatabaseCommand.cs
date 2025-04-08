@@ -1,5 +1,5 @@
-﻿using OpenVision.Server.Core.Dtos;
-using MediatR;
+﻿using MediatR;
+using OpenVision.Server.Core.Dtos;
 
 namespace OpenVision.Server.Core.Commands;
 

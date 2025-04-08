@@ -1,5 +1,4 @@
 ﻿using OpenVision.Server.Core.Dtos;
-using OpenVision.Shared.Requests;
 
 namespace OpenVision.Server.Core.Contracts;
 

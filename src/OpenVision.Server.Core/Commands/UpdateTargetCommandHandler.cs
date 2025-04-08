@@ -1,14 +1,13 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using OpenVision.Core.Configuration;
+using OpenVision.Core.Features2d;
+using OpenVision.Core.Utils;
+using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
 using OpenVision.Server.Core.Helpers;
-using OpenVision.Server.Core.Properties;
-using Microsoft.Extensions.Logging;
-using OpenVision.Server.Core.Contracts;
-using OpenVision.Core.Utils;
-using OpenVision.Core.Configuration;
-using Microsoft.EntityFrameworkCore;
-using OpenVision.Core.Features2d;
-using AutoMapper;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -17,10 +16,14 @@ namespace OpenVision.Server.Core.Commands;
 /// </summary>
 public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, TargetDto>
 {
+    #region Fields/Consts
+
     private readonly IImageTargetsRepository _imageTargetsRepository;
     private readonly ICurrentUserService _currentUserService;
     private readonly IMapper _mapper;
     private readonly ILogger<UpdateTargetCommandHandler> _logger;
+
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateTargetCommandHandler"/> class.
@@ -41,6 +44,8 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
         _logger = logger;
     }
 
+    #region Methods
+
     /// <summary>
     /// Handles the UpdateTargetCommand request by updating the target details.
     /// </summary>
@@ -60,7 +65,7 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
         if (target is null)
         {
             _logger.LogWarning("Target {TargetId} not found", request.TargetId);
-            throw new ArgumentException(ErrorMessages.TargetNotFound);
+            throw new ArgumentException("Target not found.");
         }
 
         var updateDto = request.UpdateTargetDto;
@@ -113,4 +118,6 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
         // Map the updated entity to a DTO and return.
         return _mapper.Map<TargetDto>(target);
     }
+
+    #endregion
 }

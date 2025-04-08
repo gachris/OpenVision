@@ -1,16 +1,15 @@
-﻿using MediatR;
-using OpenVision.EntityFramework.Entities;
-using OpenVision.Server.Core.Dtos;
-using OpenVision.Server.Core.Helpers;
-using OpenVision.Server.Core.Properties;
-using OpenVision.Shared;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OpenVision.Server.Core.Contracts;
 using OpenVision.Core.Configuration;
 using OpenVision.Core.Features2d;
 using OpenVision.Core.Utils;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+using OpenVision.EntityFramework.Entities;
+using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Dtos;
+using OpenVision.Server.Core.Helpers;
+using OpenVision.Shared;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -74,7 +73,7 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
 
         if (database == null)
         {
-            throw new ArgumentException(ErrorMessages.DatabaseNotFound);
+            throw new ArgumentException("Database not found.");
         }
 
         // Process the image.
@@ -122,7 +121,7 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
 
         // Map the entity to a DTO and return.
         return _mapper.Map<TargetDto>(target);
-    } 
+    }
 
     #endregion
 }

@@ -35,7 +35,7 @@ public class DatabaseDto
     /// <summary>
     /// Gets or sets the collection of targets associated with the database.
     /// </summary>
-    public required virtual IEnumerable<TargetDto> Targets { get; set; } 
+    public required virtual IEnumerable<TargetDto> Targets { get; set; }
 
     /// <summary>
     /// Gets or sets the date and time that the database was created.

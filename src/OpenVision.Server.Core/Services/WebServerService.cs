@@ -13,7 +13,6 @@ using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Exceptions;
 using OpenVision.Server.Core.Helpers;
-using OpenVision.Server.Core.Properties;
 using OpenVision.Shared;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
@@ -70,7 +69,7 @@ public class WebServerService : IWebServerService
     public async Task<GetAllTrackablesResponse> GetAsync(CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var targets = await _applicationContext.ImageTargets
                                                .Where(x => x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey)
@@ -86,13 +85,13 @@ public class WebServerService : IWebServerService
     public async Task<TrackableRetrieveResponse> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var target = await _applicationContext.ImageTargets
                                               .Include(a => a.Database.ApiKeys)
                                               .SingleOrDefaultAsync(x => x.Id == id && x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        ThrowIfNull(target, ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
+        ThrowIfNull(target, ResultCode.RecordNotFound, "Target not found.");
 
         var targetResponse = _mapper.Map<TargetRecordModel>(target);
         return new TrackableRetrieveResponse(new ResponseDoc<TargetRecordModel>(targetResponse), Guid.NewGuid(), StatusCode.Success, []);
@@ -102,7 +101,7 @@ public class WebServerService : IWebServerService
     public async Task<PostTrackableResponse> CreateAsync(PostTrackableRequest body, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var targetId = Guid.NewGuid();
 
@@ -110,7 +109,7 @@ public class WebServerService : IWebServerService
                                                 .Include(a => a.ApiKeys)
                                                 .SingleOrDefaultAsync(x => x.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        ThrowIfNull(database, ResultCode.RecordNotFound, ErrorMessages.DatabaseNotFound);
+        ThrowIfNull(database, ResultCode.RecordNotFound, "Database not found.");
 
         var imageData = new Regex("^data:image/[a-zA-Z]+;base64,").Replace(body.Image!, string.Empty);
         var buffer = Convert.FromBase64String(imageData);
@@ -159,12 +158,12 @@ public class WebServerService : IWebServerService
     public async Task<IResponseMessage> UpdateAsync(Guid id, UpdateTrackableRequest body, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var target = await _applicationContext.ImageTargets.Include(a => a.Database.ApiKeys)
                                                            .SingleOrDefaultAsync(x => x.Id == id && x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        ThrowIfNull(target, ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
+        ThrowIfNull(target, ResultCode.RecordNotFound, "Target not found.");
 
         target.Name = body.Name ?? target.Name;
         target.Width = body.Width ?? target.Width;
@@ -208,12 +207,12 @@ public class WebServerService : IWebServerService
     public async Task<IResponseMessage> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var apiKey = _httpContext.User.FindFirstValue(ApiKeyDefaults.X_API_KEY);
-        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, ErrorMessages.ApiKeyNotFound);
+        ThrowIfNullOrEmpty(apiKey, ResultCode.InvalidRequest, "Api key not found.");
 
         var target = await _applicationContext.ImageTargets.Include(a => a.Database.ApiKeys)
                                                            .SingleOrDefaultAsync(x => x.Id == id && x.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey, cancellationToken);
 
-        ThrowIfNull(target, ResultCode.RecordNotFound, ErrorMessages.TargetNotFound);
+        ThrowIfNull(target, ResultCode.RecordNotFound, "Target not found.");
 
         _applicationContext.ImageTargets.Remove(target);
 
@@ -245,6 +244,7 @@ public class WebServerService : IWebServerService
     {
         return new ResponseMessage<TResult>(new(result), Guid.NewGuid(), StatusCode.Success, []);
     }
+
     /// <summary>
     /// Throws an exception with the specified result code and message if the specified value is null.
     /// </summary>

@@ -10,7 +10,7 @@ namespace OpenVision.EntityFramework.DbContexts;
 public class ApplicationDbContext : DbContext
 {
     #region Fields/Consts
-    
+
     /// <summary>
     /// Gets or sets the DbSet of API keys in the database.
     /// </summary>

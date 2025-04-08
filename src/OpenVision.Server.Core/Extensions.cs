@@ -2,6 +2,9 @@
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using HotChocolate.Execution.Configuration;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,18 +18,15 @@ using Microsoft.OpenApi.Models;
 using OpenVision.EntityFramework.DbContexts;
 using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Configuration;
+using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Filters;
+using OpenVision.Server.Core.GraphQL;
 using OpenVision.Server.Core.Helpers;
 using OpenVision.Server.Core.Mappers;
-using OpenVision.Server.Core.Services;
-using OpenVision.Shared.Responses;
-using OpenVision.Shared;
-using MediatR;
-using MediatR.Pipeline;
-using HotChocolate.Execution.Configuration;
-using OpenVision.Server.Core.GraphQL;
-using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Repositories;
+using OpenVision.Server.Core.Services;
+using OpenVision.Shared;
+using OpenVision.Shared.Responses;
 
 namespace Microsoft.Extensions.Hosting;
 
