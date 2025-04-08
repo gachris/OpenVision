@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using OpenVision.Server.EntityFramework.DbContexts;
+using OpenVision.Server.Core.Contracts;
 
 namespace OpenVision.Server.Core.Auth;
 
@@ -15,7 +15,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
 {
     #region Fields/Consts
 
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApiKeysRepository _apiKeysRepository;
 
     #endregion
 
@@ -25,14 +25,14 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
     /// <param name="options">The monitor for the authentication scheme options.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="encoder">The URL encoder.</param>
-    /// <param name="dbContext">The application database context.</param>
+    /// <param name="apiKeysRepository">The repository for accessing api keys.</param>
     public ApiKeyAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ApplicationDbContext dbContext) : base(options, logger, encoder)
+        IApiKeysRepository apiKeysRepository) : base(options, logger, encoder)
     {
-        _dbContext = dbContext;
+        _apiKeysRepository = apiKeysRepository;
     }
 
     #region Methods Overrides
@@ -57,7 +57,8 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
         try
         {
-            var apiKey = await _dbContext.ApiKeys.FirstOrDefaultAsync(apiKey => apiKey.Key == apiKeyHeader);
+            var apiKeysQueryable = await _apiKeysRepository.GetAsync();
+            var apiKey = await apiKeysQueryable.FirstOrDefaultAsync(apiKey => apiKey.Key == apiKeyHeader);
 
             if (apiKey == null)
             {

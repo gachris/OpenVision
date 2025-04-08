@@ -1,6 +1,6 @@
-﻿using OpenVision.Shared.Requests;
+﻿using OpenVision.Client.Core.Requests;
+using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
-using OpenVision.Web.Core.Filters;
 
 namespace OpenVision.Client.Core.Services;
 
@@ -31,7 +31,7 @@ public interface ITargetsService
     /// <param name="body">The request body containing the information needed to create the target.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the new target identifier.</returns>
-    Task<IResponseMessage<Guid>> CreateAsync(PostTargetRequest body, CancellationToken cancellationToken = default);
+    Task<IResponseMessage<TargetResponse>> CreateAsync(PostTargetRequest body, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates an existing target.
@@ -40,7 +40,7 @@ public interface ITargetsService
     /// <param name="body">The request body containing the information needed to update the target.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task<IResponseMessage> UpdateAsync(Guid id, UpdateTargetRequest body, CancellationToken cancellationToken = default);
+    Task<IResponseMessage<TargetResponse>> UpdateAsync(Guid id, UpdateTargetRequest body, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes the target with the specified identifier.
@@ -48,5 +48,5 @@ public interface ITargetsService
     /// <param name="id">The unique identifier of the target to delete.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task<IResponseMessage> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IResponseMessage<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

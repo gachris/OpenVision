@@ -1,8 +1,7 @@
-using OpenVision.Client.Core.Configuration;
-using OpenVision.Web.Core.Helpers;
+using OpenVision.Client.Core.Helpers;
 using Serilog;
 
-var configuration = StartupHelper.GetConfiguration<Program>(args);
+var configuration = ProgramHelper.GetConfiguration<Program>(args);
 
 Log.Logger = new LoggerConfiguration().ReadFrom
     .Configuration(configuration)
@@ -14,17 +13,10 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
     builder.ConfigureHostBuilder<Program>(args);
-
-    var appConfiguration = builder.Configuration.GetSection(nameof(AppConfiguration)).Get<AppConfiguration>()!;
-    var securityConfiguration = builder.Configuration.GetSection(nameof(SecurityConfiguration)).Get<SecurityConfiguration>()!;
-
-    builder.AddServiceDefaults();
-    builder.AddOpenVisionClientDefaults(appConfiguration);
+    builder.ConfigureOpenVisionClient();
 
     var app = builder.Build();
-
-    app.UseOpenVisionClientDefaults(securityConfiguration);
-
+    app.ConfigureOpenVisionClientPipeline();
     app.Run();
 }
 catch (Exception ex)

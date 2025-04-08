@@ -6,6 +6,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["src/OpenVision.Server/OpenVision.Server.csproj", "src/OpenVision.Server/"]
+COPY ["src/OpenVision.ServiceDefaults/OpenVision.ServiceDefaults.csproj", "src/OpenVision.ServiceDefaults/"]
 
 RUN dotnet restore "src/OpenVision.Server/OpenVision.Server.csproj"
 COPY . .

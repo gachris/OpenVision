@@ -1,6 +1,6 @@
-﻿using OpenVision.Shared.Requests;
+﻿using OpenVision.Client.Core.Requests;
+using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
-using OpenVision.Web.Core.Filters;
 
 namespace OpenVision.Client.Core.Services;
 
@@ -31,7 +31,7 @@ public interface IDatabasesService
     /// <param name="body">The request body containing the details of the new database record.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the request.</param>
     /// <returns>A response message indicating the success or failure of the request. The task result contains the new database identifier.</returns>
-    Task<IResponseMessage<Guid>> CreateAsync(PostDatabaseRequest body, CancellationToken cancellationToken = default);
+    Task<IResponseMessage<DatabaseResponse>> CreateAsync(PostDatabaseRequest body, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates an existing database record in the API based on the specified identifier and request body.
@@ -40,7 +40,7 @@ public interface IDatabasesService
     /// <param name="body">The request body containing the updated details of the database record.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the request.</param>
     /// <returns>A response message indicating the success or failure of the request.</returns>
-    Task<IResponseMessage> UpdateAsync(Guid id, UpdateDatabaseRequest body, CancellationToken cancellationToken = default);
+    Task<IResponseMessage<DatabaseResponse>> UpdateAsync(Guid id, UpdateDatabaseRequest body, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes an existing database record from the API based on the specified identifier.
@@ -48,5 +48,5 @@ public interface IDatabasesService
     /// <param name="id">The unique identifier of the database record to delete.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the request.</param>
     /// <returns>A response message indicating the success or failure of the request.</returns>
-    Task<IResponseMessage> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IResponseMessage<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

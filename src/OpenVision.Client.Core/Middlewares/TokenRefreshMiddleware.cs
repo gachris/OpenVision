@@ -11,13 +11,16 @@ public class TokenRefreshMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly AppConfiguration _appConfiguration;
+    private readonly OidcConfiguration _oidcConfiguration;
 
-    public TokenRefreshMiddleware(RequestDelegate next, IHttpClientFactory httpClientFactory, AppConfiguration appConfiguration)
+    public TokenRefreshMiddleware(
+        RequestDelegate next,
+        IHttpClientFactory httpClientFactory,
+        OidcConfiguration oidcConfiguration)
     {
         _next = next;
         _httpClientFactory = httpClientFactory;
-        _appConfiguration = appConfiguration;
+        _oidcConfiguration = oidcConfiguration;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -41,7 +44,7 @@ public class TokenRefreshMiddleware
             var refreshToken = await context.GetTokenAsync("refresh_token");
 
             var client = _httpClientFactory.CreateClient();
-            var disco = await client.GetDiscoveryDocumentAsync(_appConfiguration.IdentityServerBaseUrl);
+            var disco = await client.GetDiscoveryDocumentAsync(_oidcConfiguration.Authority);
 
             if (disco.IsError)
             {
@@ -52,8 +55,8 @@ public class TokenRefreshMiddleware
             var tokenResponse = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = disco.TokenEndpoint,
-                ClientId = _appConfiguration.ClientId,
-                ClientSecret = _appConfiguration.ClientSecret,
+                ClientId = _oidcConfiguration.ClientId,
+                ClientSecret = _oidcConfiguration.ClientSecret,
                 RefreshToken = refreshToken
             });
 

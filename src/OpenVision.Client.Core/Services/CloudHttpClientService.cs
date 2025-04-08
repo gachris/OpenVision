@@ -33,7 +33,7 @@ public class CloudHttpClientService : ICloudHttpClientService
         var handler = new HttpClientHandler();
         return new HttpClient(handler)
         {
-            BaseAddress = new Uri(_appConfiguration.CloudApiUrl)
+            BaseAddress = new Uri(_appConfiguration.OpenVisionServerUrl)
         };
     }
 

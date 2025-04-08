@@ -6,9 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3612AD70-E077-4AB3-BDDC-A8E22C92B18C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
-		Directory.Packages.props = Directory.Packages.props
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+		src\Directory.Packages.props = src\Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Core", "src\OpenVision.Core\OpenVision.Core.csproj", "{B0B2D4A9-3AAD-4555-8628-A391A350B140}"
@@ -31,19 +31,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Client.Core", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Server.Core", "src\OpenVision.Server.Core\OpenVision.Server.Core.csproj", "{9CE2E6C4-1D44-4704-B9A6-E74E5C62B92E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Server.EntityFramework", "src\OpenVision.Server.EntityFramework\OpenVision.Server.EntityFramework.csproj", "{6C397B3C-8406-4879-AD9C-E59DFCDC3CA2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Server.EntityFramework.MySql", "src\OpenVision.Server.EntityFramework.MySql\OpenVision.Server.EntityFramework.MySql.csproj", "{F669AF6A-42D4-4330-812B-A49EB8773FD8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Server.EntityFramework.PostgreSQL", "src\OpenVision.Server.EntityFramework.PostgreSQL\OpenVision.Server.EntityFramework.PostgreSQL.csproj", "{92F8F0A3-1657-4C02-A23C-AFBCDCB96C97}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Server.EntityFramework.SqlServer", "src\OpenVision.Server.EntityFramework.SqlServer\OpenVision.Server.EntityFramework.SqlServer.csproj", "{2FD84724-9764-4656-BEC6-3D03E36BE9F2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Web.Core", "src\OpenVision.Web.Core\OpenVision.Web.Core.csproj", "{C953DBD7-A5CA-412E-9F67-AD9FF250E834}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Web.ServiceDefaults", "src\OpenVision.Web.ServiceDefaults\OpenVision.Web.ServiceDefaults.csproj", "{FD779855-5737-4B07-BA6D-998748F6EAD2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.Web.Template", "templates\template-build\OpenVision.Web.Template.csproj", "{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.EntityFramework", "src\OpenVision.EntityFramework\OpenVision.EntityFramework.csproj", "{6B8816DA-6A5A-18B5-1C03-F456F68BA938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.EntityFramework.MySql", "src\OpenVision.EntityFramework.MySql\OpenVision.EntityFramework.MySql.csproj", "{A083CB74-FB17-EB96-35BF-8C8850F710B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.EntityFramework.PostgreSQL", "src\OpenVision.EntityFramework.PostgreSQL\OpenVision.EntityFramework.PostgreSQL.csproj", "{1CFD9B38-1BA9-A426-D7A6-E03E28866BD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.EntityFramework.SqlServer", "src\OpenVision.EntityFramework.SqlServer\OpenVision.EntityFramework.SqlServer.csproj", "{313599C0-E27D-1356-72C1-3E1A7F56B353}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,34 +87,26 @@ Global
 		{9CE2E6C4-1D44-4704-B9A6-E74E5C62B92E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CE2E6C4-1D44-4704-B9A6-E74E5C62B92E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CE2E6C4-1D44-4704-B9A6-E74E5C62B92E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C397B3C-8406-4879-AD9C-E59DFCDC3CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C397B3C-8406-4879-AD9C-E59DFCDC3CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C397B3C-8406-4879-AD9C-E59DFCDC3CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C397B3C-8406-4879-AD9C-E59DFCDC3CA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F669AF6A-42D4-4330-812B-A49EB8773FD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F669AF6A-42D4-4330-812B-A49EB8773FD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F669AF6A-42D4-4330-812B-A49EB8773FD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F669AF6A-42D4-4330-812B-A49EB8773FD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{92F8F0A3-1657-4C02-A23C-AFBCDCB96C97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{92F8F0A3-1657-4C02-A23C-AFBCDCB96C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{92F8F0A3-1657-4C02-A23C-AFBCDCB96C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{92F8F0A3-1657-4C02-A23C-AFBCDCB96C97}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FD84724-9764-4656-BEC6-3D03E36BE9F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FD84724-9764-4656-BEC6-3D03E36BE9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FD84724-9764-4656-BEC6-3D03E36BE9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FD84724-9764-4656-BEC6-3D03E36BE9F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C953DBD7-A5CA-412E-9F67-AD9FF250E834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C953DBD7-A5CA-412E-9F67-AD9FF250E834}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C953DBD7-A5CA-412E-9F67-AD9FF250E834}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C953DBD7-A5CA-412E-9F67-AD9FF250E834}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD779855-5737-4B07-BA6D-998748F6EAD2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42ED7F3D-7A96-46B0-B5C8-937DEDDD5508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8816DA-6A5A-18B5-1C03-F456F68BA938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8816DA-6A5A-18B5-1C03-F456F68BA938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8816DA-6A5A-18B5-1C03-F456F68BA938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8816DA-6A5A-18B5-1C03-F456F68BA938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A083CB74-FB17-EB96-35BF-8C8850F710B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A083CB74-FB17-EB96-35BF-8C8850F710B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A083CB74-FB17-EB96-35BF-8C8850F710B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A083CB74-FB17-EB96-35BF-8C8850F710B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CFD9B38-1BA9-A426-D7A6-E03E28866BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CFD9B38-1BA9-A426-D7A6-E03E28866BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CFD9B38-1BA9-A426-D7A6-E03E28866BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CFD9B38-1BA9-A426-D7A6-E03E28866BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313599C0-E27D-1356-72C1-3E1A7F56B353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313599C0-E27D-1356-72C1-3E1A7F56B353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313599C0-E27D-1356-72C1-3E1A7F56B353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313599C0-E27D-1356-72C1-3E1A7F56B353}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

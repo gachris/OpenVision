@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Auth;
-using OpenVision.Server.Core.Services;
+using OpenVision.Server.Core.Contracts;
 using OpenVision.Shared.Requests;
 
 namespace OpenVision.Server.Core.Controllers;

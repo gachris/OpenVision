@@ -1,21 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using OpenVision.Core.Configuration;
-using OpenVision.Core.DataTypes;
-using OpenVision.Server.Core.Configuration;
-using OpenVision.Web.Core.Helpers;
+using OpenVision.Server.Core.Helpers;
 using Serilog;
 
-const string ConnectionStringName = "vision";
-
-var configuration = StartupHelper.GetConfiguration<Program>(args);
+var configuration = ProgramHelper.GetConfiguration<Program>(args);
 
 Log.Logger = new LoggerConfiguration().ReadFrom
     .Configuration(configuration)
     .CreateLogger();
-
-VisionSystemConfig.ImageRequestBuilder = new ImageRequestBuilder()
-    .WithGrayscale()
-    .WithGaussianBlur(new System.Drawing.Size(5, 5), 0);
 
 try
 {
@@ -23,18 +13,10 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
     builder.ConfigureHostBuilder<Program>(args);
-
-    var connectionString = builder.Configuration.GetConnectionString(ConnectionStringName)!;
-    var databaseProviderType = builder.Configuration.GetValue("DatabaseProvider", DatabaseProviderType.SqlServer);
-    var apiConfiguration = builder.Configuration.GetSection(nameof(ApiConfiguration)).Get<ApiConfiguration>()!;
-
-    builder.AddServiceDefaults();
-    builder.AddOpenVisionServerDefaults(apiConfiguration, connectionString, databaseProviderType);
+    builder.ConfigureOpenVisionServer();
 
     var app = builder.Build();
-
-    app.UseOpenVisionServerDefaults(apiConfiguration);
-
+    app.ConfigureOpenVisionServerPipeline();
     app.Run();
 }
 catch (Exception ex)

@@ -7,10 +7,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <link rel="icon" type="image/x-icon" href="@UrlHelper.Content(AppConfiguration.FaviconUri)" />
-    <link rel="shortcut icon" type="image/x-icon" href="@UrlHelper.Content(AppConfiguration.FaviconUri)" />
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
 
-    <title>@AppConfiguration.PageTitle - @ViewData["Title"]</title>
+    <title>@AppConfiguration.ApplicationName - @ViewData["Title"]</title>
 
     <environment include="Development">
         <link href="~/dist/css/bundle.min.css" asp-append-version="true" rel="stylesheet" />
@@ -22,11 +22,6 @@
 
     <link href="~/css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-    @if (!string.IsNullOrEmpty(AppConfiguration.CustomThemeCss))
-    {
-        <link href="@UrlHelper.Content(AppConfiguration.CustomThemeCss)" asp-append-version="true" rel="stylesheet" />
-    }
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 

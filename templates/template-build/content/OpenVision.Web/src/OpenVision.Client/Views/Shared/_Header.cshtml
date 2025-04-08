@@ -1,5 +1,5 @@
 ﻿@inject IViewLocalizer Localizer
-@inject AppConfiguration AdminConfiguration
+@inject AppConfiguration AppConfiguration
 
 @{
     string? name = null;
@@ -16,7 +16,7 @@
         <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark bottom_border" data-sticky="top">
             <div class="container">
                 <a asp-controller="Home" asp-action="Index" class="sidebar-brand">
-                    @AdminConfiguration.PageTitle
+                    @AppConfiguration.ApplicationName
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <img class="icon navbar-toggler-open" src="/images/icons/menu.svg" />

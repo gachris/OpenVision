@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Auth;
-using OpenVision.Server.Core.Services;
+using OpenVision.Server.Core.Contracts;
+using OpenVision.Shared.Responses;
 
 namespace OpenVision.Server.Core.Controllers;
 
@@ -12,19 +14,12 @@ namespace OpenVision.Server.Core.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(Policy = AuthorizationConsts.BearerPolicy)]
-public class FilesController : ControllerBase
+public class FilesController : ApiControllerBase
 {
     #region Fields/Consts
 
-    /// <summary>
-    /// The service for interacting with files.
-    /// </summary>
     private readonly IFilesService _filesService;
-
-    /// <summary>
-    /// The logger instance for logging information, warnings, and errors.
-    /// </summary>
-    private readonly ILogger<FilesController> _logger;
+    private readonly IMapper _mapper;
 
     #endregion
 
@@ -32,12 +27,18 @@ public class FilesController : ControllerBase
     /// Initializes a new instance of the <see cref="FilesController"/> class.
     /// </summary>
     /// <param name="filesService">The service for interacting with files.</param>
-    /// <param name="logger">The logger instance for logging information, warnings, and errors.</param>
-    public FilesController(IFilesService filesService, ILogger<FilesController> logger)
+    /// <param name="mapper">The mapper instance.</param>
+    /// <param name="logger">The logger instance.</param>
+    public FilesController(
+        IFilesService filesService,
+        IMapper mapper,
+        ILogger<FilesController> logger) : base(logger)
     {
         _filesService = filesService;
-        _logger = logger;
+        _mapper = mapper;
     }
+
+    #region Methods
 
     /// <summary>
     /// Downloads the file with the specified ID.
@@ -48,7 +49,16 @@ public class FilesController : ControllerBase
     [Route("{id:guid}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var result = await _filesService.DownloadAsync(id, CancellationToken.None);
-        return File(result.Response.Result.FileContents, result.Response.Result.ContentType, result.Response.Result.Filename);
-    }
+        return await ExecuteAsync(async () =>
+        {
+            _logger.LogInformation("Received request to download database file for database id: {DatabaseId}", id);
+
+            var databaseFileDto = await _filesService.GetDatabaseFileAsync(id, CancellationToken.None);
+
+            _logger.LogInformation("Successfully retrieved database file for database id: {DatabaseId}", id);
+            return File(databaseFileDto.FileContents, databaseFileDto.ContentType, databaseFileDto.Filename);
+        });
+    } 
+
+    #endregion
 }

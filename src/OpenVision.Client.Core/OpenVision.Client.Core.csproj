@@ -23,7 +23,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OpenVision.Shared\OpenVision.Shared.csproj" />
-		<ProjectReference Include="..\OpenVision.Web.Core\OpenVision.Web.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
