@@ -8,11 +8,18 @@ namespace OpenVision.Server.Core.Contracts;
 public interface ITargetsService
 {
     /// <summary>
+    /// Gets a queryable collection of target DTOs for further composition (e.g., filtering, sorting, paging).
+    /// </summary>
+    /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
+    /// <returns>An <see cref="IQueryable{TargetDto}"/> of target DTOs.</returns>
+    Task<IQueryable<TargetDto>> GetQueryableAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     /// Retrieves all targets.
     /// </summary>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An enumerable collection of targets.</returns>
-    Task<IQueryable<TargetDto>> GetAsync(CancellationToken cancellationToken);
+    Task<IEnumerable<TargetDto>> GetAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Retrieves a specific target by its identifier.

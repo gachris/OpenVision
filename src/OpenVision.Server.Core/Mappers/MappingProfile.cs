@@ -79,10 +79,10 @@ internal class MappingProfile : Profile
 
         CreateMap<TargetRecordModel, ImageTarget>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.TargetId)))
-            .ForMember(dest => dest.Recos, opt => opt.MapFrom(src => src.TrackingRating))
+            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.TrackingRating))
             .ReverseMap()
             .ForCtorParam("targetId", opt => opt.MapFrom(src => src.Id.ToString()))
-            .ForCtorParam("trackingRating", opt => opt.MapFrom(src => src.Recos));
+            .ForCtorParam("trackingRating", opt => opt.MapFrom(src => src.Rating));
 
         CreateMap<CreateDatabaseDto, PostDatabaseRequest>()
                  .ReverseMap();
@@ -97,6 +97,15 @@ internal class MappingProfile : Profile
             .ReverseMap();
 
         CreateMap<DownloadFileResult, DatabaseFileDto>()
+            .ReverseMap();
+
+        CreateMap<PostTrackableRequest, PostTrackableDto>()
+            .ReverseMap();
+
+        CreateMap<UpdateTrackableRequest, UpdateTrackableDto>()
+            .ReverseMap();
+
+        CreateMap<TargetRecordModel, TargetRecordDto>()
             .ReverseMap();
     }
 }

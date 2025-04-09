@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+﻿using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -45,6 +45,8 @@ public class FilesService : IFilesService
         using var client = _cloudHttpClientService.GetClient();
 
         var token = await _httpContext.GetTokenAsync("access_token");
+        ArgumentNullException.ThrowIfNull(token, nameof(token));
+
         client.SetBearerToken(token);
 
         var response = await client.GetAsync($"{Route}/{id}", cancellationToken);

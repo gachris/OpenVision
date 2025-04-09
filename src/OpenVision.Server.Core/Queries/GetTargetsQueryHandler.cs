@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Queries;
 
 /// <summary>
 /// Handles the GetTargetsQuery and returns the list of target DTOs.
 /// </summary>
-public class GetTargetsQueryHandler : IRequestHandler<GetTargetsQuery, IQueryable<TargetDto>>
+public class GetTargetsQueryHandler : IRequestHandler<GetTargetsQuery, IEnumerable<TargetDto>>
 {
     #region Fields/Consts
 
@@ -51,25 +50,24 @@ public class GetTargetsQueryHandler : IRequestHandler<GetTargetsQuery, IQueryabl
     /// <param name="request">The query request.</param>
     /// <param name="cancellationToken">A token to cancel the operation if needed.</param>
     /// <returns>
-    /// An <see cref="IQueryable{TargetDto}"/> containing the list of target DTOs.
+    /// An <see cref="IEnumerable{TargetDto}"/> containing the list of target DTOs.
     /// </returns>
-    public async Task<IQueryable<TargetDto>> Handle(GetTargetsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<TargetDto>> Handle(GetTargetsQuery request, CancellationToken cancellationToken)
     {
         var userId = _currentUserService.UserId;
 
         _logger.LogInformation("Getting targets for user {UserId}", userId);
 
-        var imageTargetsQueryable = await _imageTargetsRepository.GetAsync();
+        var imageTargetForUserSpecification = new ImageTargetForUserSpecification(userId)
+        {
+            Includes = { target => target.Database }
+        };
+        var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
+        var targetDtos = _mapper.Map<IEnumerable<TargetDto>>(imageTargets);
 
-        var imageTargets = imageTargetsQueryable
-            .Include(x => x.Database)
-            .Where(x => x.Database.UserId == userId);
+        _logger.LogInformation("Retrieved {Count} targets for user {UserId}", targetDtos.Count(), userId);
 
-        var targets = imageTargets.ProjectTo<TargetDto>(_mapper.ConfigurationProvider);
-
-        _logger.LogInformation("Retrieved {Count} targets for user {UserId}", targets.Count(), userId);
-
-        return await Task.FromResult(targets);
+        return targetDtos;
     }
 
     #endregion

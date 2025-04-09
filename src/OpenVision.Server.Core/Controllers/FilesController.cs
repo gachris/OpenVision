@@ -25,10 +25,12 @@ public class FilesController : ApiControllerBase
     /// Initializes a new instance of the <see cref="FilesController"/> class.
     /// </summary>
     /// <param name="filesService">The service for interacting with files.</param>
+    /// <param name="mapper">The mapper instance.</param>
     /// <param name="logger">The logger instance.</param>
     public FilesController(
         IFilesService filesService,
-        ILogger<FilesController> logger) : base(logger)
+        IMapper mapper,
+        ILogger<FilesController> logger) : base(mapper, logger)
     {
         _filesService = filesService;
     }

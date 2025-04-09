@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -53,10 +54,9 @@ public class UpdateDatabaseCommandHandler : IRequestHandler<UpdateDatabaseComman
         var userId = _currentUserService.UserId;
         _logger.LogInformation("Editing database {DatabaseId} for user {UserId}", request.DatabaseId, userId);
 
-        var databasesQueryable = await _databasesRepository.GetAsync();
-        var database = await databasesQueryable
-            .Where(x => x.Id == request.DatabaseId && x.UserId == userId)
-            .SingleOrDefaultAsync(cancellationToken);
+        var databaseForUserSpecification = new DatabaseForUserSpecification(request.DatabaseId, userId);
+        var databases = await _databasesRepository.GetBySpecificationAsync(databaseForUserSpecification, cancellationToken);
+        var database = databases.SingleOrDefault();
 
         if (database is null)
         {

@@ -58,7 +58,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
         try
         {
             var apiKeysQueryable = await _apiKeysRepository.GetAsync();
-            var apiKey = await apiKeysQueryable.FirstOrDefaultAsync(apiKey => apiKey.Key == apiKeyHeader);
+            var apiKey = apiKeysQueryable.FirstOrDefault(apiKey => apiKey.Key == apiKeyHeader);
 
             if (apiKey == null)
             {

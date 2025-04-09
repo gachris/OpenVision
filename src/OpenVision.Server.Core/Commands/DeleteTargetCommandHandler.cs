@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -22,16 +22,16 @@ public class DeleteTargetCommandHandler : IRequestHandler<DeleteTargetCommand, b
     /// Initializes a new instance of the <see cref="DeleteTargetCommandHandler"/> class.
     /// </summary>
     /// <param name="imageTargetsRepository">The repository for accessing targets.</param>
-    /// <param name="logger">The logger for recording informational and error messages.</param>
     /// <param name="currentUserService">The service for obtaining the current user's identifier.</param>
+    /// <param name="logger">The logger for recording informational and error messages.</param>
     public DeleteTargetCommandHandler(
         IImageTargetsRepository imageTargetsRepository,
-        ILogger<DeleteTargetCommandHandler> logger,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        ILogger<DeleteTargetCommandHandler> logger)
     {
         _imageTargetsRepository = imageTargetsRepository;
-        _logger = logger;
         _currentUserService = currentUserService;
+        _logger = logger;
     }
 
     #region Methods
@@ -47,11 +47,12 @@ public class DeleteTargetCommandHandler : IRequestHandler<DeleteTargetCommand, b
         var userId = _currentUserService.UserId;
         _logger.LogInformation("Deleting target {TargetId} for user {UserId}", request.TargetId, userId);
 
-        var imageTargetsQueryable = await _imageTargetsRepository.GetAsync();
-
-        var imageTarget = await imageTargetsQueryable
-            .Include(x => x.Database)
-            .SingleOrDefaultAsync(x => x.Id == request.TargetId && x.Database.UserId == userId, cancellationToken);
+        var imageTargetForUserSpecification = new ImageTargetForUserSpecification(request.TargetId, userId)
+        {
+            Includes = { target => target.Database }
+        };
+        var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
+        var imageTarget = imageTargets.SingleOrDefault();
 
         if (imageTarget is null)
         {

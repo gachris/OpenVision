@@ -10,4 +10,10 @@ public interface ICurrentUserService
     /// If the user identifier is not found, an exception is thrown.
     /// </summary>
     string UserId { get; }
+
+    /// <summary>
+    /// Gets the current API key if provided in the user's claims.
+    /// If the API key is not found, an exception is thrown.
+    /// </summary>
+    string ApiKey { get; }
 }

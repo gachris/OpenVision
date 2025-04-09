@@ -23,7 +23,6 @@ public class TargetsController : ApiControllerBase
     #region Fields/Consts
 
     private readonly ITargetsService _targetsService;
-    private readonly IMapper _mapper;
 
     #endregion
 
@@ -36,10 +35,9 @@ public class TargetsController : ApiControllerBase
     public TargetsController(
         ITargetsService targetsService,
         IMapper mapper,
-        ILogger<TargetsController> logger) : base(logger)
+        ILogger<TargetsController> logger) : base(mapper, logger)
     {
         _targetsService = targetsService;
-        _mapper = mapper;
     }
 
     #region Methods
@@ -57,7 +55,6 @@ public class TargetsController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to get targets list with query: {@Query}", query);
-
             var pagedResponse = await GetPagedResponseAsync(query, cancellationToken);
             _logger.LogInformation("Returning paged targets list with total records: {TotalRecords}", pagedResponse.TotalRecords);
             return new OkObjectResult(pagedResponse);
@@ -177,7 +174,7 @@ public class TargetsController : ApiControllerBase
         TargetBrowserQuery query,
         CancellationToken cancellationToken)
     {
-        var targetsQueryable = await _targetsService.GetAsync(cancellationToken);
+        var targetsQueryable = await _targetsService.GetQueryableAsync(cancellationToken);
         var validFilter = new BrowserQuery(query.Page, query.Size);
         var take = validFilter.Size;
         var skip = validFilter.Page - 1;

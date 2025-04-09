@@ -107,11 +107,9 @@ public static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-
         services.AddTransient<IDatabasesRepository, DatabasesRepository>();
         services.AddTransient<IApiKeysRepository, ApiKeysRepository>();
         services.AddTransient<IImageTargetsRepository, ImageTargetsRepository>();
-
         return services;
     }
 
@@ -123,7 +121,7 @@ public static class Extensions
     public static IServiceCollection AddOpenVisionCoreServices(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        services.AddTransient<IWebServerService, WebServerService>();
+        services.AddTransient<ITrackablesService, TrackablesService>();
         services.AddTransient<IDatabasesService, DatabasesService>();
         services.AddTransient<IFilesService, FilesService>();
         services.AddTransient<ITargetsService, TargetsService>();

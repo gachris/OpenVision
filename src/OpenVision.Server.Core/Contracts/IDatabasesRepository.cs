@@ -2,13 +2,9 @@
 
 namespace OpenVision.Server.Core.Contracts;
 
-public interface IDatabasesRepository
+/// <summary>
+/// Provides asynchronous methods to access and manipulate database data.
+/// </summary>
+public interface IDatabasesRepository : IGenericRepository<Database>
 {
-    Task<IQueryable<Database>> GetAsync();
-
-    Task<bool> CreateAsync(Database database, CancellationToken cancellationToken = default);
-
-    Task<bool> UpdateAsync(Database database, CancellationToken cancellationToken = default);
-
-    Task<bool> RemoveAsync(Database database, CancellationToken cancellationToken = default);
 }

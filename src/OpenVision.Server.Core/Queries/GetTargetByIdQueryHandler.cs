@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Queries;
 
@@ -58,12 +58,12 @@ public class GetTargetByIdQueryHandler : IRequestHandler<GetTargetByIdQuery, Tar
 
         _logger.LogInformation("Getting target {TargetId} for user {UserId}", request.TargetId, userId);
 
-        var imageTargetsQueryable = await _imageTargetsRepository.GetAsync();
-
-        var imageTarget = await imageTargetsQueryable
-            .Include(x => x.Database)
-            .Where(x => x.Id == request.TargetId && x.Database.UserId == userId)
-            .SingleOrDefaultAsync(cancellationToken);
+        var imageTargetForUserSpecification = new ImageTargetForUserSpecification(request.TargetId, userId)
+        {
+            Includes = { target => target.Database }
+        };
+        var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
+        var imageTarget = imageTargets.SingleOrDefault();
 
         if (imageTarget is null)
         {

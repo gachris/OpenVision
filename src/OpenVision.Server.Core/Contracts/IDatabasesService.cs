@@ -8,11 +8,18 @@ namespace OpenVision.Server.Core.Contracts;
 public interface IDatabasesService
 {
     /// <summary>
+    /// Gets a queryable collection of database DTOs for further composition (e.g., filtering, sorting, paging).
+    /// </summary>
+    /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
+    /// <returns>An <see cref="IQueryable{DatabaseDto}"/> of database DTOs.</returns>
+    Task<IQueryable<DatabaseDto>> GetQueryableAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     /// Retrieves all databases.
     /// </summary>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An enumerable collection of databases.</returns>
-    Task<IQueryable<DatabaseDto>> GetAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<DatabaseDto>> GetAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves a specific database by its identifier.

@@ -24,7 +24,9 @@ public class TargetsService : ITargetsService
     /// </summary>
     /// <param name="mediator">The mediator instance for sending commands and queries.</param>
     /// <param name="logger">The logger instance for logging information and errors.</param>
-    public TargetsService(IMediator mediator, ILogger<TargetsService> logger)
+    public TargetsService(
+        IMediator mediator,
+        ILogger<TargetsService> logger)
     {
         _mediator = mediator;
         _logger = logger;
@@ -33,7 +35,14 @@ public class TargetsService : ITargetsService
     #region Methods
 
     /// <inheritdoc/>
-    public async Task<IQueryable<TargetDto>> GetAsync(CancellationToken cancellationToken)
+    public async Task<IQueryable<TargetDto>> GetQueryableAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Dispatching GetQueryableTargetQuery");
+        return await _mediator.Send(new GetQueryableTargetQuery(), cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<TargetDto>> GetAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Dispatching GetTargetsQuery");
         return await _mediator.Send(new GetTargetsQuery(), cancellationToken);

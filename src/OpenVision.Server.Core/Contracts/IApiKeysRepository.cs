@@ -2,13 +2,9 @@
 
 namespace OpenVision.Server.Core.Contracts;
 
-public interface IApiKeysRepository
+/// <summary>
+/// Provides asynchronous methods to access and manipulate API key data.
+/// </summary>
+public interface IApiKeysRepository : IGenericRepository<ApiKey>
 {
-    Task<IQueryable<ApiKey>> GetAsync();
-
-    Task<bool> CreateAsync(ApiKey apiKey, CancellationToken cancellationToken = default);
-
-    Task<bool> UpdateAsync(ApiKey apiKey, CancellationToken cancellationToken = default);
-
-    Task<bool> RemoveAsync(ApiKey apiKey, CancellationToken cancellationToken = default);
 }

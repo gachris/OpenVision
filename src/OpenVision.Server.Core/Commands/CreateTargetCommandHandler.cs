@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Core.Configuration;
 using OpenVision.Core.Features2d;
@@ -9,6 +8,7 @@ using OpenVision.EntityFramework.Entities;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
 using OpenVision.Server.Core.Helpers;
+using OpenVision.Server.Core.Repositories.Specifications;
 using OpenVision.Shared;
 
 namespace OpenVision.Server.Core.Commands;
@@ -65,19 +65,12 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
         var createDto = request.CreateTargetDto;
         var targetId = Guid.NewGuid();
 
-        // Retrieve the associated database.
-        var databaseQueryable = await _databasesRepository.GetAsync();
-
-        var database = await databaseQueryable.Where(x => x.Id == createDto.DatabaseId)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (database == null)
-        {
-            throw new ArgumentException("Database not found.");
-        }
+        var databaseForUserSpecification = new DatabaseForUserSpecification(createDto.DatabaseId, userId);
+        var databases = await _databasesRepository.GetBySpecificationAsync(databaseForUserSpecification, cancellationToken);
+        var database = databases.SingleOrDefault() ?? throw new ArgumentException("Database not found.");
 
         // Process the image.
-        var image = createDto.Image!.ToMat();
+        var image = createDto.Image.ToMat();
         image.LowResolution(320);
 
         var imageRequest = VisionSystemConfig.ImageRequestBuilder.Build(image);

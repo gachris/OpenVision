@@ -86,7 +86,7 @@ public class WebSocketController : ControllerBase
 
         var clientApiKey = HttpContext.User.Claims.First(claim => claim.Type.Equals(ApiKeyDefaults.X_API_KEY)).Value;
         var databasesQueryable = await _databasesRepository.GetAsync();
-        var database = await databasesQueryable.FirstOrDefaultAsync(database => database.ApiKeys.Any(apiKey => apiKey.Key == clientApiKey && apiKey.Type == ApiKeyType.Client));
+        var database = databasesQueryable.FirstOrDefault(database => database.ApiKeys.Any(apiKey => apiKey.Key == clientApiKey && apiKey.Type == ApiKeyType.Client));
 
         ArgumentNullException.ThrowIfNull(database, nameof(database));
 

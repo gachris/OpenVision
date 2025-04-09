@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.EntityFramework.DbContexts;
+using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Repositories;
 
@@ -8,10 +10,14 @@ namespace OpenVision.Server.Core.Repositories;
 /// A generic repository for common CRUD operations.
 /// </summary>
 /// <typeparam name="T">The entity type.</typeparam>
-public class GenericRepository<T> where T : class
+public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
+    #region Fields/Consts
+
     protected readonly ApplicationDbContext _applicationContext;
     protected readonly ILogger _logger;
+
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericRepository{T}"/> class using the provided application database context.
@@ -35,19 +41,22 @@ public class GenericRepository<T> where T : class
         _logger = logger;
     }
 
+    #region Methods
+
     /// <summary>
-    /// Retrieves all entities of type <typeparamref name="T"/> as an <see cref="IQueryable{T}"/>.
+    /// Retrieves all entities of type <typeparamref name="T"/> as an <see cref="IEnumerable{T}"/>.
     /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>
-    /// A task representing the asynchronous operation, containing an <see cref="IQueryable{T}"/> of entities.
+    /// A task representing the asynchronous operation, containing an <see cref="IEnumerable{T}"/> of entities.
     /// </returns>
-    public virtual async Task<IQueryable<T>> GetAsync()
+    public virtual async Task<IEnumerable<T>> GetAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             _logger.LogInformation("Retrieving all entities of type {EntityType}.", typeof(T).Name);
             var entities = _applicationContext.Set<T>().AsQueryable();
-            return await Task.FromResult(entities);
+            return await entities.ToListAsync(cancellationToken);
         }
         catch (Exception ex)
         {
@@ -130,4 +139,61 @@ public class GenericRepository<T> where T : class
             throw;
         }
     }
+
+    /// <summary>
+    /// Retrieves entities of type <typeparamref name="T"/> from the database that satisfy the provided specification.
+    /// </summary>
+    /// <param name="specification">An instance of <see cref="ISpecification{T}"/> defining the filtering criteria for the query.</param>
+    /// <returns>
+    /// A task representing the asynchronous operation that returns an enumerable collection of entities matching the specification.
+    /// </returns>
+    public IQueryable<T> GetQueryableBySpecification(ISpecification<T> specification)
+    {
+        try
+        {
+            _logger.LogInformation("Retrieving entities of type {EntityType} by specification.", typeof(T).Name);
+
+            var query = _applicationContext.Set<T>().AsQueryable();
+            query = specification.Apply(query);
+
+            _logger.LogInformation("Retrieved {ResultCount} entities of type {EntityType} by specification.", query.Count(), typeof(T).Name);
+
+            return query;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving entities of type {EntityType} by specification.", typeof(T).Name);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Retrieves entities of type <typeparamref name="T"/> from the database that satisfy the provided specification.
+    /// </summary>
+    /// <param name="specification">An instance of <see cref="ISpecification{T}"/> defining the filtering criteria for the query.</param>
+    /// <returns>
+    /// A task representing the asynchronous operation that returns an enumerable collection of entities matching the specification.
+    /// </returns>
+    public async Task<IEnumerable<T>> GetBySpecificationAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _logger.LogInformation("Retrieving entities of type {EntityType} by specification.", typeof(T).Name);
+
+            var query = _applicationContext.Set<T>().AsQueryable();
+            query = specification.Apply(query);
+
+            var results = await query.ToListAsync(cancellationToken: cancellationToken);
+            _logger.LogInformation("Retrieved {ResultCount} entities of type {EntityType} by specification.", results.Count, typeof(T).Name);
+
+            return results;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving entities of type {EntityType} by specification.", typeof(T).Name);
+            throw;
+        }
+    }
+
+    #endregion
 }
