@@ -3,7 +3,7 @@
 namespace OpenVision.Server.Core.Dtos;
 
 /// <summary>
-/// Represents a data transfer object for a api key.
+/// Represents a data transfer object for a API key.
 /// </summary>
 public class ApiKeyDto
 {
@@ -11,6 +11,11 @@ public class ApiKeyDto
     /// Gets or sets the unique identifier of the API key.
     /// </summary>
     public required virtual Guid Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the database that the API key belongs to.
+    /// </summary>
+    public required virtual Guid DatabaseId { get; set; }
 
     /// <summary>
     /// Gets or sets the API key string.
@@ -31,4 +36,9 @@ public class ApiKeyDto
     /// Gets or sets the date and time that the API key was created.
     /// </summary>
     public required virtual DateTimeOffset Created { get; set; }
+
+    /// <summary>
+    /// Gets or sets the database to which the API key belongs.
+    /// </summary>
+    public virtual DatabaseDto? Database { get; set; }
 }

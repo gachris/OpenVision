@@ -85,5 +85,5 @@ public class TargetDto
     /// <summary>
     /// Gets or sets the database to which the image target belongs.
     /// </summary>
-    public required virtual DatabaseDto Database { get; set; }
+    public virtual DatabaseDto? Database { get; set; }
 }

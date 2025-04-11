@@ -17,95 +17,41 @@ internal class MappingProfile : Profile
     /// </summary>
     public MappingProfile()
     {
-        CreateMap<ApiKey, ApiKeyResponse>();
-        CreateMap<ApiKeyResponse, ApiKey>();
-
-        CreateMap<Database, DatabaseResponse>()
-            .ForCtorParam("targets", opt => opt.MapFrom(src => src.ImageTargets));
-
-        CreateMap<DatabaseResponse, Database>()
-            .ForMember(dest => dest.ImageTargets, opt => opt.MapFrom(src => src.Targets));
-
-        CreateMap<ImageTarget, TargetResponse>()
-            .ForCtorParam("xUnits", opt => opt.MapFrom(src => src.Width))
-            .ForCtorParam("yUnits", opt => opt.MapFrom(src => src.Height));
-
-        CreateMap<TargetResponse, ImageTarget>()
-            .ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.XUnits))
-            .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.YUnits));
-
-        CreateMap<ApiKey, ApiKeyDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.Key))
-            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
-            .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
-            .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated));
-
+        // EF to DTO
         CreateMap<Database, DatabaseDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
-            .ForMember(dest => dest.ApiKeys, opt => opt.MapFrom(src => src.ApiKeys))
-            .ForMember(dest => dest.Targets, opt => opt.MapFrom(src => src.ImageTargets))
-            .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
-            .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated));
+            .ForMember(dest => dest.Targets, opt => opt.MapFrom(src => src.ImageTargets));
+
+        CreateMap<ApiKey, ApiKeyDto>();
 
         CreateMap<ImageTarget, TargetDto>()
-           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-           .ForMember(dest => dest.DatabaseId, opt => opt.MapFrom(src => src.DatabaseId))
-           .ForMember(dest => dest.PreprocessImage, opt => opt.MapFrom(src => src.PreprocessImage))
-           .ForMember(dest => dest.AfterProcessImage, opt => opt.MapFrom(src => src.AfterProcessImage))
-           .ForMember(dest => dest.AfterProcessImageWithKeypoints, opt => opt.MapFrom(src => src.AfterProcessImageWithKeypoints))
            .ForMember(dest => dest.XUnits, opt => opt.MapFrom(src => src.Width))
-           .ForMember(dest => dest.YUnits, opt => opt.MapFrom(src => src.Height))
-           .ForMember(dest => dest.Recos, opt => opt.MapFrom(src => src.Recos))
-           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating))
-           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-           .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
-           .ForMember(dest => dest.ActiveFlag, opt => opt.MapFrom(src => src.ActiveFlag))
-           .ForMember(dest => dest.Metadata, opt => opt.MapFrom(src => src.Metadata))
-           .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
-           .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated))
-           .ForMember(dest => dest.Database, opt => opt.MapFrom(src => src.Database));
+           .ForMember(dest => dest.YUnits, opt => opt.MapFrom(src => src.Height));
 
-        CreateMap<DatabaseDto, DatabaseResponse>()
-                 .ReverseMap();
+        CreateMap<ImageTarget, TargetRecordDto>()
+            .ForMember(dest => dest.TargetId, opt => opt.MapFrom(src => src.Id.ToString()))
+            .ForMember(dest => dest.TrackingRating, opt => opt.MapFrom(src => src.Rating));
 
-        CreateMap<ApiKeyDto, ApiKeyResponse>()
-                 .ReverseMap();
+        // REST API request to DTO
+        CreateMap<PostDatabaseRequest, CreateDatabaseDto>();
+        CreateMap<UpdateDatabaseRequest, UpdateDatabaseDto>();
+        CreateMap<PostTargetRequest, CreateTargetDto>();
+        CreateMap<UpdateTargetRequest, UpdateTargetDto>();
 
-        CreateMap<TargetDto, TargetResponse>()
-                 .ReverseMap();
+        // DTO REST API response
+        CreateMap<DatabaseDto, DatabaseResponse>();
+        CreateMap<ApiKeyDto, ApiKeyResponse>();
+        CreateMap<TargetDto, TargetResponse>();
 
-        CreateMap<TargetRecordModel, ImageTarget>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.TargetId)))
-            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.TrackingRating))
-            .ReverseMap()
-            .ForCtorParam("targetId", opt => opt.MapFrom(src => src.Id.ToString()))
-            .ForCtorParam("trackingRating", opt => opt.MapFrom(src => src.Rating));
+        // SERVER API-KEY REST API request to DTO
+        CreateMap<PostTrackableRequest, PostTrackableDto>();
+        CreateMap<UpdateTrackableRequest, UpdateTrackableDto>();
 
-        CreateMap<CreateDatabaseDto, PostDatabaseRequest>()
-                 .ReverseMap();
+        // DTO to SERVER API-KEY REST API response
+        CreateMap<TargetRecordDto, TargetRecordModel>();
 
-        CreateMap<UpdateDatabaseDto, UpdateDatabaseRequest>()
-                 .ReverseMap();
-
-        CreateMap<CreateTargetDto, PostTargetRequest>()
-                 .ReverseMap();
-
-        CreateMap<UpdateTargetRequest, UpdateTargetDto>()
-            .ReverseMap();
-
-        CreateMap<DownloadFileResult, DatabaseFileDto>()
-            .ReverseMap();
-
-        CreateMap<PostTrackableRequest, PostTrackableDto>()
-            .ReverseMap();
-
-        CreateMap<UpdateTrackableRequest, UpdateTrackableDto>()
-            .ReverseMap();
-
-        CreateMap<TargetRecordModel, TargetRecordDto>()
-            .ReverseMap();
+        // DTO to GraphQL response
+        CreateMap<DatabaseDto, GraphQL.Types.Database>();
+        CreateMap<ApiKeyDto, GraphQL.Types.ApiKey>();
+        CreateMap<TargetDto, GraphQL.Types.Target>();
     }
 }

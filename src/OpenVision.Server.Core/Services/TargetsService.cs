@@ -35,42 +35,42 @@ public class TargetsService : ITargetsService
     #region Methods
 
     /// <inheritdoc/>
-    public async Task<IQueryable<TargetDto>> GetQueryableAsync(CancellationToken cancellationToken)
+    public async Task<IQueryable<TargetDto>> GetQueryableAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching GetQueryableTargetQuery");
         return await _mediator.Send(new GetQueryableTargetQuery(), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<TargetDto>> GetAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<TargetDto>> GetAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching GetTargetsQuery");
         return await _mediator.Send(new GetTargetsQuery(), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<TargetDto?> GetAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<TargetDto?> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching GetTargetByIdQuery for target {TargetId}", id);
         return await _mediator.Send(new GetTargetByIdQuery(id), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<TargetDto> CreateAsync(CreateTargetDto createTargetDto, CancellationToken cancellationToken)
+    public async Task<TargetDto> CreateAsync(CreateTargetDto createTargetDto, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching CreateTargetCommand");
         return await _mediator.Send(new CreateTargetCommand(createTargetDto), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<TargetDto> UpdateAsync(Guid id, UpdateTargetDto updateTargetDto, CancellationToken cancellationToken)
+    public async Task<TargetDto> UpdateAsync(Guid id, UpdateTargetDto updateTargetDto, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching UpdateTargetCommand for target {TargetId}", id);
         return await _mediator.Send(new UpdateTargetCommand(id, updateTargetDto), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching DeleteTargetCommand for target {TargetId}", id);
         return await _mediator.Send(new DeleteTargetCommand(id), cancellationToken);

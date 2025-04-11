@@ -69,6 +69,7 @@ public static class Extensions
         var requestExecutorBuilder = services.AddGraphQLServer();
         requestExecutorBuilder.AddAuthorization();
         requestExecutorBuilder.InitializeOnStartup();
+        requestExecutorBuilder.AddProjections();
         requestExecutorBuilder.AddFiltering();
         requestExecutorBuilder.AddSorting();
         requestExecutorBuilder.AddQueryType<Query>();

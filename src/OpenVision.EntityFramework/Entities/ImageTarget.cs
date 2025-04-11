@@ -20,7 +20,7 @@ public partial class ImageTarget
     /// <summary>
     /// Gets or sets the name of the image target.
     /// </summary>
-    public virtual required string Name { get; set; }
+    public virtual required string Name { get; set; } 
 
     /// <summary>
     /// Gets or sets the preprocessed image data of the image target.
@@ -105,5 +105,5 @@ public partial class ImageTarget
     /// <summary>
     /// Gets or sets the database to which the image target belongs.
     /// </summary>
-    public virtual Database Database { get; set; } = null!;
+    public virtual Database? Database { get; set; }
 }

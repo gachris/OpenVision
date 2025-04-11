@@ -40,10 +40,10 @@ public partial class Database
     /// <summary>
     /// Gets or sets the collection of API keys associated with this database.
     /// </summary>
-    public virtual IList<ApiKey> ApiKeys { get; set; } = [];
+    public virtual ICollection<ApiKey> ApiKeys { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the collection of image targets associated with this database.
     /// </summary>
-    public virtual IList<ImageTarget> ImageTargets { get; set; } = [];
+    public virtual ICollection<ImageTarget> ImageTargets { get; set; } = [];
 }
