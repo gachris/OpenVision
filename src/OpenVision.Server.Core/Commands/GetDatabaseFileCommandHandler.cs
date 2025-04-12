@@ -5,7 +5,7 @@ using OpenVision.Core.Dataset;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
 using OpenVision.Server.Core.Repositories.Specifications;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 using Path = System.IO.Path;
 
 namespace OpenVision.Server.Core.Commands;
@@ -52,7 +52,9 @@ public class GetDatabaseFileCommandHandler : IRequestHandler<GetDatabaseFileComm
     /// <returns>A <see cref="DatabaseFileDto"/> containing the filename, file contents, and content type.</returns>
     public async Task<DatabaseFileDto> Handle(GetDatabaseFileCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         _logger.LogInformation("User {UserId} requested download for database {DatabaseId}", userId, request.DatabaseId);
 
         var databaseForUserSpecification = new DatabaseForUserSpecification(request.DatabaseId, userId)

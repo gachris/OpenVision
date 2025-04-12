@@ -57,7 +57,9 @@ public class GetQueryableDatabaseQueryHandler : IRequestHandler<GetQueryableData
     /// </returns>
     public async Task<IQueryable<DatabaseDto>> Handle(GetQueryableDatabaseQuery request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         _logger.LogInformation("Retrieving databases for user with ID {UserId}", userId);
 
         var databaseForUserSpecification = new DatabaseForUserSpecification(userId);

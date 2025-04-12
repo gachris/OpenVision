@@ -15,6 +15,7 @@ using NWebsec.Core.Common.HttpHeaders.Configuration;
 using NWebsec.Core.Common.Middleware.Options;
 using OpenVision.Client.Core.Configuration;
 using OpenVision.Client.Core.Constants;
+using OpenVision.Client.Core.Contracts;
 using OpenVision.Client.Core.Helpers;
 using OpenVision.Client.Core.Localization;
 using OpenVision.Client.Core.Services;

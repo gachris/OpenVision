@@ -1,9 +1,11 @@
-﻿namespace OpenVision.Shared.Responses;
+﻿using OpenVision.Shared.Types;
+
+namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents the response returned by the API when retrieving a target record from the database.
 /// </summary>
-public class TrackableRetrieveResponse : ResponseMessage<TargetRecordModel>
+public record TrackableRetrieveResponse : ResponseMessage<TargetRecordModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TrackableRetrieveResponse"/> class with the specified target record, status, transaction ID, and status code.

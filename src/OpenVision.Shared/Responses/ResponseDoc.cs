@@ -1,17 +1,14 @@
-﻿using System.Text.Json.Serialization;
-
-namespace OpenVision.Shared.Responses;
+﻿namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents the response payload returned by the API.
 /// </summary>
 /// <typeparam name="TResult">The type of the response data.</typeparam>
-public class ResponseDoc<TResult>
+public record ResponseDoc<TResult>
 {
     /// <summary>
     /// Gets the actual response data.
     /// </summary>
-    [JsonPropertyName("result")]
     public virtual TResult Result { get; }
 
     /// <summary>

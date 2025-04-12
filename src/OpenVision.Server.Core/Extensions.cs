@@ -22,11 +22,12 @@ using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Filters;
 using OpenVision.Server.Core.GraphQL;
 using OpenVision.Server.Core.Helpers;
+using OpenVision.Server.Core.ImageRecognition;
 using OpenVision.Server.Core.Mappers;
 using OpenVision.Server.Core.Repositories;
 using OpenVision.Server.Core.Services;
-using OpenVision.Shared;
 using OpenVision.Shared.Responses;
+using OpenVision.Shared.Types;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -122,11 +123,13 @@ public static class Extensions
     public static IServiceCollection AddOpenVisionCoreServices(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        services.AddTransient<ITrackablesService, TrackablesService>();
         services.AddTransient<IDatabasesService, DatabasesService>();
         services.AddTransient<IFilesService, FilesService>();
         services.AddTransient<ITargetsService, TargetsService>();
         services.AddTransient<IApiKeyGeneratorService, ApiKeyGeneratorService>();
+        services.AddTransient<ITargetSpecificationFactory, TargetSpecificationFactory>();
+        services.AddTransient<IDatabaseSpecificationFactory, DatabaseSpecificationFactory>();
+        services.AddTransient<IImageRecognitionManager, ImageRecognitionManager>();
         return services;
     }
 
@@ -257,11 +260,22 @@ public static class Extensions
 
         var authenticationBuilder = services.AddAuthentication(options =>
         {
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = "SmartScheme";
+            options.DefaultAuthenticateScheme = "SmartScheme";
+            options.DefaultChallengeScheme = "SmartScheme";
+            options.DefaultSignInScheme = "SmartScheme";
+            options.DefaultForbidScheme = "SmartScheme";
+        })
+        .AddPolicyScheme("SmartScheme", "Selects between JWT and API Key", options =>
+        {
+            options.ForwardDefaultSelector = context =>
+            {
+                if (context.Request.Headers.ContainsKey(ApiKeyDefaults.X_API_KEY))
+                {
+                    return ApiKeyDefaults.AuthenticationScheme;
+                }
+                return JwtBearerDefaults.AuthenticationScheme;
+            };
         });
 
         return authenticationBuilder;
@@ -291,7 +305,7 @@ public static class Extensions
     public static AuthenticationBuilder AddApiKeyScheme(this AuthenticationBuilder authenticationBuilder)
     {
         ArgumentNullException.ThrowIfNull(authenticationBuilder);
-        authenticationBuilder.AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(ApiKeyDefaults.AuthenticationScheme, null);
+        authenticationBuilder.AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(ApiKeyDefaults.AuthenticationScheme, options => { });
         return authenticationBuilder;
     }
 

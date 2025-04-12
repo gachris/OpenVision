@@ -1,8 +1,10 @@
-﻿@{
+﻿@using OpenVision.Shared.Types
+
+@{
     ViewData["Title"] = @Localizer["Page_title"];
 }
 
-@model DatabasePagedResponse
+@model PagedResponse<IEnumerable<DatabaseResponse>>
 @inject IViewLocalizer Localizer
 
 <section>

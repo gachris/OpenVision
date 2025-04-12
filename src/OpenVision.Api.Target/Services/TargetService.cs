@@ -18,7 +18,7 @@ public class TargetService : BaseClientService
     /// </summary>
     public TargetService(Initializer initializer) : base(initializer)
     {
-        BaseUri = initializer.ServerUrl;
+        BaseUri = initializer.ServerBaseUri;
         TargetList = new TargetListResource(this);
     }
 

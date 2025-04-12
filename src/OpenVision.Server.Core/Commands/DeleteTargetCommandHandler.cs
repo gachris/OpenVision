@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
-using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -13,7 +12,7 @@ public class DeleteTargetCommandHandler : IRequestHandler<DeleteTargetCommand, b
     #region Fields/Consts
 
     private readonly IImageTargetsRepository _imageTargetsRepository;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ITargetSpecificationFactory _targetSpecificationFactory;
     private readonly ILogger<DeleteTargetCommandHandler> _logger;
 
     #endregion
@@ -22,15 +21,15 @@ public class DeleteTargetCommandHandler : IRequestHandler<DeleteTargetCommand, b
     /// Initializes a new instance of the <see cref="DeleteTargetCommandHandler"/> class.
     /// </summary>
     /// <param name="imageTargetsRepository">The repository for accessing targets.</param>
-    /// <param name="currentUserService">The service for obtaining the current user's identifier.</param>
+    /// <param name="targetSpecificationFactory">The factory used to create the appropriate target specification based on the current authentication context.</param>
     /// <param name="logger">The logger for recording informational and error messages.</param>
     public DeleteTargetCommandHandler(
         IImageTargetsRepository imageTargetsRepository,
-        ICurrentUserService currentUserService,
+        ITargetSpecificationFactory targetSpecificationFactory,
         ILogger<DeleteTargetCommandHandler> logger)
     {
         _imageTargetsRepository = imageTargetsRepository;
-        _currentUserService = currentUserService;
+        _targetSpecificationFactory = targetSpecificationFactory;
         _logger = logger;
     }
 
@@ -44,24 +43,18 @@ public class DeleteTargetCommandHandler : IRequestHandler<DeleteTargetCommand, b
     /// <returns>A boolean value indicating whether the deletion was successful.</returns>
     public async Task<bool> Handle(DeleteTargetCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
-        _logger.LogInformation("Deleting target {TargetId} for user {UserId}", request.TargetId, userId);
-
-        var imageTargetForUserSpecification = new ImageTargetForUserSpecification(request.TargetId, userId)
-        {
-            Includes = { target => target.Database }
-        };
+        var imageTargetForUserSpecification = _targetSpecificationFactory.GetImageTargetSpecification(request.TargetId);
         var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
         var imageTarget = imageTargets.SingleOrDefault();
 
         if (imageTarget is null)
         {
-            _logger.LogWarning("Target {TargetId} not found for user {UserId}", request.TargetId, userId);
+            _logger.LogWarning("Target {TargetId} not found", request.TargetId);
             return false;
         }
 
         var result = await _imageTargetsRepository.RemoveAsync(imageTarget, cancellationToken);
-        _logger.LogInformation("Deleted target {TargetId} for user {UserId}", request.TargetId, userId);
+        _logger.LogInformation("Deleted target {TargetId}", request.TargetId);
 
         return result;
     }

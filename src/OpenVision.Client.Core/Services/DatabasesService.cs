@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using OpenVision.Client.Core.Requests;
+using OpenVision.Client.Core.Contracts;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
 
@@ -52,10 +52,10 @@ public class DatabasesService : IDatabasesService
         _logger = logger;
     }
 
-    #region IDatabasesService Implementation
+    #region Methods
 
     /// <inheritdoc/>
-    public async Task<DatabasePagedResponse> GetAsync(DatabaseBrowserQuery query, CancellationToken cancellationToken = default)
+    public async Task<IPagedResponse<IEnumerable<DatabaseResponse>>> GetAsync(DatabaseBrowserQuery query, CancellationToken cancellationToken = default)
     {
         using var client = _cloudHttpClientService.GetClient();
 
@@ -70,19 +70,14 @@ public class DatabasesService : IDatabasesService
             new("size", query.Size.ToString())
         };
 
-        if (!string.IsNullOrEmpty(query.Description))
+        if (!string.IsNullOrEmpty(query.Name))
         {
-            queryParams.Add(new KeyValuePair<string, StringValues>("description", query.Description));
-        }
-
-        if (query.Created.HasValue)
-        {
-            queryParams.Add(new KeyValuePair<string, StringValues>("created", query.Created.Value.ToString("yyyy-MM-dd")));
+            queryParams.Add(new KeyValuePair<string, StringValues>("name", query.Name));
         }
 
         var requestUrl = QueryHelpers.AddQueryString(Route, queryParams);
         var response = await client.GetAsync(requestUrl, cancellationToken);
-        var result = await response.Content.ReadFromJsonAsync<DatabasePagedResponse>(JsonSerializerOptions, cancellationToken: cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<PagedResponse<IEnumerable<DatabaseResponse>>>(JsonSerializerOptions, cancellationToken: cancellationToken);
 
         return result ?? throw new ArgumentNullException(nameof(result));
     }

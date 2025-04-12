@@ -3,10 +3,10 @@
 /// <summary>
 /// Represents the data used to update a database, with each field being optional.
 /// </summary>
-public class UpdateDatabaseDto
+public record UpdateDatabaseDto
 {
     /// <summary>
-    /// Gets or sets the name for the database.
+    /// Gets the name for the database.
     /// </summary>
-    public virtual string? Name { get; set; }
+    public virtual string? Name { get; init; }
 }

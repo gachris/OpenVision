@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using OpenVision.Client.Core.Requests;
+using OpenVision.Client.Core.Contracts;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
 
@@ -56,7 +56,7 @@ public class TargetsService : ITargetsService
     #region ITargetsService Implementation
 
     /// <inheritdoc/>
-    public async Task<TargetPagedResponse> GetAsync(TargetBrowserQuery query, CancellationToken cancellationToken = default)
+    public async Task<IPagedResponse<IEnumerable<TargetResponse>>> GetAsync(TargetBrowserQuery query, CancellationToken cancellationToken = default)
     {
         using var client = _cloudHttpClientService.GetClient();
 
@@ -71,25 +71,15 @@ public class TargetsService : ITargetsService
             new KeyValuePair<string, StringValues>("size", query.Size.ToString())
         };
 
-        if (!string.IsNullOrEmpty(query.Name))
-        {
-            queryParams.Add(new KeyValuePair<string, StringValues>("description", query.Name));
-        }
-
-        if (query.Created.HasValue)
-        {
-            queryParams.Add(new KeyValuePair<string, StringValues>("created", query.Created.Value.ToString("yyyy-MM-dd")));
-        }
-
         if (query.DatabaseId.HasValue)
         {
-            queryParams.Add(new KeyValuePair<string, StringValues>("database_id", $"{query.DatabaseId}"));
+            queryParams.Add(new KeyValuePair<string, StringValues>("databaseId", $"{query.DatabaseId}"));
         }
 
         var requestUrl = QueryHelpers.AddQueryString(Route, queryParams);
 
         var response = await client.GetAsync(requestUrl, cancellationToken);
-        var result = await response.Content.ReadFromJsonAsync<TargetPagedResponse>(JsonSerializerOptions, cancellationToken: cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<PagedResponse<IEnumerable<TargetResponse>>>(JsonSerializerOptions, cancellationToken: cancellationToken);
 
         return result ?? throw new ArgumentNullException(nameof(result));
     }

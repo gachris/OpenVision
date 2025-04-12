@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using OpenVision.EntityFramework.Entities;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -59,12 +59,14 @@ public class CreateDatabaseCommandHandler : IRequestHandler<CreateDatabaseComman
     /// <returns>A <see cref="DatabaseDto"/> representing the newly created database.</returns>
     public async Task<DatabaseDto> Handle(CreateDatabaseCommand request, CancellationToken cancellationToken)
     {
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         var createDatabaseDto = request.CreateDatabaseDto;
         var databaseId = Guid.NewGuid();
         var clientApiKeyId = Guid.NewGuid();
         var serverApiKeyId = Guid.NewGuid();
 
-        var userId = _currentUserService.UserId;
         _logger.LogInformation("Creating database for user {UserId}", userId);
 
         var currentTime = DateTimeOffset.Now;

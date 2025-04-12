@@ -1,12 +1,12 @@
-﻿using OpenVision.Shared;
-using OpenVision.Shared.Responses;
+﻿using OpenVision.Shared.Responses;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Core.Reco.DataTypes.Responses;
 
 /// <summary>
 /// Represents the response message for a feature matching operation.
 /// </summary>
-public class FeatureMatchingResponse : ResponseMessage<IReadOnlyCollection<TargetMatchResponse>>
+public record FeatureMatchingResponse : ResponseMessage<IReadOnlyCollection<TargetMatchResponse>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FeatureMatchingResponse"/> class with the specified values.

@@ -1,11 +1,18 @@
-﻿@if (ViewBag.Notifications != null)
-{
-	var settings = new JsonSerializerSettings
-	{
-		TypeNameHandling = TypeNameHandling.All
-	};
+﻿@using System.Text.Json
+@using System.Text.Json.Serialization
 
-	var obj = JsonConvert.DeserializeObject<List<NotificationHelpers.Alert>>(ViewBag.Notifications, settings);
+@if (ViewBag.Notifications != null)
+{
+	var jsonSerializerOptions = new JsonSerializerOptions
+	{
+		PropertyNameCaseInsensitive = true,
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		Converters =
+		{
+			new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+		}
+	};
+	var obj = JsonSerializer.Deserialize<List<NotificationHelpers.Alert>>(ViewBag.Notifications, jsonSerializerOptions);
 
 	foreach (NotificationHelpers.Alert notification in obj)
 	{

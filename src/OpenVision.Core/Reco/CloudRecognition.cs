@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using OpenVision.Core.Reco.DataTypes.Requests;
 using OpenVision.Core.Reco.DataTypes.Responses;
-using OpenVision.Shared;
-using OpenVision.Shared.WebSockets;
+using OpenVision.Shared.Extensions;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Core.Reco;
 
@@ -108,7 +108,7 @@ public class CloudRecognition : ICloudRecognition
                               .GetResult();
 
         // Convert the byte array to a string
-        var receivedMessage = Encoding.ASCII.GetString(received.Buffer, 0, received.Count);
+        var receivedMessage = Encoding.UTF8.GetString(received.Buffer, 0, received.Count);
 
         var featureMatchingResponse = JsonSerializer.Deserialize<FeatureMatchingResponse>(receivedMessage, JsonSerializerOptions);
         ArgumentNullException.ThrowIfNull(featureMatchingResponse, nameof(featureMatchingResponse));

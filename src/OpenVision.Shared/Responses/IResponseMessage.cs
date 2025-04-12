@@ -1,4 +1,6 @@
-﻿namespace OpenVision.Shared.Responses;
+﻿using OpenVision.Shared.Types;
+
+namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents a response message returned by the API.

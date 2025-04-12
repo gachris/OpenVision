@@ -1,4 +1,5 @@
 ﻿using OpenVision.Client.Core.Configuration;
+using OpenVision.Client.Core.Contracts;
 
 namespace OpenVision.Client.Core.Services;
 
@@ -25,7 +26,7 @@ public class CloudHttpClientService : ICloudHttpClientService
         _appConfiguration = appConfiguration;
     }
 
-    #region ICloudHttpClientService Implementation
+    #region Methods
 
     /// <inheritdoc/>
     public HttpClient GetClient()

@@ -44,7 +44,9 @@ public class DeleteDatabaseCommandHandler : IRequestHandler<DeleteDatabaseComman
     /// <returns>A boolean value indicating whether the deletion was successful.</returns>
     public async Task<bool> Handle(DeleteDatabaseCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         _logger.LogInformation("Deleting database {DatabaseId} for user {UserId}", request.DatabaseId, userId);
 
         var databaseForUserSpecification = new DatabaseForUserSpecification(request.DatabaseId, userId)

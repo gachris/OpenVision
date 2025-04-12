@@ -1,5 +1,5 @@
 ﻿using OpenVision.EntityFramework.Entities;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Repositories.Specifications;
 

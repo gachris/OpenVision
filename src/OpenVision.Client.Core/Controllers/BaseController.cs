@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using OpenVision.Client.Core.Helpers;
 
 namespace OpenVision.Client.Core.Controllers;
@@ -65,20 +66,32 @@ public class BaseController : Controller
 
         var alerts = new List<NotificationHelpers.Alert>();
 
-        if (TempData.TryGetValue(NotificationHelpers.NotificationKey, out object? value))
+        var jsonSerializerOptions = new JsonSerializerOptions
         {
-            alerts = JsonConvert.DeserializeObject<List<NotificationHelpers.Alert>>(value?.ToString());
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters =
+            {
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+            }
+        };
+
+        if (TempData.TryGetValue(NotificationHelpers.NotificationKey, out var value))
+        {
+            var textValue = value?.ToString();
+
+            if (string.IsNullOrEmpty(textValue))
+            {
+                return;
+            }
+
+            alerts = JsonSerializer.Deserialize<List<NotificationHelpers.Alert>>(textValue, jsonSerializerOptions) ?? [];
             TempData.Remove(NotificationHelpers.NotificationKey);
         }
 
         alerts.Add(toast);
 
-        var settings = new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All
-        };
-
-        var alertJson = JsonConvert.SerializeObject(alerts, settings);
+        var alertJson = JsonSerializer.Serialize(alerts, jsonSerializerOptions);
 
         TempData.Add(NotificationHelpers.NotificationKey, alertJson);
     }
@@ -88,8 +101,12 @@ public class BaseController : Controller
     /// </summary>
     protected void GenerateNotifications()
     {
-        if (!TempData.ContainsKey(NotificationHelpers.NotificationKey)) return;
-        ViewBag.Notifications = TempData[NotificationHelpers.NotificationKey];
+        if (!TempData.TryGetValue(NotificationHelpers.NotificationKey, out object? value))
+        {
+            return;
+        }
+
+        ViewBag.Notifications = value;
         TempData.Remove(NotificationHelpers.NotificationKey);
     }
 

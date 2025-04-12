@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OpenVision.Server.Core.Requests;
-using OpenVision.Shared;
+using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Controllers;
 
@@ -64,7 +64,7 @@ public abstract class ApiControllerBase : ControllerBase
     /// <returns>A success response message with no result.</returns>
     protected static IResponseMessage Success()
     {
-        return new ResponseMessage(Guid.NewGuid(), Shared.StatusCode.Success, []);
+        return new ResponseMessage(Guid.NewGuid(), Shared.Types.StatusCode.Success, []);
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public abstract class ApiControllerBase : ControllerBase
     /// <returns>An error response message.</returns>
     protected static IResponseMessage Error(string message)
     {
-        return new ResponseMessage(Guid.NewGuid(), Shared.StatusCode.Success, [new(ResultCode.InternalServerError, message)]);
+        return new ResponseMessage(Guid.NewGuid(), Shared.Types.StatusCode.Success, [new(ResultCode.InternalServerError, message)]);
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public abstract class ApiControllerBase : ControllerBase
     /// <returns>A success response message with the specified result.</returns>
     protected static IResponseMessage<TResult> Success<TResult>(TResult result)
     {
-        return new ResponseMessage<TResult>(new ResponseDoc<TResult>(result), Guid.NewGuid(), Shared.StatusCode.Success, []);
+        return new ResponseMessage<TResult>(new ResponseDoc<TResult>(result), Guid.NewGuid(), Shared.Types.StatusCode.Success, []);
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public abstract class ApiControllerBase : ControllerBase
             previousPage,
             new(_mapper.Map<IEnumerable<TTarget>>(items)),
             Guid.NewGuid(),
-            Shared.StatusCode.Success,
+            Shared.Types.StatusCode.Success,
             []);
     }
 

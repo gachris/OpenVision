@@ -185,7 +185,7 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// <summary>
         /// Gets or sets server url.
         /// </summary>
-        public string ServerUrl { get; set; }
+        public string ServerBaseUri { get; set; }
 
         /// <summary>
         /// Constructs a new initializer with default values.

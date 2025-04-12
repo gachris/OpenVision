@@ -17,7 +17,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Duende.IdentityServer" />
-		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="NWebsec.AspNetCore.Core" />
 		<PackageReference Include="NWebsec.AspNetCore.Middleware" />
 	</ItemGroup>

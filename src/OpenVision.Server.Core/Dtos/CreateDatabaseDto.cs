@@ -1,19 +1,19 @@
-﻿using OpenVision.Shared;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Dtos;
 
 /// <summary>
 /// Represents the data required to create a new database.
 /// </summary>
-public class CreateDatabaseDto
+public record CreateDatabaseDto
 {
     /// <summary>
-    /// Gets or sets the name of the database.
+    /// Gets the name of the database.
     /// </summary>
-    public required virtual string Name { get; set; }
+    public required virtual string Name { get; init; }
 
     /// <summary>
-    /// Gets or sets the type of the database.
+    /// Gets the type of the database.
     /// </summary>
-    public required virtual DatabaseType Type { get; set; }
+    public required virtual DatabaseType Type { get; init; }
 }

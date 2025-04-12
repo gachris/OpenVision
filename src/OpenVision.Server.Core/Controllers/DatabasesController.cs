@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
-using OpenVision.Server.Core.Requests;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
 
@@ -56,6 +55,8 @@ public class DatabasesController : ApiControllerBase
             _logger.LogInformation("Received request to get databases list with query: {@Query}", query);
 
             var databaseDtosQueryable = await _databasesService.GetQueryableAsync(cancellationToken);
+            databaseDtosQueryable = databaseDtosQueryable.Where(x => string.IsNullOrEmpty(query.Name) || x.Name.Contains(query.Name));
+
             var pagedResponse = await GetPagedResponseAsync<DatabaseDto, DatabaseResponse>(databaseDtosQueryable, query, cancellationToken);
             _logger.LogInformation("Returning paged databases list with total records: {TotalRecords}", pagedResponse.TotalRecords);
             return new OkObjectResult(pagedResponse);

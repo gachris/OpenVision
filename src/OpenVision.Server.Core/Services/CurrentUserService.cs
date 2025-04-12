@@ -21,14 +21,10 @@ public class CurrentUserService : ICurrentUserService
     #region Properties
 
     /// <inheritdoc/>
-    public string UserId =>
-        _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? throw new ArgumentException("User identifier not found.");
+    public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
     /// <inheritdoc/>
-    public string ApiKey =>
-        _httpContextAccessor.HttpContext?.User?.FindFirst(ApiKeyDefaults.X_API_KEY)?.Value
-            ?? throw new ArgumentException("API key not provided.");
+    public string? ApiKey => _httpContextAccessor.HttpContext?.User?.FindFirst(ApiKeyDefaults.X_API_KEY)?.Value;
 
     #endregion
 

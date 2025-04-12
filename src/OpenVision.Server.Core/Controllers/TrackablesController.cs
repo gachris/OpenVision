@@ -20,22 +20,22 @@ public class TrackablesController : ApiControllerBase
 {
     #region Fields/Consts
 
-    private readonly ITrackablesService _trackablesService;
+    private readonly ITargetsService _targetsService;
 
     #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TrackablesController"/> class.
     /// </summary>
-    /// <param name="trackablesService">The trackables service instance.</param>
+    /// <param name="targetsService">The targets service instance.</param>
     /// <param name="mapper">The mapper instance.</param>
     /// <param name="logger">The logger instance.</param>
     public TrackablesController(
-        ITrackablesService trackablesService,
+        ITargetsService targetsService,
         IMapper mapper,
         ILogger<TrackablesController> logger) : base(mapper, logger)
     {
-        _trackablesService = trackablesService;
+        _targetsService = targetsService;
     }
 
     #region Methods
@@ -52,9 +52,9 @@ public class TrackablesController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to get trackables list");
-            var targetRecordDtos = await _trackablesService.GetAsync(cancellationToken);
+            var targetRecordDtos = await _targetsService.GetAsync(cancellationToken);
             _logger.LogInformation("Returning trackables list with total records: {TotalRecords}", targetRecordDtos.Count());
-            return new OkObjectResult(new GetAllTrackablesResponse(new(_mapper.Map<List<TargetRecordModel>>(targetRecordDtos)), Guid.NewGuid(), Shared.StatusCode.Success, []));
+            return new OkObjectResult(new GetAllTrackablesResponse(new(_mapper.Map<List<TargetRecordModel>>(targetRecordDtos)), Guid.NewGuid(), Shared.Types.StatusCode.Success, []));
         });
     }
 
@@ -71,9 +71,9 @@ public class TrackablesController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to get trackable with id: {Id}", id);
-            var targetRecordDto = await _trackablesService.GetAsync(id, cancellationToken);
+            var targetRecordDto = await _targetsService.GetAsync(id, cancellationToken);
             _logger.LogInformation("Returning trackable details for id: {Id}", id);
-            return new OkObjectResult(new TrackableRetrieveResponse(new(_mapper.Map<TargetRecordModel>(targetRecordDto)), Guid.NewGuid(), Shared.StatusCode.Success, []));
+            return new OkObjectResult(new TrackableRetrieveResponse(new(_mapper.Map<TargetRecordModel>(targetRecordDto)), Guid.NewGuid(), Shared.Types.StatusCode.Success, []));
         });
     }
 
@@ -90,15 +90,15 @@ public class TrackablesController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to create a new trackable with name: {Name}", body.Name);
-            var postTrackableDto = _mapper.Map<PostTrackableDto>(body);
-            var targetRecordDto = await _trackablesService.CreateAsync(postTrackableDto, cancellationToken);
+            var postTrackableDto = _mapper.Map<CreateTargetDto>(body);
+            var targetRecordDto = await _targetsService.CreateAsync(postTrackableDto, cancellationToken);
 
-            var url = Url.Action("Get", new { id = targetRecordDto.TargetId });
+            var url = Url.Action("Get", new { id = targetRecordDto.Id });
             ArgumentException.ThrowIfNullOrEmpty(url, nameof(url));
 
-            _logger.LogInformation("Trackable created with id: {TargetId}. Location: {Url}", targetRecordDto.TargetId, url);
+            _logger.LogInformation("Trackable created with id: {TargetId}. Location: {Url}", targetRecordDto.Id, url);
             var locationUri = new Uri(url, UriKind.Relative);
-            return new CreatedResult(locationUri, new PostTrackableResponse(new ResponseDoc<string>(targetRecordDto.TargetId), Guid.NewGuid(), Shared.StatusCode.Success, []));
+            return new CreatedResult(locationUri, new PostTrackableResponse(new ResponseDoc<string>(targetRecordDto.Id.ToString()), Guid.NewGuid(), Shared.Types.StatusCode.Success, []));
         });
     }
 
@@ -116,7 +116,7 @@ public class TrackablesController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to update trackable with id: {Id}", id);
-            var targetRecordDto = await _trackablesService.UpdateAsync(id, _mapper.Map<UpdateTrackableDto>(body), cancellationToken);
+            var targetRecordDto = await _targetsService.UpdateAsync(id, _mapper.Map<UpdateTargetDto>(body), cancellationToken);
             _logger.LogInformation("Trackable with id: {Id} updated successfully.", id);
             return new OkObjectResult(Success());
         });
@@ -135,7 +135,7 @@ public class TrackablesController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to delete trackable with id: {Id}", id);
-            var deleted = await _trackablesService.DeleteAsync(id, cancellationToken);
+            var deleted = await _targetsService.DeleteAsync(id, cancellationToken);
             _logger.LogInformation("Trackable with id: {Id} deleted successfully.", id);
             return new OkObjectResult(Success());
         });

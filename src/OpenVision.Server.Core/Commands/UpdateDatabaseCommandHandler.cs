@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
@@ -51,7 +50,9 @@ public class UpdateDatabaseCommandHandler : IRequestHandler<UpdateDatabaseComman
     /// <returns>A <see cref="DatabaseDto"/> representing the updated database.</returns>
     public async Task<DatabaseDto> Handle(UpdateDatabaseCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         _logger.LogInformation("Editing database {DatabaseId} for user {UserId}", request.DatabaseId, userId);
 
         var databaseForUserSpecification = new DatabaseForUserSpecification(request.DatabaseId, userId);

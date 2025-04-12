@@ -1,9 +1,11 @@
-﻿namespace OpenVision.Shared.Responses;
+﻿using OpenVision.Shared.Types;
+
+namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents a response message indicating the successful deletion of a trackable.
 /// </summary>
-public class DeleteTrackableResponse : ResponseMessage
+public record DeleteTrackableResponse : ResponseMessage
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteTrackableResponse"/> class with the specified transaction ID and status code.

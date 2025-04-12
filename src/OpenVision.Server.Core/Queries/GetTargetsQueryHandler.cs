@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
-using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Queries;
 
@@ -15,7 +14,7 @@ public class GetTargetsQueryHandler : IRequestHandler<GetTargetsQuery, IEnumerab
     #region Fields/Consts
 
     private readonly IImageTargetsRepository _imageTargetsRepository;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ITargetSpecificationFactory _targetSpecificationFactory;
     private readonly IMapper _mapper;
     private readonly ILogger<GetTargetsQueryHandler> _logger;
 
@@ -25,17 +24,17 @@ public class GetTargetsQueryHandler : IRequestHandler<GetTargetsQuery, IEnumerab
     /// Initializes a new instance of the <see cref="GetTargetsQueryHandler"/> class.
     /// </summary>
     /// <param name="imageTargetsRepository">The repository for accessing image targets.</param>
-    /// <param name="currentUserService">The current user service to obtain the current user's identifier.</param>
+    /// <param name="targetSpecificationFactory">The factory used to create the appropriate target specification based on the current authentication context.</param>
     /// <param name="mapper">The AutoMapper instance used for mapping entities to DTOs.</param>
     /// <param name="logger">The logger for logging informational messages and errors.</param>
     public GetTargetsQueryHandler(
         IImageTargetsRepository imageTargetsRepository,
-        ICurrentUserService currentUserService,
+        ITargetSpecificationFactory targetSpecificationFactory,
         IMapper mapper,
         ILogger<GetTargetsQueryHandler> logger)
     {
         _imageTargetsRepository = imageTargetsRepository;
-        _currentUserService = currentUserService;
+        _targetSpecificationFactory = targetSpecificationFactory;
         _mapper = mapper;
         _logger = logger;
     }
@@ -54,18 +53,11 @@ public class GetTargetsQueryHandler : IRequestHandler<GetTargetsQuery, IEnumerab
     /// </returns>
     public async Task<IEnumerable<TargetDto>> Handle(GetTargetsQuery request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
-
-        _logger.LogInformation("Getting targets for user {UserId}", userId);
-
-        var imageTargetForUserSpecification = new ImageTargetForUserSpecification(userId)
-        {
-            Includes = { target => target.Database }
-        };
+        var imageTargetForUserSpecification = _targetSpecificationFactory.GetImageTargetSpecification();
         var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
         var targetDtos = _mapper.Map<IEnumerable<TargetDto>>(imageTargets);
 
-        _logger.LogInformation("Retrieved {Count} targets for user {UserId}", targetDtos.Count(), userId);
+        _logger.LogInformation("Retrieved {Count} targets", targetDtos.Count());
 
         return targetDtos;
     }

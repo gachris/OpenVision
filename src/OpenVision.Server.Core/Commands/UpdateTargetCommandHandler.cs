@@ -7,7 +7,6 @@ using OpenVision.Core.Utils;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
 using OpenVision.Server.Core.Helpers;
-using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -19,7 +18,7 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
     #region Fields/Consts
 
     private readonly IImageTargetsRepository _imageTargetsRepository;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ITargetSpecificationFactory _targetSpecificationFactory;
     private readonly IMapper _mapper;
     private readonly ILogger<UpdateTargetCommandHandler> _logger;
 
@@ -29,17 +28,17 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
     /// Initializes a new instance of the <see cref="UpdateTargetCommandHandler"/> class.
     /// </summary>
     /// <param name="imageTargetsRepository">The repository for accessing image targets.</param>
-    /// <param name="currentUserService">The service for obtaining the current user's identifier.</param>
+    /// <param name="targetSpecificationFactory">The factory used to create the appropriate target specification based on the current authentication context.</param>
     /// <param name="mapper">The AutoMapper instance used for mapping entities to DTOs.</param>
     /// <param name="logger">The logger for logging informational and error messages.</param>
     public UpdateTargetCommandHandler(
         IImageTargetsRepository imageTargetsRepository,
-        ICurrentUserService currentUserService,
+        ITargetSpecificationFactory targetSpecificationFactory,
         IMapper mapper,
         ILogger<UpdateTargetCommandHandler> logger)
     {
         _imageTargetsRepository = imageTargetsRepository;
-        _currentUserService = currentUserService;
+        _targetSpecificationFactory = targetSpecificationFactory;
         _mapper = mapper;
         _logger = logger;
     }
@@ -54,13 +53,7 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
     /// <returns>A <see cref="TargetDto"/> representing the updated target.</returns>
     public async Task<TargetDto> Handle(UpdateTargetCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
-        _logger.LogInformation("Updating target {TargetId} for user {UserId}", request.TargetId, userId);
-
-        var imageTargetForUserSpecification = new ImageTargetForUserSpecification(request.TargetId, userId)
-        {
-            Includes = { target => target.Database }
-        };
+        var imageTargetForUserSpecification = _targetSpecificationFactory.GetImageTargetSpecification(request.TargetId);
         var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
         var imageTarget = imageTargets.SingleOrDefault();
 
@@ -115,7 +108,7 @@ public class UpdateTargetCommandHandler : IRequestHandler<UpdateTargetCommand, T
         // Persist changes.
         await _imageTargetsRepository.UpdateAsync(imageTarget, cancellationToken);
 
-        _logger.LogInformation("Updated target {TargetId} for user {UserId}", request.TargetId, userId);
+        _logger.LogInformation("Updated target {TargetId}", request.TargetId);
 
         // Map the updated entity to a DTO and return.
         return _mapper.Map<TargetDto>(imageTarget);

@@ -1,4 +1,4 @@
-﻿using OpenVision.Shared;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.GraphQL.Types;
 
@@ -9,44 +9,44 @@ namespace OpenVision.Server.Core.GraphQL.Types;
 public record Database
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the database.
+    /// Gets the unique identifier of the database.
     /// </summary>
     [ID]
     [GraphQLDescription("The unique identifier of the database.")]
     public required virtual Guid Id { get; init; }
 
     /// <summary>
-    /// Gets or sets the name of the database.
+    /// Gets the name of the database.
     /// </summary>
     [GraphQLDescription("The name of the database.")]
     public required virtual string Name { get; init; }
 
     /// <summary>
-    /// Gets or sets the type of the database (device or cloud).
+    /// Gets the type of the database (device or cloud).
     /// </summary>
     [GraphQLDescription("The type of the database (device or cloud).")]
     public required virtual DatabaseType Type { get; init; }
 
     /// <summary>
-    /// Gets or sets the date and time that the database was created.
+    /// Gets the date and time that the database was created.
     /// </summary>
     [GraphQLDescription("The date and time when the database was created.")]
     public required virtual DateTimeOffset Created { get; init; }
 
     /// <summary>
-    /// Gets or sets the date and time that the database was last updated.
+    /// Gets the date and time that the database was last updated.
     /// </summary>
     [GraphQLDescription("The date and time when the database was last updated.")]
     public required virtual DateTimeOffset Updated { get; init; }
 
     /// <summary>
-    /// Gets or sets the collection of API keys associated with the database.
+    /// Gets the collection of API keys associated with the database.
     /// </summary>
     [GraphQLDescription("The collection of API keys associated with the database.")]
     public required virtual ICollection<ApiKey> ApiKeys { get; init; }
 
     /// <summary>
-    /// Gets or sets the collection of targets associated with the database.
+    /// Gets the collection of targets associated with the database.
     /// </summary>
     [GraphQLDescription("The collection of targets associated with the database.")]
     public required virtual ICollection<Target> Targets { get; init; }

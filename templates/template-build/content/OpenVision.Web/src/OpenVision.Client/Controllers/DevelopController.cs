@@ -1,13 +1,12 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenVision.Client.Core.Contracts;
 using OpenVision.Client.Core.Controllers;
-using OpenVision.Client.Core.Requests;
-using OpenVision.Client.Core.Services;
 using OpenVision.Client.Core.ViewModels;
-using OpenVision.Shared;
 using OpenVision.Shared.Requests;
-using ResponseStatusCode = OpenVision.Shared.StatusCode;
+using OpenVision.Shared.Types;
+using ResponseStatusCode = OpenVision.Shared.Types.StatusCode;
 
 namespace OpenVision.Client.Controllers;
 
@@ -57,7 +56,7 @@ public class DevelopController : BaseController
     {
         ViewBag.Search = search;
 
-        var databaseBrowserQuery = new DatabaseBrowserQuery() { Page = page ?? 1, Size = 9, Description = search };
+        var databaseBrowserQuery = new DatabaseBrowserQuery() { Page = page ?? 1, Size = 9, Name = search };
         var responseMessage = await _databasesService.GetAsync(databaseBrowserQuery);
 
         if (responseMessage.StatusCode == ResponseStatusCode.Success)
@@ -101,8 +100,8 @@ public class DevelopController : BaseController
     {
         var postDatabaseRequest = new PostDatabaseRequest()
         {
-            Name = viewModel.Name,
-            Type = viewModel.Type
+            Name = viewModel.Name!,
+            Type = viewModel.Type!.Value
         };
 
         var responseMessage = await _databasesService.CreateAsync(postDatabaseRequest);
@@ -149,15 +148,15 @@ public class DevelopController : BaseController
     [HttpGet]
     public async Task<IActionResult> DownloadDatabase(Guid id)
     {
-        var responseMessage = await _filesService.DownloadAsync(id);
+        var databaseFileDto = await _filesService.DownloadAsync(id);
 
-        if (responseMessage.StatusCode == ResponseStatusCode.Failed)
+        if (databaseFileDto is null)
         {
-            ErrorNotification($"An error occurred: {responseMessage.Errors.First().Message}", "Error");
+            ErrorNotification($"An error occurred while downloading file.", "Error");
             return RedirectToAction(nameof(Target), new { id });
         }
 
-        return File(responseMessage.Response.Result.FileContents, responseMessage.Response.Result.ContentType, responseMessage.Response.Result.Filename);
+        return File(databaseFileDto.FileContents, databaseFileDto.ContentType, databaseFileDto.Filename);
     }
 
     /// <summary>
@@ -229,15 +228,7 @@ public class DevelopController : BaseController
         using var ms = new MemoryStream();
         imageFile.CopyTo(ms);
 
-        var postTargetRequest = new PostTargetRequest()
-        {
-            Name = viewModel.Name,
-            Type = viewModel.Type,
-            Image = ms.ToArray(),
-            DatabaseId = databaseId,
-            Width = viewModel.Width,
-            ActiveFlag = ActiveFlag.True,
-        };
+        string? metadata = null;
 
         if (viewModel.Metadata is not null)
         {
@@ -249,8 +240,19 @@ public class DevelopController : BaseController
                 return RedirectToAction(nameof(Database), new { id = databaseId });
             }
 
-            postTargetRequest.Metadata = await streamReader.ReadToEndAsync();
+            metadata = await streamReader.ReadToEndAsync();
         }
+
+        var postTargetRequest = new PostTargetRequest()
+        {
+            Name = viewModel.Name!,
+            Type = viewModel.Type!.Value,
+            Image = ms.ToArray(),
+            DatabaseId = databaseId,
+            Width = viewModel.Width!.Value,
+            ActiveFlag = ActiveFlag.True,
+            Metadata = metadata
+        };
 
         var responseMessage = await _targetsService.CreateAsync(postTargetRequest);
 

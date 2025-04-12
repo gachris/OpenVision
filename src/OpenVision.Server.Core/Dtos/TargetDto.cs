@@ -1,89 +1,89 @@
-﻿using OpenVision.Shared;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Dtos;
 
 /// <summary>
 /// Represents a data transfer object for a target.
 /// </summary>
-public class TargetDto
+public record TargetDto
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the target.
+    /// Gets the unique identifier of the target.
     /// </summary>
-    public required virtual Guid Id { get; set; }
+    public required virtual Guid Id { get; init; }
 
     /// <summary>
-    /// Gets or sets the unique identifier of the database that the target belongs to.
+    /// Gets the unique identifier of the database that the target belongs to.
     /// </summary>
-    public required virtual Guid DatabaseId { get; set; }
+    public required virtual Guid DatabaseId { get; init; }
 
     /// <summary>
-    /// Gets or sets the preprocessed image of the target.
+    /// Gets the preprocessed image of the target.
     /// </summary>
-    public required virtual byte[] PreprocessImage { get; set; }
+    public required virtual byte[] PreprocessImage { get; init; }
 
     /// <summary>
-    /// Gets or sets the image of the target after it has been processed.
+    /// Gets the image of the target after it has been processed.
     /// </summary>
-    public required virtual byte[] AfterProcessImage { get; set; }
+    public required virtual byte[] AfterProcessImage { get; init; }
 
     /// <summary>
-    /// Gets or sets the image of the target after it has been processed with keypoints.
+    /// Gets the image of the target after it has been processed with keypoints.
     /// </summary>
-    public required virtual byte[] AfterProcessImageWithKeypoints { get; set; }
+    public required virtual byte[] AfterProcessImageWithKeypoints { get; init; }
 
     /// <summary>
-    /// Gets or sets the units in the x direction.
+    /// Gets the units in the x direction.
     /// </summary>
-    public required virtual float XUnits { get; set; }
+    public required virtual float XUnits { get; init; }
 
     /// <summary>
-    /// Gets or sets the units in the y direction.
+    /// Gets the units in the y direction.
     /// </summary>
-    public required virtual float YUnits { get; set; }
+    public required virtual float YUnits { get; init; }
 
     /// <summary>
-    /// Gets or sets the number of recognitions.
+    /// Gets the number of recognitions.
     /// </summary>
-    public required virtual int Recos { get; set; }
+    public required virtual int Recos { get; init; }
 
     /// <summary>
-    /// Gets or sets the rating of the target.
+    /// Gets the rating of the target.
     /// </summary>
-    public required virtual int Rating { get; set; }
+    public required virtual int Rating { get; init; }
 
     /// <summary>
-    /// Gets or sets the name of the target.
+    /// Gets the name of the target.
     /// </summary>
-    public required virtual string Name { get; set; }
+    public required virtual string Name { get; init; }
 
     /// <summary>
-    /// Gets or sets the type of the target.
+    /// Gets the type of the target.
     /// </summary>
-    public required virtual TargetType Type { get; set; }
+    public required virtual TargetType Type { get; init; }
 
     /// <summary>
-    /// Gets or sets the active flag of the target.
+    /// Gets the active flag of the target.
     /// </summary>
-    public required virtual ActiveFlag ActiveFlag { get; set; }
+    public required virtual ActiveFlag ActiveFlag { get; init; }
 
     /// <summary>
-    /// Gets or sets the metadata of the target.
+    /// Gets the metadata of the target.
     /// </summary>
-    public virtual string? Metadata { get; set; }
+    public virtual string? Metadata { get; init; }
 
     /// <summary>
-    /// Gets or sets the creation date of the target object.
+    /// Gets the creation date of the target object.
     /// </summary>
-    public required virtual DateTimeOffset Created { get; set; }
+    public required virtual DateTimeOffset Created { get; init; }
 
     /// <summary>
-    /// Gets or sets the last update date of the target object.
+    /// Gets the last update date of the target object.
     /// </summary>
-    public required virtual DateTimeOffset Updated { get; set; }
+    public required virtual DateTimeOffset Updated { get; init; }
 
     /// <summary>
-    /// Gets or sets the database to which the image target belongs.
+    /// Gets the database to which the image target belongs.
     /// </summary>
-    public virtual DatabaseDto? Database { get; set; }
+    public virtual DatabaseDto? Database { get; init; }
 }

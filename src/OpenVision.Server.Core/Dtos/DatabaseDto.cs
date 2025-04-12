@@ -1,44 +1,44 @@
-﻿using OpenVision.Shared;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Dtos;
 
 /// <summary>
 /// Represents a data transfer object for a database.
 /// </summary>
-public class DatabaseDto
+public record DatabaseDto
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the database.
+    /// Gets the unique identifier of the database.
     /// </summary>
-    public required virtual Guid Id { get; set; }
+    public required virtual Guid Id { get; init; }
     
     /// <summary>
-    /// Gets or sets the name of the database.
+    /// Gets the name of the database.
     /// </summary>
-    public required virtual string Name { get; set; }
+    public required virtual string Name { get; init; }
 
     /// <summary>
-    /// Gets or sets the type of the database (device or cloud).
+    /// Gets the type of the database (device or cloud).
     /// </summary>
-    public required virtual DatabaseType Type { get; set; }
+    public required virtual DatabaseType Type { get; init; }
 
     /// <summary>
-    /// Gets or sets the date and time that the database was created.
+    /// Gets the date and time that the database was created.
     /// </summary>
-    public required virtual DateTimeOffset Created { get; set; }
+    public required virtual DateTimeOffset Created { get; init; }
 
     /// <summary>
-    /// Gets or sets the date and time that the database was last updated.
+    /// Gets the date and time that the database was last updated.
     /// </summary>
-    public required virtual DateTimeOffset Updated { get; set; }
+    public required virtual DateTimeOffset Updated { get; init; }
 
     /// <summary>
-    /// Gets or sets the collection of API keys associated with the database.
+    /// Gets the collection of API keys associated with the database.
     /// </summary>
-    public required virtual ICollection<ApiKeyDto> ApiKeys { get; set; }
+    public required virtual ICollection<ApiKeyDto> ApiKeys { get; init; }
 
     /// <summary>
-    /// Gets or sets the collection of targets associated with the database.
+    /// Gets the collection of targets associated with the database.
     /// </summary>
-    public required virtual ICollection<TargetDto> Targets { get; set; }
+    public required virtual ICollection<TargetDto> Targets { get; init; }
 }

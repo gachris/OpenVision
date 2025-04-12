@@ -1,4 +1,4 @@
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.EntityFramework.Entities;
 

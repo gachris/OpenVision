@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
-using OpenVision.Server.Core.Requests;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
 
@@ -55,7 +53,12 @@ public class TargetsController : ApiControllerBase
         return await ExecuteAsync(async () =>
         {
             _logger.LogInformation("Received request to get targets list with query: {@Query}", query);
-            var pagedResponse = await GetPagedResponseAsync(query, cancellationToken);
+            var targetDtosQueryable = await _targetsService.GetQueryableAsync(cancellationToken);
+            targetDtosQueryable = targetDtosQueryable
+                .Where(x => x.Database!.Id == query.DatabaseId)
+                .OrderBy(x => x.Created);
+
+            var pagedResponse = await GetPagedResponseAsync<TargetDto, TargetResponse>(targetDtosQueryable, query, cancellationToken);
             _logger.LogInformation("Returning paged targets list with total records: {TotalRecords}", pagedResponse.TotalRecords);
             return new OkObjectResult(pagedResponse);
         });
@@ -139,82 +142,6 @@ public class TargetsController : ApiControllerBase
             _logger.LogInformation("Target with id: {Id} deleted successfully.", id);
             return new OkObjectResult(Success(deleted));
         });
-    }
-
-    #endregion
-
-    #region Helper Methods
-
-    /// <summary>
-    /// Builds a pagination URL using the Url.Action method with the specified pagination filter.
-    /// </summary>
-    /// <param name="filter">The pagination filter containing the page and size parameters.</param>
-    /// <returns>A <see cref="Uri"/> representing the pagination link.</returns>
-    private Uri BuildPageUri(BrowserQuery filter)
-    {
-        var request = HttpContext.Request;
-        var url = Url.Action("Get", new { page = filter.Page, size = filter.Size });
-        var baseUri = $"{request.Scheme}://{request.Host}{url}";
-
-        if (string.IsNullOrEmpty(baseUri))
-        {
-            throw new InvalidOperationException("Unable to generate URL for the pagination link.");
-        }
-
-        return new Uri(baseUri);
-    }
-
-    /// <summary>
-    /// Retrieves a paginated response of targets for the query parameters.
-    /// </summary>
-    /// <param name="query">The pagination and filtering query parameters.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An <see cref="IPagedResponse{T}"/> containing a collection of <see cref="TargetResponse"/> objects.</returns>
-    private async Task<IPagedResponse<IEnumerable<TargetResponse>>> GetPagedResponseAsync(
-        TargetBrowserQuery query,
-        CancellationToken cancellationToken)
-    {
-        var targetsQueryable = await _targetsService.GetQueryableAsync(cancellationToken);
-        var validFilter = new BrowserQuery(query.Page, query.Size);
-        var take = validFilter.Size;
-        var skip = validFilter.Page - 1;
-
-        var totalRecords = await targetsQueryable.CountAsync(cancellationToken);
-        var targetDtos = await targetsQueryable
-            .Where(x => string.IsNullOrEmpty(query.Name) || x.Name.Contains(query.Name))
-            .Where(x => x.Database.Id == query.DatabaseId)
-            .OrderBy(x => x.Created)
-            .Skip(skip * take)
-            .Take(take)
-            .ToListAsync(cancellationToken);
-
-        var totalPages = totalRecords / (double)validFilter.Size;
-        var roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
-
-        var nextPage = validFilter.Page >= 1 && validFilter.Page < roundedTotalPages
-            ? BuildPageUri(new BrowserQuery(validFilter.Page + 1, validFilter.Size))
-            : null;
-
-        var previousPage = validFilter.Page - 1 >= 1 && validFilter.Page <= roundedTotalPages
-            ? BuildPageUri(new BrowserQuery(validFilter.Page - 1, validFilter.Size))
-            : null;
-
-        var firstPage = BuildPageUri(new BrowserQuery(1, validFilter.Size));
-        var lastPage = BuildPageUri(new BrowserQuery(roundedTotalPages, validFilter.Size));
-
-        return new PagedResponse<IEnumerable<TargetResponse>>(
-            validFilter.Page,
-            validFilter.Size,
-            firstPage,
-            lastPage,
-            roundedTotalPages,
-            totalRecords,
-            nextPage,
-        previousPage,
-            new(_mapper.Map<IEnumerable<TargetResponse>>(targetDtos)),
-            Guid.NewGuid(),
-            Shared.StatusCode.Success,
-            []);
     }
 
     #endregion

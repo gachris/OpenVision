@@ -1,9 +1,11 @@
-﻿namespace OpenVision.Shared.Responses;
+﻿using OpenVision.Shared.Types;
+
+namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents a response message containing a collection of <see cref="TargetRecordModel"/> objects returned by the API.
 /// </summary>
-public class GetAllTrackablesResponse : ResponseMessage<IReadOnlyCollection<TargetRecordModel>>
+public record GetAllTrackablesResponse : ResponseMessage<IReadOnlyCollection<TargetRecordModel>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="GetAllTrackablesResponse"/> class with the specified response payload, transaction ID, and status code.

@@ -54,7 +54,8 @@ public class GetDatabasesQueryHandler : IRequestHandler<GetDatabasesQuery, IEnum
     /// </returns>
     public async Task<IEnumerable<DatabaseDto>> Handle(GetDatabasesQuery request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
 
         _logger.LogInformation("Getting databases for user {UserId}", userId);
 

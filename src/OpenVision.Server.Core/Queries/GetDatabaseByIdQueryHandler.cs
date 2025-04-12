@@ -54,7 +54,8 @@ public class GetDatabaseByIdQueryHandler : IRequestHandler<GetDatabaseByIdQuery,
     /// </returns>
     public async Task<DatabaseDto?> Handle(GetDatabaseByIdQuery request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
 
         _logger.LogInformation("Getting database {DatabaseId} for user {UserId}", request.DatabaseId, userId);
 

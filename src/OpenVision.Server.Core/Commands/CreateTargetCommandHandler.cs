@@ -8,8 +8,7 @@ using OpenVision.EntityFramework.Entities;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
 using OpenVision.Server.Core.Helpers;
-using OpenVision.Server.Core.Repositories.Specifications;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -23,7 +22,7 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
 
     private readonly IDatabasesRepository _databasesRepository;
     private readonly IImageTargetsRepository _imageTargetsRepository;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IDatabaseSpecificationFactory _databaseSpecificationFactory;
     private readonly IMapper _mapper;
     private readonly ILogger<CreateTargetCommandHandler> _logger;
 
@@ -34,19 +33,19 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
     /// </summary>
     /// <param name="databasesRepository">The repository for accessing databases.</param>
     /// <param name="imageTargetsRepository">The repository for accessing image targets.</param>
-    /// <param name="currentUserService">The service for obtaining the current user's identifier.</param>
+    /// <param name="databaseSpecificationFactory">The factory used to create the appropriate target specification based on the current authentication context.</param>
     /// <param name="mapper">The AutoMapper instance used for mapping entities to DTOs.</param>
     /// <param name="logger">The logger for logging informational and error messages.</param>
     public CreateTargetCommandHandler(
         IDatabasesRepository databasesRepository,
         IImageTargetsRepository imageTargetsRepository,
-        ICurrentUserService currentUserService,
+        IDatabaseSpecificationFactory databaseSpecificationFactory,
         IMapper mapper,
         ILogger<CreateTargetCommandHandler> logger)
     {
         _databasesRepository = databasesRepository;
         _imageTargetsRepository = imageTargetsRepository;
-        _currentUserService = currentUserService;
+        _databaseSpecificationFactory = databaseSpecificationFactory;
         _mapper = mapper;
         _logger = logger;
     }
@@ -61,11 +60,12 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
     /// <returns>A <see cref="TargetDto"/> representing the newly created target.</returns>
     public async Task<TargetDto> Handle(CreateTargetCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
         var createDto = request.CreateTargetDto;
         var targetId = Guid.NewGuid();
 
-        var databaseForUserSpecification = new DatabaseForUserSpecification(createDto.DatabaseId, userId);
+        var databaseForUserSpecification = createDto.DatabaseId is null 
+            ? _databaseSpecificationFactory.GetDatabaseSpecification()
+            : _databaseSpecificationFactory.GetDatabaseSpecification(createDto.DatabaseId.Value);
         var databases = await _databasesRepository.GetBySpecificationAsync(databaseForUserSpecification, cancellationToken);
         var database = databases.SingleOrDefault() ?? throw new ArgumentException("Database not found.");
 
@@ -83,7 +83,7 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
         var target = new ImageTarget
         {
             Id = targetId,
-            DatabaseId = createDto.DatabaseId,
+            DatabaseId = database.Id,
             Name = createDto.Name,
             Type = database.Type is DatabaseType.Cloud ? TargetType.Cloud : createDto.Type,
             Width = createDto.Width,
@@ -110,7 +110,7 @@ public class CreateTargetCommandHandler : IRequestHandler<CreateTargetCommand, T
         // Persist the new target.
         await _imageTargetsRepository.CreateAsync(target, cancellationToken);
 
-        _logger.LogInformation("Created target {TargetId} for user {UserId}", targetId, userId);
+        _logger.LogInformation("Created target {TargetId}", targetId);
 
         // Map the entity to a DTO and return.
         return _mapper.Map<TargetDto>(target);

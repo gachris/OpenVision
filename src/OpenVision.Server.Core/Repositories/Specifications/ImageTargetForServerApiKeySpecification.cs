@@ -1,5 +1,5 @@
 ﻿using OpenVision.EntityFramework.Entities;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Server.Core.Repositories.Specifications;
 
@@ -15,7 +15,7 @@ public class ImageTargetForServerApiKeySpecification : BaseSpecification<ImageTa
     /// </summary>
     /// <param name="apiKey">The server API key used for filtering.</param>
     public ImageTargetForServerApiKeySpecification(string apiKey)
-        : base(target => target.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey)
+        : base(target => target.Database!.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey)
     {
     }
 
@@ -27,7 +27,7 @@ public class ImageTargetForServerApiKeySpecification : BaseSpecification<ImageTa
     /// <param name="apiKey">The server API key used for filtering.</param>
     public ImageTargetForServerApiKeySpecification(Guid targetId, string apiKey)
         : base(target => target.Id == targetId
-                  && target.Database.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey
+                  && target.Database!.ApiKeys.First(key => key.Type == ApiKeyType.Server).Key == apiKey
                   && target.Database.UserId == apiKey)
     {
     }

@@ -14,7 +14,7 @@ public class ImageTargetForUserSpecification : BaseSpecification<ImageTarget>
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     public ImageTargetForUserSpecification(string userId)
-        : base(target => target.Database.UserId == userId)
+        : base(target => target.Database!.UserId == userId)
     {
     }
 
@@ -25,7 +25,7 @@ public class ImageTargetForUserSpecification : BaseSpecification<ImageTarget>
     /// <param name="targetId">The unique identifier of the image target.</param>
     /// <param name="userId">The unique identifier of the user.</param>
     public ImageTargetForUserSpecification(Guid targetId, string userId)
-        : base(target => target.Id == targetId && target.Database.UserId == userId)
+        : base(target => target.Id == targetId && target.Database!.UserId == userId)
     {
     }
 }
