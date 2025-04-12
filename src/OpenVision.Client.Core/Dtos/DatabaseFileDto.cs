@@ -3,36 +3,20 @@
 /// <summary>
 /// Represents the result of downloading a file.
 /// </summary>
-public class DatabaseFileDto
+public record DatabaseFileDto
 {
     /// <summary>
     /// Gets the filename of the downloaded file.
     /// </summary>
-    public string Filename { get; }
+    public virtual required string Filename { get; init; }
 
     /// <summary>
     /// Gets the contents of the downloaded file.
     /// </summary>
-    public byte[] FileContents { get; }
+    public virtual required byte[] FileContents { get; init; }
 
     /// <summary>
     /// Gets the content type of the downloaded file.
     /// </summary>
-    public string ContentType { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the DownloadFileResult class with the specified filename, file contents, and content type.
-    /// </summary>
-    /// <param name="filename">The filename of the downloaded file.</param>
-    /// <param name="fileContents">The contents of the downloaded file.</param>
-    /// <param name="contentType">The content type of the downloaded file.</param>
-    public DatabaseFileDto(
-        string filename,
-        byte[] fileContents,
-        string contentType)
-    {
-        Filename = filename;
-        FileContents = fileContents;
-        ContentType = contentType;
-    }
+    public virtual required string ContentType { get; init; }
 }

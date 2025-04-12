@@ -1,0 +1,288 @@
+﻿@using OpenVision.Shared.Types
+@model DatabaseResponse
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Model.Name;
+
+    var clientApiKey = @Model.ApiKeys.First(x => x.Type == ApiKeyType.Client).Key;
+    var serverApiKey = @Model.ApiKeys.First(x => x.Type == ApiKeyType.Server).Key;
+}
+
+@section styles {
+    <style>
+        .api-key-container {
+            font-family: monospace;
+            font-size: 10pt;
+            background-color: #f2f2f2;
+            padding: 0.5rem;
+        }
+    </style>
+}
+
+<section class="content">
+    <div class="container">
+        <div>
+            <div class="row">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="databases" asp-action="index">@Localizer["Databases_breadcrumb_item"]</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">
+                        <span class="h1 font-weight-semi-bold">@Model.Name</span>
+                        <span class="ml-2">
+                            <a href="#" data-toggle="modal" data-target="#update-database-name-modal">@Localizer["Edit_database_name_button"]</a>
+                        </span>
+                    </p>
+                    <p class="m-0 mt-1">
+                        <span class="h4 font-weight-semi-bold">@Localizer["Database_type_label"]: </span>
+                        <span class="h4">@Model.Type</span>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div style="height: 25px;"></div>
+            </div>
+            @if (Model.Type is DatabaseType.Device)
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#create-target-modal">@Localizer["Add_target_button"]</a>
+                    </div>
+                    <div class="col-md-6 text-lg-end text-md-end">
+                        <a class="btn btn-primary" tabindex="0" id="add-dialog-btn" asp-controller="databases" asp-action="download" asp-route-id="@Model.Id">@Localizer["Download_database_all"]</a>
+                    </div>
+                </div>
+                <div>
+                    <div style="height: 25px;"></div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>@Localizer["Target_name_column_header"]</th>
+                                        <th>@Localizer["Target_type_column_header"]</th>
+                                        <th>@Localizer["Target_rating_column_header"]</th>
+                                        <th>@Localizer["Target_status_column_header"]</th>
+                                        <th>@Localizer["Target_modified_column_header"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var target in Model.Targets)
+                                    {
+                                        <tr class="tr-clickable" onclick="location.href='@Url.Action("Details", "targets", new { databaseId = target.DatabaseId, targetId = target.Id })'">
+                                            <td>@target.Name</td>
+                                            <td>@target.Type</td>
+                                            <td>
+                                                @for (int i = 0; i < 5; i++)
+                                                {
+                                                    <span class="fa fa-star @(i <= @target.Rating ? "checked" : "")"></span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var status = target.ActiveFlag is ActiveFlag.True ? @Localizer["Target_status_active_label"] : @Localizer["Target_status_inactive_label"];
+                                                }
+                                                @status
+                                            </td>
+                                            <td>@target.Updated.ToString("MMM dd, yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" data-tab="tab1">@Localizer["Targets_tab_header"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-tab="tab2">@Localizer["Database_api_keys_tab_header"]</a>
+                    </li>
+                </ul>
+                <section class="tab-content">
+                    <section id="tab1" class="tab-pane active">
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#create-target-modal">@Localizer["Add_target_button"]</a>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>@Localizer["Target_name_column_header"]</th>
+                                                <th>@Localizer["Target_type_column_header"]</th>
+                                                <th>@Localizer["Target_rating_column_header"]</th>
+                                                <th>@Localizer["Target_status_column_header"]</th>
+                                                <th>@Localizer["Target_modified_column_header"]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var target in Model.Targets)
+                                            {
+                                                <tr class="tr-clickable" onclick="location.href='@Url.Action("Details", "targets", new { databaseId = target.DatabaseId, targetId = target.Id })'">
+                                                    <td>@target.Name</td>
+                                                    <td>@target.Type</td>
+                                                    <td>
+                                                        @for (int i = 0; i < 5; i++)
+                                                        {
+                                                            <span class="fa fa-star @(i <= @target.Rating ? "checked" : "")"></span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @{
+                                                            var status = target.ActiveFlag is ActiveFlag.True ? @Localizer["Target_status_active_label"] : @Localizer["Target_status_inactive_label"];
+                                                        }
+                                                        @status
+                                                    </td>
+                                                    <td>@target.Updated.ToString("MMM dd, yyyy HH:mm")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="tab2" class="tab-pane">
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        <p>@Localizer["Api_keys_description"]</p>
+                        <h4 class="font-weight-semi-bold">@Localizer["Api_keys_label"]</h4>
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        <div>
+                            @Localizer["Client_api_key_label"]:
+                            <div style="display:inline-table">
+                                <span class="ml-2 api-key-container">@clientApiKey</span>
+                                <button class="btn btn-outline-secondary ml-2 border-0" onclick="copyToClipboard('@clientApiKey')">
+                                    <i class="fa fa-file" aria-hidden="true"></i>
+                                </button>
+                                <label class="ml-2 mt-2 small" style="display: flex; max-width:70%">
+                                    @Localizer["Client_api_key_description"]
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        <div>
+                            @Localizer["Server_api_key_label"]:
+                            <div style="display:inline-table">
+                                <span class="ml-2 api-key-container">@serverApiKey</span>
+                                <button class="btn btn-outline-secondary ml-2 border-0" onclick="copyToClipboard('@serverApiKey')">
+                                    <i class="fa fa-file" aria-hidden="true"></i>
+                                </button>
+                                <label class="ml-2 mt-2 small" style="display: flex; max-width:70%">
+                                    @Localizer["Server_api_key_description"]
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            }
+        </div>
+    </div>
+</section>
+
+@if (Model.Type is DatabaseType.Cloud)
+{
+    @await Html.PartialAsync("~/Views/Targets/CreateCloud.cshtml", new PostTargetViewModel() { DatabaseId = Model.Id, Type = TargetType.Cloud })
+}
+else
+{
+    @await Html.PartialAsync("~/Views/Targets/CreateDevice.cshtml", new PostTargetViewModel() { DatabaseId = Model.Id, Type = TargetType.Image })
+}
+
+@await Html.PartialAsync("Update", new UpdateDatabaseViewModel() { Id = Model.Id, Name = Model.Name })
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // show the first tab by default
+            $(".tab-content").find(".tab-pane").first().show();
+
+            // handle tab click
+            $(".nav-tabs a").click(function () {
+                var tab_id = $(this).attr("data-tab");
+
+                // hide all tab content
+                $(".tab-content").find(".tab-pane").hide();
+
+                // show the selected tab content
+                $("#" + tab_id).show();
+            });
+        });
+
+        $(document).ready(function () {
+            // set the first tab as active by default
+            $(".nav-tabs .nav-link:first").addClass("active");
+            $(".tab-content .tab-pane:first").addClass("active");
+
+            // handle tab click
+            $(".nav-tabs .nav-link").click(function () {
+                var tab_id = $(this).attr("data-tab");
+
+                // remove the active class from all tabs and tab panes
+                $(".nav-tabs .nav-link").removeClass("active");
+                $(".tab-content .tab-pane").removeClass("active");
+
+                // add the active class to the selected tab and tab pane
+                $(this).addClass("active");
+                $("#" + tab_id).addClass("active");
+            });
+        });
+
+        function copyToClipboard(textToCopy) {
+            navigator.clipboard.writeText(textToCopy);
+        }
+
+        function updateFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const fileNameInput = document.getElementById('fileNameInput');
+            const fileName = fileInput.files[0].name.split('.')[0];
+            fileNameInput.value = fileName;
+        }
+
+        function checkMetadataFileInput() {
+            var fileInput = document.getElementById("metadataPackage");
+            var clearButton = document.getElementById("clearButton");
+            if (fileInput.value) {
+                clearButton.disabled = false;
+            } else {
+                clearButton.disabled = true;
+            }
+        }
+
+        function clearMetadataFileInput() {
+            var fileInput = document.getElementById("metadataPackage");
+            var clearButton = document.getElementById("clearButton");
+            fileInput.value = null;
+            clearButton.disabled = true;
+        }
+    </script>
+    }

@@ -1,0 +1,244 @@
+﻿@using OpenVision.Shared.Types
+@model TargetResponse
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+@section styles {
+    <style>
+        .image-container {
+            position: relative;
+            width: 580px;
+            height: 580px;
+        }
+
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            max-width: 530px;
+            max-height: 530px;
+        }
+    </style>
+}
+
+<section class="content">
+    <div class="container">
+        <div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a asp-controller="databases" asp-action="index">@Localizer["Databases_breadcrumb_item"]</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a asp-controller="databases" asp-action="details" asp-route-id="@Model.DatabaseId">@Model.DatabaseId</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1 id="page-main-title">@Model.Name</h1>
+                    </div>
+                </div>
+                <div class="row mt-2 mb-2">
+                    <div>
+                        <a href="#" class="link-primary" data-toggle="modal" data-target="#update-target-name-modal">@Localizer["Edit_target_name_button"]</a>
+                        @if (Model.Type is TargetType.Cloud)
+                        {
+                            if (Model.ActiveFlag is ActiveFlag.False)
+                            {
+                                <form style="display:inline" id="activate-target-name-form" asp-controller="targets" asp-action="activate" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.Id" Method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="@Model.Id" name="id" />
+                                    <a href="#" class="link-primary ml-2" onclick="this.closest('form').submit()">
+                                        @Localizer["Activate_target_button"]
+                                    </a>
+                                </form>
+                            }
+                            else
+                            {
+                                <form style="display:inline" id="deactivate-target-name-form" asp-controller="targets" asp-action="deactivate" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.Id" Method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="@Model.Id" name="id" />
+                                    <a href="#" class="link-primary ml-2" onclick="this.closest('form').submit()">
+                                        @Localizer["Deactivate_target_button"]
+                                    </a>
+                                </form>
+                            }
+                        }
+                        <a href="#" class="link-primary ml-2" data-toggle="modal" data-target="#delete-target-modal">@Localizer["Remove_target_button"]</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="width:auto;">
+                        <div class="border border-1 rounded-3 image-container">
+                            @{
+                                var base64 = Convert.ToBase64String(Model.PreprocessImage);
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                            }
+                            <img id="Image" class="shadow rounded-3 border border-1 center" src="@imgSrc" />
+                            @{
+                                var featuresBase64 = Convert.ToBase64String(Model.AfterProcessImageWithKeypoints);
+                                var featuresImgSrc = String.Format("data:image/png;base64,{0}", featuresBase64);
+                            }
+                            <img id="FeaturesImage" class="shadow rounded-3 border border-1 center" style="display:none;" src="@featuresImgSrc" />
+                        </div>
+                        <div class="row mt-2 mb-3">
+                            <div>
+                                <a href="#" class="link-primary" data-toggle="modal" data-target="#update-target-image-modal">@Localizer["Update_target_button"]</a>
+                                <a href="#" class="link-primary ml-2" id="toggleFeatures">Show Features</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:auto;">
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_type_label"]: </span>@Model.Type
+                        </div>
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_status_label"]: </span>
+                            @{
+                                var status = @Model.ActiveFlag is ActiveFlag.True ? @Localizer["Target_status_active_label"] : @Localizer["Target_status_inactive_label"];
+                            }
+                            @status
+                        </div>
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_id_label"]: </span>@Model.Id
+                        </div>
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_rating_label"]: </span>
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <span class="fa fa-star @(i <= Model.Rating ? "checked" : "")"></span>
+                            }
+                        </div>
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_width_label"]: </span>
+                            @Model.XUnits
+                            <a href="#" class="link-primary ml-2" data-toggle="modal" data-target="#update-target-width-modal">@Localizer["Edit_target_width_button"]</a>
+                        </div>
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_created_label"]: </span>@Model.Created.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        <div class="mb-1">
+                            <span class="font-weight-semi-bold">@Localizer["Target_modified_label"]: </span>@Model.Updated.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        <div>
+                            <div style="height: 25px;"></div>
+                        </div>
+                        @if (Model.Type is TargetType.Cloud)
+                        {
+                            <div class="mb-1">
+                                <div class="font-weight-semi-bold">@Localizer["Target_metadata_package_label"]: </div>
+                                @if (Model.Metadata.IsNullOrEmpty())
+                                {
+                                    <a href="#" class="link-primary" data-toggle="modal" data-target="#upload-target-metadata-modal">@Localizer["Upload_target_metadata_button"]</a>
+                                }
+                                else
+                                {
+                                    <a class="link-primary" asp-controller="targets" asp-action="downloadMetadata" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.Id">@Localizer["Download_target_metadata_button"]</a>
+                                    <form style="display:inline" id="Activate-target-name-form" asp-controller="targets" asp-action="deleteMetadata" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.Id" Method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" asp-for="@Model.Id" name="id" />
+                                        <a href="#" class="link-primary ml-2" onclick="this.closest('form').submit()">@Localizer["Delete_target_metadata_button"]</a>
+                                    </form>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <div style="height: 25px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("UpdateName", new UpdateTargetNameViewModel() { TargetId = Model.Id, DatabaseId = Model.DatabaseId, Name = Model.Name })
+
+@await Html.PartialAsync("UpdateWidth", new UpdateTargetWidthViewModel() { TargetId = Model.Id, DatabaseId = Model.DatabaseId, Width = Model.XUnits })
+
+@await Html.PartialAsync("UpdateImage", new UpdateTargetImageViewModel() { TargetId = Model.Id, DatabaseId = Model.DatabaseId })
+
+@if (Model.Metadata.IsNullOrEmpty())
+{
+    @await Html.PartialAsync("UploadMetadata", new UploadTargetMetadataViewModel() { TargetId = Model.Id, DatabaseId = Model.DatabaseId })
+}
+
+@await Html.PartialAsync("Delete", new DeleteTargetViewModel() { TargetId = Model.Id, DatabaseId = Model.DatabaseId })
+
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+
+            var img = document.getElementById('Image');
+            if (img.width > img.height) {
+                img.height = Math.round(img.height * (530 / img.width));
+                img.width = 530;
+            } else {
+                img.width = Math.round(img.width * (530 / img.height));
+                img.height = 530;
+            }
+
+            // Add click event to toggle features link
+            $('#toggleFeatures').click(function () {
+                // Toggle image visibility
+                $('#Image').toggle();
+                $('#FeaturesImage').toggle();
+
+                // Change link text
+                if ($(this).text() == 'Show Features') {
+                    $(this).text('Hide Features');
+
+                    var img = document.getElementById('FeaturesImage');
+                    if (img.width > img.height) {
+                        img.height = Math.round(img.height * (530 / img.width));
+                        img.width = 530;
+                    } else {
+                        img.width = Math.round(img.width * (530 / img.height));
+                        img.height = 530;
+                    }
+                } else {
+                    $(this).text('Show Features');
+
+                    var img = document.getElementById('Image');
+                    if (img.width > img.height) {
+                        img.height = Math.round(img.height * (530 / img.width));
+                        img.width = 530;
+                    } else {
+                        img.width = Math.round(img.width * (530 / img.height));
+                        img.height = 530;
+                    }
+                }
+            });
+        });
+
+        function checkMetadataFileInput() {
+            var fileInput = document.getElementById("metadataPackage");
+            var clearButton = document.getElementById("clearButton");
+            if (fileInput.value) {
+                clearButton.disabled = false;
+            } else {
+                clearButton.disabled = true;
+            }
+        }
+
+        function clearMetadataFileInput() {
+            var fileInput = document.getElementById("metadataPackage");
+            var clearButton = document.getElementById("clearButton");
+            fileInput.value = null;
+            clearButton.disabled = true;
+        }
+    </script>
+}

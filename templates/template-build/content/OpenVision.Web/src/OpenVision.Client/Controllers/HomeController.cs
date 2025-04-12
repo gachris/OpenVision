@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OpenVision.Client.Core.Controllers;
 using OpenVision.Client.Core.ViewModels;
 
@@ -39,6 +38,7 @@ public class HomeController : BaseController
     /// <summary>
     /// Displays the support page.
     /// </summary>
+    [HttpGet("support")]
     public IActionResult Support()
     {
         _logger.LogInformation("Support page requested.");
@@ -46,20 +46,42 @@ public class HomeController : BaseController
     }
 
     /// <summary>
-    /// Displays the error page for unhandled exceptions.
+    /// Displays the contact form.
     /// </summary>
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    /// <returns>The Contact view.</returns>
+    [HttpGet("contact")]
+    public IActionResult Contact()
     {
-        var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-        _logger.LogError("Error page requested. Request ID: {RequestId}", requestId);
+        _logger.LogInformation("Contact page requested.");
+        return View();
+    }
 
-        var error = new ErrorViewModel
+    /// <summary>
+    /// Processes the submitted contact form.
+    /// </summary>
+    /// <param name="model">The contact form data.</param>
+    /// <returns>A redirection back to the contact page with a success or error notification.</returns>
+    [HttpPost("contact")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Contact(ContactViewModel model)
+    {
+        if (ModelState.IsValid)
         {
-            RequestId = requestId
-        };
+            // TODO: Add your processing logic (e.g., send an email, save to database)
+            _logger.LogInformation("Contact form submitted by {Name} ({Email}).", model.Name, model.Email);
 
-        return View(error);
+            // Example: a method on your BaseController to show success notifications.
+            SuccessNotification("Your message has been sent successfully!", "Success");
+
+            return RedirectToAction("Contact");
+        }
+        else
+        {
+            _logger.LogWarning("Contact form submission failed validation.");
+        }
+
+        // If model state is invalid, re-display the form with validation messages.
+        return View(model);
     }
 
     #endregion

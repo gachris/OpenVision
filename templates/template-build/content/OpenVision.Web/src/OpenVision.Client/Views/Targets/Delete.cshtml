@@ -1,0 +1,25 @@
+﻿@model DeleteTargetViewModel
+@inject IViewLocalizer Localizer
+
+<form id="delete-target-form" asp-controller="targets" asp-action="delete" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.TargetId" Method="post">
+    <div class="modal fade" id="delete-target-modal" tabindex="-1" role="dialog" aria-labelledby="delete-target-modal-label">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title font-weight-semi-bold" id="delete-target-modal-label">@Localizer["Remove_target_title"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.TextBoxFor(model => model.TargetId, new { @type = "hidden" })
+                    @Html.TextBoxFor(model => model.DatabaseId, new { @type = "hidden" })
+                    @Localizer["Delete_target_confirmation_message"]
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">@Localizer["Cancel_button"]</button>
+                    <button type="submit" class="btn btn-danger">@Localizer["Remove_button"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

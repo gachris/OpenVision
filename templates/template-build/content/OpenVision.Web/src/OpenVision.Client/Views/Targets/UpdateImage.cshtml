@@ -1,0 +1,28 @@
+﻿@model UpdateTargetImageViewModel
+@inject IViewLocalizer Localizer
+
+<form id="update-target-image-form" asp-controller="targets" asp-action="updateImage" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.TargetId" EncType="multipart/form-data" Method="post">
+    <div class="modal fade" id="update-target-image-modal" tabindex="-1" role="dialog" aria-labelledby="update-target-image-modal-label">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title font-weight-semi-bold" id="update-target-image-modal-label">@Localizer["Update_image_title"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.TextBoxFor(model => model.TargetId, new { @type = "hidden" })
+                     <div class="mb-3">
+                        @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @id="fileInput", @type = "file", @name = "image", @class="form-control", @accept=".png, .jpg, .jpeg" }})
+                        @Html.ValidationMessageFor(model => model.Image, null, new { @class = "text-danger small" })
+                        <span class="form-text text-muted small">@Localizer["File_description"]</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">@Localizer["Cancel_button"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Done_button"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

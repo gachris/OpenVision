@@ -1,0 +1,51 @@
+﻿@model PostTargetViewModel
+@inject IViewLocalizer Localizer
+
+<form id="create-target-form" asp-controller="targets" asp-action="create" asp-route-databaseId="@Model.DatabaseId" EncType="multipart/form-data" Method="post">
+    <div class="modal fade" id="create-target-modal" tabindex="-1" role="dialog" aria-labelledby="create-target-modal-label">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title font-weight-semi-bold" id="create-target-modal-label">@Localizer["Create_target_dialog_title"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.TextBoxFor(model => model.DatabaseId, new { @type = "hidden" })
+                    @Html.TextBoxFor(model => model.Type, new { @type = "hidden" })
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Image)
+                        @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @id="fileInput", @type = "file", @name = "image", @onchange="updateFileName()", @class="form-control", @accept=".png, .jpg, .jpeg" }})
+                        @Html.ValidationMessageFor(model => model.Image, null, new { @class = "text-danger small" })
+                        <span class="form-text text-muted small">@Localizer["File_description"]</span>
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Width)
+                        @Html.TextBoxFor(model => model.Width, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Width, null, new { @class = "text-danger small" })
+                        <span class="form-text text-muted small">@Localizer["Width_description"]</span>
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Metadata)<span class="text-muted small">: (@Localizer["Optional_label"])</span>
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.Metadata, new { htmlAttributes = new { @id="metadataPackage", @type = "file", @name = "metadata", @class="form-control", @onchange="checkMetadataFileInput()" }})
+                            <button type="button" class="btn btn-secondary" id="clearButton" disabled onclick="clearMetadataFileInput()" aria-label="Close">
+                                x
+                            </button>
+                        </div>
+                        <span class="form-text text-muted small">@Localizer["Target_metadata_description"]</span>
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Name)
+                        @Html.TextBoxFor(model => model.Name, new { @id = "fileNameInput", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger small" })
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">@Localizer["Cancel_button"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Add_button"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

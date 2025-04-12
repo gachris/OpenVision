@@ -14,11 +14,11 @@
 
 			@if (Model.EnableSearch)
 			{
-				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="1" asp-route-search="@Model.Search">@Localizer["FirstButtonText"]</a></li>
+				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="1" asp-route-search="@Model.Search">@Localizer["First"]</a></li>
 			}
 			else
 			{
-				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="1">@Localizer["FirstButtonText"]</a></li>
+				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="1">@Localizer["First"]</a></li>
 			}
 
 			@if (PagerHelpers.ShowLeftPagerButton(Model.MaxPages, totalCount, currentPage))
@@ -73,11 +73,11 @@
 
 			@if (Model.EnableSearch)
 			{
-				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="@totalCount" asp-route-search="@Model.Search">@Localizer["LastButtonText"]</a></li>
+				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="@totalCount" asp-route-search="@Model.Search">@Localizer["Last"]</a></li>
 			}
 			else
 			{
-				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="@totalCount">@Localizer["LastButtonText"]</a></li>
+				<li class="page-item"><a class="page-link" asp-action="@Model.Action" asp-route-page="@totalCount">@Localizer["Last"]</a></li>
 			}
 		</ul>
 	</nav>

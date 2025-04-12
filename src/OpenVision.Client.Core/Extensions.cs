@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using MediatR.Pipeline;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -19,6 +21,7 @@ using OpenVision.Client.Core.Contracts;
 using OpenVision.Client.Core.Helpers;
 using OpenVision.Client.Core.Localization;
 using OpenVision.Client.Core.Services;
+using OpenVision.Client.Core;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -31,6 +34,22 @@ namespace Microsoft.Extensions.Hosting;
 /// </summary>
 public static class Extensions
 {
+    /// <summary>
+    /// Registers MediatR services and pipeline behaviors with the dependency injection container.
+    /// </summary>
+    /// <param name="services">The IServiceCollection to which the MediatR services will be added.</param>
+    /// <returns>The updated IServiceCollection.</returns>
+    public static IServiceCollection AddDefaultMediatR(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddMediatR((configuration) => configuration.RegisterServicesFromAssembly(typeof(Extensions).Assembly));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
+
+        return services;
+    }
+
     /// <summary>
     /// Adds localization services to the application.
     /// </summary>
@@ -51,6 +70,18 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Registers AutoMapper and scans for profiles in the assembly containing <see cref="MappingProfile"/>.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The updated service collection.</returns>
+    public static IServiceCollection AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        services.AddAutoMapper(typeof(MappingProfile));
+        return services;
+    }
+
+    /// <summary>
     /// Adds application-specific services to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
@@ -58,10 +89,11 @@ public static class Extensions
     public static IServiceCollection AddOpenVisionServices(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        services.AddTransient<IDatabasesService, DatabasesService>();
-        services.AddTransient<IFilesService, FilesService>();
-        services.AddTransient<ITargetsService, TargetsService>();
-        services.AddTransient<ICloudHttpClientService, CloudHttpClientService>();
+        services.AddTransient<IDatabaseApiService, DatabaseApiService>();
+        services.AddTransient<IFileApiService, FileApiService>();
+        services.AddTransient<ITargetApiService, TargetApiService>();
+        services.AddTransient<IOpenVisionApiClientFactory, OpenVisionApiClientFactory>();
+        services.AddTransient<IAccessTokenProvider, AccessTokenProvider>();
         return services;
     }
 

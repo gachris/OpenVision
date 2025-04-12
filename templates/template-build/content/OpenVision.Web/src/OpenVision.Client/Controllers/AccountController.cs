@@ -9,6 +9,7 @@ namespace OpenVision.Client.Controllers;
 /// <summary>
 /// Controller for handling user account related actions such as login and logout.
 /// </summary>
+[Route("account")]
 public class AccountController : BaseController
 {
     #region Fields/Consts
@@ -29,12 +30,13 @@ public class AccountController : BaseController
     #region Methods
 
     /// <summary>
-    /// Action method to initiate user login.
+    /// Action method to initiate user sign in.
     /// </summary>
     /// <returns>Returns a challenge response to the configured authentication provider.</returns>
-    public IActionResult Login()
+    [HttpGet("signin")]
+    public IActionResult SignIn()
     {
-        _logger.LogInformation("Login initiated.");
+        _logger.LogInformation("Sign in initiated.");
         var authenticationProperties = new AuthenticationProperties
         {
             RedirectUri = "/"
@@ -45,13 +47,31 @@ public class AccountController : BaseController
     }
 
     /// <summary>
-    /// Action method to initiate user logout.
+    /// Action method to initiate user sign in.
+    /// </summary>
+    /// <returns>Returns a challenge response to the configured authentication provider.</returns>
+    [HttpGet("signup")]
+    public IActionResult SignUp()
+    {
+        _logger.LogInformation("Sign up initiated.");
+        var authenticationProperties = new AuthenticationProperties
+        {
+            RedirectUri = "/"
+        };
+
+        _logger.LogInformation("Redirecting to authentication provider.");
+        return Challenge(authenticationProperties);
+    }
+
+    /// <summary>
+    /// Action method to initiate user sign out.
     /// </summary>
     /// <returns>Returns a sign out result for the configured authentication and OpenID Connect schemes.</returns>
     [Authorize]
-    public IActionResult Logout()
+    [HttpGet("signoff")]
+    public IActionResult SignOff()
     {
-        _logger.LogInformation("Logout initiated.");
+        _logger.LogInformation("Sign out initiated.");
         var authenticationSchemes = new List<string>
         {
             AuthenticationConsts.SignInScheme,

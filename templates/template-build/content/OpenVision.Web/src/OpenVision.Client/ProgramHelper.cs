@@ -105,15 +105,23 @@ public static class ProgramHelper
             .GetSection(nameof(OidcConfiguration))
             .Get<OidcConfiguration>()!;
 
+        var openVisionServerOptionsSection = builder.Configuration
+            .GetSection(nameof(OpenVisionApiOptions));
+
         // Register default services specific to your application.
         builder.AddServiceDefaults();
 
+        // Register MediatR.
+        builder.Services.AddDefaultMediatR();
+
         builder.Services.AddSingleton(appConfiguration);
+        builder.Services.Configure<OpenVisionApiOptions>(openVisionServerOptionsSection);
 
         // Add application localization
         builder.Services.AddDefaultLocalization();
 
         // Add application services
+        builder.Services.AddAutoMapperConfiguration();
         builder.Services.AddOpenVisionServices();
 
         // Add HttpContextAccessor
@@ -160,6 +168,8 @@ public static class ProgramHelper
         else
         {
             app.UseExceptionHandler("/Error");
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -185,7 +195,7 @@ public static class ProgramHelper
         // Map application controllers
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+            pattern: "{controller=home}/{action=index}/{id?}");
 
         return app;
     }

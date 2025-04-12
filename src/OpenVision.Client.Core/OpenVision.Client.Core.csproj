@@ -16,7 +16,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AutoMapper" />
 		<PackageReference Include="Duende.IdentityServer" />
+		<PackageReference Include="MediatR" />
 		<PackageReference Include="NWebsec.AspNetCore.Core" />
 		<PackageReference Include="NWebsec.AspNetCore.Middleware" />
 	</ItemGroup>

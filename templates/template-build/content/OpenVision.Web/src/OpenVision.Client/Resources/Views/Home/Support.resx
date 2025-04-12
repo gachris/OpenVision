@@ -117,49 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add_Target" xml:space="preserve">
-    <value>Add Target</value>
+  <data name="FAQ_Answer1" xml:space="preserve">
+    <value>OpenVision is a comprehensive platform that integrates augmented reality with robust image and object recognition capabilities. It empowers users to create immersive experiences and intelligent solutions across various devices and platforms.</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="FAQ_Answer2" xml:space="preserve">
+    <value>Simply sign up for an account and use our intuitive interface to upload your 3D models, images, and other media. Our suite of tools enables you to customize and deploy immersive experiences tailored to your specific needs.</value>
   </data>
-  <data name="Create" xml:space="preserve">
-    <value>Create</value>
+  <data name="FAQ_Answer3" xml:space="preserve">
+    <value>Our support team_</value>
   </data>
-  <data name="Create_target_dialog_title" xml:space="preserve">
-    <value>Create database</value>
+  <data name="FAQ_Question1" xml:space="preserve">
+    <value>What is OpenVision?</value>
   </data>
-  <data name="Database" xml:space="preserve">
-    <value>Database</value>
+  <data name="FAQ_Question2" xml:space="preserve">
+    <value>How do I create a new experience?</value>
   </data>
-  <data name="Delete_target_dialog_message" xml:space="preserve">
-    <value>Are you sure? All images for this database will be deleted.</value>
+  <data name="FAQ_Question3" xml:space="preserve">
+    <value>What support options do you offer?</value>
   </data>
-  <data name="Delete_target_dialog_title" xml:space="preserve">
-    <value>Warning</value>
+  <data name="FAQ_Title" xml:space="preserve">
+    <value>Frequently Asked Questions</value>
   </data>
-  <data name="Download_Database_All" xml:space="preserve">
-    <value>Download Database (All)</value>
+  <data name="NuGet_OpenVision_MauiDescription" xml:space="preserve">
+    <value>Tools and components for building cross-platform apps with .NET MAUI.</value>
   </data>
-  <data name="Modified" xml:space="preserve">
-    <value>Modified</value>
+  <data name="NuGet_OpenVision_MauiTitle" xml:space="preserve">
+    <value>OpenVision.Maui</value>
   </data>
-  <data name="No" xml:space="preserve">
-    <value>No</value>
+  <data name="NuGet_OpenVision_WinUiDescription" xml:space="preserve">
+    <value>Libraries for integrating OpenVision features in Windows UI applications.</value>
   </data>
-  <data name="Rating" xml:space="preserve">
-    <value>Rating</value>
+  <data name="NuGet_OpenVision_WinUiTitle" xml:space="preserve">
+    <value>OpenVision.WinUi</value>
   </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
+  <data name="NuGet_OpenVision_WpfDescription" xml:space="preserve">
+    <value>Components and services for WPF application integration.</value>
   </data>
-  <data name="Status" xml:space="preserve">
-    <value>Status</value>
+  <data name="NuGet_OpenVision_WpfTitle" xml:space="preserve">
+    <value>OpenVision.Wpf</value>
   </data>
-  <data name="Type" xml:space="preserve">
-    <value>Type</value>
+  <data name="Packages_Intro" xml:space="preserve">
+    <value>Enhance your development experience with our suite of NuGet packages for multiple platforms:</value>
   </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+  <data name="Packages_NuGet_LinkText" xml:space="preserve">
+    <value>NuGet.org</value>
+  </data>
+  <data name="Packages_NuGet_Summary" xml:space="preserve">
+    <value>Visit NuGet.org for more details and additional packages.</value>
+  </data>
+  <data name="Packages_Title" xml:space="preserve">
+    <value>OpenVision NuGet Packages</value>
+  </data>
+  <data name="SupportFAQ_Description" xml:space="preserve">
+    <value>Welcome to the OpenVision Support Center – your one-stop resource for assistance with our innovative platform that combines augmented reality with advanced image and object recognition technology.</value>
+  </data>
+  <data name="SupportFAQ_Title" xml:space="preserve">
+    <value>Support &amp; FAQ</value>
   </data>
 </root>

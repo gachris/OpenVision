@@ -120,20 +120,14 @@
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="Log_In" xml:space="preserve">
-    <value>Log In</value>
+  <data name="Sign_in" xml:space="preserve">
+    <value>Sign in</value>
   </data>
-  <data name="Log_out" xml:space="preserve">
-    <value>Log out</value>
+  <data name="Sign_out" xml:space="preserve">
+    <value>Sing out</value>
   </data>
-  <data name="Privacy" xml:space="preserve">
-    <value>Privacy</value>
-  </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="Support" xml:space="preserve">
-    <value>Support</value>
+  <data name="Sign_up" xml:space="preserve">
+    <value>Sign up</value>
   </data>
   <data name="Target_manager" xml:space="preserve">
     <value>Target Manager</value>
