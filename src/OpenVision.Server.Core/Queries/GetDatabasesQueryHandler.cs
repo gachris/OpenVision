@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Queries;
 
 /// <summary>
 /// Handles the GetDatabasesQuery and returns the list of database DTOs.
 /// </summary>
-public class GetDatabasesQueryHandler : IRequestHandler<GetDatabasesQuery, IQueryable<DatabaseDto>>
+public class GetDatabasesQueryHandler : IRequestHandler<GetDatabasesQuery, IEnumerable<DatabaseDto>>
 {
     #region Fields/Consts
 
@@ -51,26 +50,29 @@ public class GetDatabasesQueryHandler : IRequestHandler<GetDatabasesQuery, IQuer
     /// <param name="request">The query request.</param>
     /// <param name="cancellationToken">Token used to cancel the operation if needed.</param>
     /// <returns>
-    /// An <see cref="IQueryable{DatabaseDto}"/> containing the list of database DTOs.
+    /// An <see cref="IEnumerable{DatabaseDto}"/> containing the list of database DTOs.
     /// </returns>
-    public async Task<IQueryable<DatabaseDto>> Handle(GetDatabasesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<DatabaseDto>> Handle(GetDatabasesQuery request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
 
         _logger.LogInformation("Getting databases for user {UserId}", userId);
 
-        var databasesQueryable = await _databasesRepository.GetAsync();
+        var databaseForUserSpecification = new DatabaseForUserSpecification(userId)
+        {
+            Includes =
+            {
+                database => database.ImageTargets,
+                database => database.ApiKeys
+            }
+        };
+        var databases = await _databasesRepository.GetBySpecificationAsync(databaseForUserSpecification, cancellationToken);
+        var databaseDtos = _mapper.Map<IEnumerable<DatabaseDto>>(databases);
 
-        var databases = databasesQueryable
-            .Include(a => a.ImageTargets)
-            .Include(a => a.ApiKeys)
-            .Where(x => x.UserId == userId);
+        _logger.LogInformation("Retrieved {Count} databases for user {UserId}", databases.Count(), userId);
 
-        var databasesDto = databases.ProjectTo<DatabaseDto>(_mapper.ConfigurationProvider);
-
-        _logger.LogInformation("Retrieved {Count} databases for user {UserId}", databasesDto.Count(), userId);
-
-        return databasesDto;
+        return databaseDtos;
     }
 
     #endregion

@@ -12,8 +12,14 @@ public class UpdateTargetWidthViewModel
     /// </summary>
     [Display(Name = "Target id")]
     [Required(ErrorMessage = "Target id is required.")]
-    public virtual Guid? Id { get; set; }
+    public virtual Guid? TargetId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the ID of the database.
+    /// </summary>
+    [Display(Name = "Database id")]
+    [Required(ErrorMessage = "Database id is required.")]
+    public virtual Guid? DatabaseId { get; set; }
     /// <summary>
     /// Gets or sets the size of the target in the X dimension.
     /// </summary>

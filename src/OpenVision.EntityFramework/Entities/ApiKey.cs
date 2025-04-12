@@ -1,4 +1,4 @@
-﻿using OpenVision.Shared;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.EntityFramework.Entities;
 
@@ -40,5 +40,5 @@ public partial class ApiKey
     /// <summary>
     /// Gets or sets the associated database entity navigation property.
     /// </summary>
-    public virtual Database Database { get; set; } = null!;
+    public virtual Database? Database { get; set; }
 }

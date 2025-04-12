@@ -1,0 +1,83 @@
+﻿@model OpenVision.Client.Core.ViewModels.ContactViewModel
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Contact"];
+}
+
+@section styles {
+    <style>
+        .contact-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+            .contact-container h1 {
+                margin-bottom: 1.5rem;
+                font-size: 2.5rem;
+                text-align: center;
+                color: #343a40;
+            }
+
+            .contact-container p.description {
+                font-size: 1.1rem;
+                line-height: 1.5;
+                margin-bottom: 1.5rem;
+                color: #495057;
+            }
+
+            .contact-container label {
+                font-weight: 600;
+            }
+
+            .contact-container .form-control {
+                margin-bottom: 1rem;
+            }
+
+            .contact-container button {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 1.1rem;
+                margin-top: 1rem;
+            }
+    </style>
+}
+
+<section class="content">
+    <div class="container py-2">
+        <div class="contact-container">
+            <h1>@Localizer["Title"]</h1>
+            <p class="description">
+                @Localizer["Description_Paragraph1"]
+            </p>
+            <p class="description">
+                @Localizer["Description_Paragraph2"]
+            </p>
+            <form asp-action="Contact" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label asp-for="Name">@Localizer["Label_Name"]</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email">@Localizer["Label_Email"]</label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Message">@Localizer["Label_Message"]</label>
+                    <textarea asp-for="Message" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    @Localizer["Send_message"]
+                </button>
+            </form>
+        </div>
+    </div>
+</section>

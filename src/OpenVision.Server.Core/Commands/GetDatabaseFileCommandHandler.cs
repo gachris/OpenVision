@@ -4,7 +4,8 @@ using Microsoft.Extensions.Logging;
 using OpenVision.Core.Dataset;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
-using OpenVision.Shared;
+using OpenVision.Server.Core.Repositories.Specifications;
+using OpenVision.Shared.Types;
 using Path = System.IO.Path;
 
 namespace OpenVision.Server.Core.Commands;
@@ -51,21 +52,31 @@ public class GetDatabaseFileCommandHandler : IRequestHandler<GetDatabaseFileComm
     /// <returns>A <see cref="DatabaseFileDto"/> containing the filename, file contents, and content type.</returns>
     public async Task<DatabaseFileDto> Handle(GetDatabaseFileCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         _logger.LogInformation("User {UserId} requested download for database {DatabaseId}", userId, request.DatabaseId);
 
-        var databasesQueryable = await _databasesRepository.GetAsync();
-        databasesQueryable = databasesQueryable.Include(x => x.ImageTargets);
-
-        var database = await databasesQueryable.SingleOrDefaultAsync(
-            x => x.Id == request.DatabaseId &&
-                 x.UserId == userId &&
-                 x.Type == DatabaseType.Device,
-            cancellationToken);
+        var databaseForUserSpecification = new DatabaseForUserSpecification(request.DatabaseId, userId)
+        {
+            Includes =
+            {
+                database => database.ImageTargets,
+                database => database.ApiKeys
+            }
+        };
+        var databases = await _databasesRepository.GetBySpecificationAsync(databaseForUserSpecification, cancellationToken);
+        var database = databases.SingleOrDefault();
 
         if (database is null)
         {
             _logger.LogWarning("Database {DatabaseId} not found for user {UserId}", request.DatabaseId, userId);
+            throw new ArgumentNullException(nameof(database));
+        }
+
+        if (database.Type is not DatabaseType.Device)
+        {
+            _logger.LogWarning("Database {DatabaseId} not is not supported for download.", request.DatabaseId);
             throw new ArgumentNullException(nameof(database));
         }
 

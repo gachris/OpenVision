@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Client.Core.ViewModels;
 

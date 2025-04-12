@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
@@ -15,7 +14,7 @@ public class GetTargetByIdQueryHandler : IRequestHandler<GetTargetByIdQuery, Tar
     #region Fields/Consts
 
     private readonly IImageTargetsRepository _imageTargetsRepository;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ITargetSpecificationFactory _targetSpecificationFactory;
     private readonly IMapper _mapper;
     private readonly ILogger<GetTargetByIdQueryHandler> _logger;
 
@@ -25,17 +24,17 @@ public class GetTargetByIdQueryHandler : IRequestHandler<GetTargetByIdQuery, Tar
     /// Initializes a new instance of the <see cref="GetTargetByIdQueryHandler"/> class.
     /// </summary>
     /// <param name="imageTargetsRepository">Repository for accessing image targets.</param>
-    /// <param name="currentUserService">The current user service to obtain the current user's identifier.</param>
+    /// <param name="targetSpecificationFactory">The factory used to create the appropriate target specification based on the current authentication context.</param>
     /// <param name="mapper">The AutoMapper instance used for mapping entities to DTOs.</param>
     /// <param name="logger">The logger instance used for logging informational messages and errors.</param>
     public GetTargetByIdQueryHandler(
         IImageTargetsRepository imageTargetsRepository,
-        ICurrentUserService currentUserService,
+        ITargetSpecificationFactory targetSpecificationFactory,
         IMapper mapper,
         ILogger<GetTargetByIdQueryHandler> logger)
     {
         _imageTargetsRepository = imageTargetsRepository;
-        _currentUserService = currentUserService;
+        _targetSpecificationFactory = targetSpecificationFactory;
         _mapper = mapper;
         _logger = logger;
     }
@@ -54,20 +53,13 @@ public class GetTargetByIdQueryHandler : IRequestHandler<GetTargetByIdQuery, Tar
     /// </returns>
     public async Task<TargetDto?> Handle(GetTargetByIdQuery request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
-
-        _logger.LogInformation("Getting target {TargetId} for user {UserId}", request.TargetId, userId);
-
-        var imageTargetsQueryable = await _imageTargetsRepository.GetAsync();
-
-        var imageTarget = await imageTargetsQueryable
-            .Include(x => x.Database)
-            .Where(x => x.Id == request.TargetId && x.Database.UserId == userId)
-            .SingleOrDefaultAsync(cancellationToken);
+        var imageTargetForUserSpecification = _targetSpecificationFactory.GetImageTargetSpecification(request.TargetId);
+        var imageTargets = await _imageTargetsRepository.GetBySpecificationAsync(imageTargetForUserSpecification, cancellationToken);
+        var imageTarget = imageTargets.SingleOrDefault();
 
         if (imageTarget is null)
         {
-            _logger.LogWarning("Target {TargetId} not found for user {UserId}", request.TargetId, userId);
+            _logger.LogWarning("Target {TargetId} not found", request.TargetId);
             return null;
         }
 

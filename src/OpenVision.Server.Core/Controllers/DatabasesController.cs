@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Auth;
 using OpenVision.Server.Core.Contracts;
 using OpenVision.Server.Core.Dtos;
-using OpenVision.Server.Core.Requests;
 using OpenVision.Shared.Requests;
 using OpenVision.Shared.Responses;
 
@@ -23,7 +21,6 @@ public class DatabasesController : ApiControllerBase
     #region Fields/Consts
 
     private readonly IDatabasesService _databasesService;
-    private readonly IMapper _mapper;
 
     #endregion
 
@@ -36,10 +33,9 @@ public class DatabasesController : ApiControllerBase
     public DatabasesController(
         IDatabasesService databasesService,
         IMapper mapper,
-        ILogger<DatabasesController> logger) : base(logger)
+        ILogger<DatabasesController> logger) : base(mapper, logger)
     {
         _databasesService = databasesService;
-        _mapper = mapper;
     }
 
     #region Methods
@@ -58,7 +54,10 @@ public class DatabasesController : ApiControllerBase
         {
             _logger.LogInformation("Received request to get databases list with query: {@Query}", query);
 
-            var pagedResponse = await GetPagedResponseAsync(query, cancellationToken);
+            var databaseDtosQueryable = await _databasesService.GetQueryableAsync(cancellationToken);
+            databaseDtosQueryable = databaseDtosQueryable.Where(x => string.IsNullOrEmpty(query.Name) || x.Name.Contains(query.Name));
+
+            var pagedResponse = await GetPagedResponseAsync<DatabaseDto, DatabaseResponse>(databaseDtosQueryable, query, cancellationToken);
             _logger.LogInformation("Returning paged databases list with total records: {TotalRecords}", pagedResponse.TotalRecords);
             return new OkObjectResult(pagedResponse);
         });
@@ -142,80 +141,6 @@ public class DatabasesController : ApiControllerBase
             _logger.LogInformation("Database with id: {Id} deleted successfully.", id);
             return new OkObjectResult(Success(deleted));
         });
-    }
-
-    #endregion
-
-    #region Helper Methods
-
-    /// <summary>
-    /// Builds a pagination URL using the Url.Action method with the specified pagination filter.
-    /// </summary>
-    /// <param name="filter">The pagination filter containing the page and size parameters.</param>
-    /// <returns>A <see cref="Uri"/> representing the pagination link.</returns>
-    private Uri BuildPageUri(BrowserQuery filter)
-    {
-        var request = HttpContext.Request;
-        var url = Url.Action("Get", new { page = filter.Page, size = filter.Size });
-        var baseUri = $"{request.Scheme}://{request.Host}{url}";
-
-        if (string.IsNullOrEmpty(baseUri))
-        {
-            throw new InvalidOperationException("Unable to generate URL for the pagination link.");
-        }
-
-        return new Uri(baseUri);
-    }
-
-    /// <summary>
-    /// Retrieves a paginated response of databases for the query parameters.
-    /// </summary>
-    /// <param name="query">The pagination and filtering query parameters.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An <see cref="IPagedResponse{T}"/> containing a collection of <see cref="DatabaseResponse"/> objects.</returns>
-    private async Task<IPagedResponse<IEnumerable<DatabaseResponse>>> GetPagedResponseAsync(
-        DatabaseBrowserQuery query,
-        CancellationToken cancellationToken)
-    {
-        var databasesQueryable = await _databasesService.GetAsync(cancellationToken);
-        var validFilter = new BrowserQuery(query.Page, query.Size);
-        var take = validFilter.Size;
-        var skip = validFilter.Page - 1;
-
-        var totalRecords = await databasesQueryable.CountAsync(cancellationToken);
-        var databaseDtos = await databasesQueryable
-            .OrderBy(x => x.Created)
-            .Skip(skip * take)
-            .Take(take)
-            .ToListAsync(cancellationToken);
-
-        var totalPages = totalRecords / (double)validFilter.Size;
-        var roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
-
-        var nextPage = validFilter.Page >= 1 && validFilter.Page < roundedTotalPages
-            ? BuildPageUri(new BrowserQuery(validFilter.Page + 1, validFilter.Size))
-            : null;
-
-        var previousPage = validFilter.Page - 1 >= 1 && validFilter.Page <= roundedTotalPages
-            ? BuildPageUri(new BrowserQuery(validFilter.Page - 1, validFilter.Size))
-            : null;
-
-        var firstPage = BuildPageUri(new BrowserQuery(1, validFilter.Size));
-        var lastPage = BuildPageUri(new BrowserQuery(roundedTotalPages, validFilter.Size));
-
-        return new PagedResponse<IEnumerable<DatabaseResponse>>(
-            validFilter.Page,
-            validFilter.Size,
-            firstPage,
-            lastPage,
-            roundedTotalPages,
-            totalRecords,
-            nextPage,
-            previousPage,
-            new(_mapper.Map<IEnumerable<DatabaseResponse>>(databaseDtos)),
-            Guid.NewGuid(),
-            Shared.StatusCode.Success,
-            []);
     }
 
     #endregion

@@ -1,49 +1,166 @@
 ﻿@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = @Localizer["Support"];
+    ViewData["Title"] = Localizer["Support"];
 }
 
-@section styles{
+@section styles {
     <style>
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
+        /* Overall Page Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Hero Section Styles */
+        .support-hero {
+            background: linear-gradient(135deg, #ffffff 0%, #e9eff5 100%);
+            padding: 4rem 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+            .support-hero h1 {
+                font-size: 3rem;
+                font-weight: 700;
+                color: #343a40;
+                margin-bottom: 1rem;
+            }
+
+            .support-hero p {
+                font-size: 1.2rem;
+                line-height: 1.6;
+                max-width: 800px;
+                margin: auto;
+                color: #495057;
+            }
+
+            .support-hero .btn {
+                padding: 0.75rem 1.75rem;
+                font-size: 1.1rem;
+                border-radius: 0.3rem;
+            }
+
+        /* FAQ Section Styles */
+        .faq-section {
+            padding: 2rem 1.5rem;
+        }
+
+            .faq-section h2 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                color: #343a40;
+            }
+
+            .faq-section h3 {
+                font-size: 1.5rem;
+                margin-top: 1.5rem;
+                color: #343a40;
+            }
+
+            .faq-section p {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                margin-bottom: 1rem;
+                color: #495057;
+            }
+
+        /* NuGet Packages Section Styles */
+        .packages-section {
+            padding: 2rem 1.5rem;
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+        }
+
+            .packages-section h2 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                color: #343a40;
+            }
+
+            .packages-section ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            .packages-section li {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+                color: #495057;
+            }
+
+            .packages-section a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+                .packages-section a:hover {
+                    text-decoration: underline;
+                }
     </style>
 }
 
-<section>
+<section class="support-hero">
     <div class="container">
-        <div>
-            <h1 class="mb-4">@ViewData["Title"]</h1>
-            <h2>Frequently Asked Questions</h2>
-            <p>Here are some of the most common questions we receive:</p>
-            <h3>How do I create an AR experience?</h3>
-            <p>Creating an AR experience is easy with Vision. Simply sign up for an account, and use our intuitive interface to upload your own 3D models, animations, and images. You can then add interactivity and other features to your AR experience to create a truly immersive experience.</p>
-            <h3>How do I integrate AR into my website or app?</h3>
-            <p>We offer a variety of integration options for our platform, including APIs and SDKs that make it easy to incorporate AR into your website or app. Our team of experts is available to provide guidance and support throughout the integration process.</p>
-            <h3>What kind of support do you offer?</h3>
-            <p>We offer comprehensive support to our users, including resources such as documentation, tutorials, and FAQs. Our team of experts is also available to provide personalized support via email or live chat.</p>
-            <h2>Contact Us</h2>
-            <p>If you have any questions or concerns, please don't hesitate to contact us. You can reach us via email, phone, or live chat:</p>
-            <ul>
-                <li><strong>Email:</strong> support@vision.com</li>
-                <li><strong>Phone:</strong> 1-800-123-4567</li>
-                <li><strong>Live Chat:</strong> Click on the chat icon in the lower-right corner of your screen to start a conversation with one of our support team members.</li>
-            </ul>
-            <p>Our support team is available Monday through Friday, from 9am to 5pm EST.</p>
-            <h2>Additional Resources</h2>
-            <p>For additional resources and information, be sure to check out our documentation and tutorials. You can also connect with our community of users on our forums and social media channels.</p>
-            <ul>
-                <li><strong>Documentation:</strong> Visit our documentation site for detailed information on our platform and its features.</li>
-                <li><strong>Tutorials:</strong> Check out our video tutorials for step-by-step guidance on creating AR experiences.</li>
-                <li><strong>Forums:</strong> Connect with other users and our support team on our forums.</li>
-                <li><strong>Social Media:</strong> Follow us on Twitter, Facebook, and Instagram for news and updates.</li>
-            </ul>
-        </div>
+        <h1>@Localizer["SupportFAQ_Title"]</h1>
+        <p>
+            @Localizer["SupportFAQ_Description"]
+        </p>
+    </div>
+</section>
+
+<section class="faq-section">
+    <div class="container">
+        <h2>@Localizer["FAQ_Title"]</h2>
+        <h3>@Localizer["FAQ_Question1"]</h3>
+        <p>
+            @Localizer["FAQ_Answer1"]
+        </p>
+        <h3>@Localizer["FAQ_Question2"]</h3>
+        <p>
+            @Localizer["FAQ_Answer2"]
+        </p>
+        <h3>@Localizer["FAQ_Question3"]</h3>
+        <p>
+            @Localizer["FAQ_Answer3"]
+        </p>
+    </div>
+</section>
+
+<section class="packages-section">
+    <div class="container">
+        <h2>@Localizer["Packages_Title"]</h2>
+        <p>
+            @Localizer["Packages_Intro"]
+        </p>
+        <ul>
+            <li>
+                <strong>
+                    <a href="https://www.nuget.org/packages/OpenVision.Maui" target="_blank">
+                        @Localizer["NuGet_OpenVision_MauiTitle"]
+                    </a>
+                </strong> – @Localizer["NuGet_OpenVision_MauiDescription"]
+            </li>
+            <li>
+                <strong>
+                    <a href="https://www.nuget.org/packages/OpenVision.WinUi" target="_blank">
+                        @Localizer["NuGet_OpenVision_WinUiTitle"]
+                    </a>
+                </strong> – @Localizer["NuGet_OpenVision_WinUiDescription"]
+            </li>
+            <li>
+                <strong>
+                    <a href="https://www.nuget.org/packages/OpenVision.Wpf" target="_blank">
+                        @Localizer["NuGet_OpenVision_WpfTitle"]
+                    </a>
+                </strong> – @Localizer["NuGet_OpenVision_WpfDescription"]
+            </li>
+        </ul>
+        <p>
+            @Localizer["Packages_NuGet_Summary"]
+            <a href="https://www.nuget.org/packages?q=OpenVision" target="_blank">
+                @Localizer["Packages_NuGet_LinkText"]
+            </a>.
+        </p>
     </div>
 </section>

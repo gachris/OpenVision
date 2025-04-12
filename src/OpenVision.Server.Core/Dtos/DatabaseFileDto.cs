@@ -3,20 +3,20 @@
 /// <summary>
 /// Represents a data transfer object for a database file.
 /// </summary>
-public class DatabaseFileDto
+public record DatabaseFileDto
 {
     /// <summary>
-    /// Gets or sets the filename of the downloaded file.
+    /// Gets the filename of the downloaded file.
     /// </summary>
-    public required virtual string Filename { get; set; }
+    public required virtual string Filename { get; init; }
 
     /// <summary>
-    /// Gets or sets the contents of the downloaded file.
+    /// Gets the contents of the downloaded file.
     /// </summary>
-    public required virtual byte[] FileContents { get; set; }
+    public required virtual byte[] FileContents { get; init; }
 
     /// <summary>
-    /// Gets or sets the content type of the downloaded file.
+    /// Gets the content type of the downloaded file.
     /// </summary>
-    public required virtual string ContentType { get; set; }
+    public required virtual string ContentType { get; init; }
 }

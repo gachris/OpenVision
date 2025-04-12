@@ -4,26 +4,88 @@
     ViewData["Title"] = @Localizer["Home"];
 }
 
-@section styles{
+@section styles {
     <style>
-      
-        p {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
+        /* Overall Page Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Hero Section Styles */
+        .hero-section {
+            background: linear-gradient(135deg, #ffffff 0%, #e9eff5 100%);
+            padding: 6rem 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+            .hero-section h1 {
+                font-size: 3.5rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                color: #343a40;
+            }
+
+            .hero-section p {
+                font-size: 1.2rem;
+                line-height: 1.6;
+                margin-bottom: 1.5rem;
+                max-width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+                color: #495057;
+            }
+
+            .hero-section .btn {
+                padding: 0.75rem 1.75rem;
+                font-size: 1.1rem;
+                border-radius: 0.3rem;
+            }
+
+        /* Content Section Styles */
+        .content-section {
+            padding: 3rem 1.5rem;
+        }
+
+            .content-section h2 {
+                font-size: 2.5rem;
+                margin-bottom: 1.5rem;
+                color: #343a40;
+            }
+
+            .content-section p {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                margin-bottom: 1.5rem;
+                color: #495057;
+            }
     </style>
 }
 
-<section>
+<section class="hero-section">
     <div class="container">
-        <div>
-            <h1 class="mb-4">Welcome to Vision!</h1>
-            <p>We are excited to introduce you to our cutting-edge platform that offers unparalleled augmented reality experiences. Our technology is designed to bring your imagination to life, allowing you to see and interact with virtual objects in the real world like never before.</p>
-            <p>At Vision, we pride ourselves on providing a user-friendly experience that is accessible to anyone. Whether you're an individual user or a business looking to incorporate AR into your marketing strategy, we have the tools and resources to make it happen.</p>
-            <p>Our platform is designed to be flexible and customizable, allowing you to create unique AR experiences that are tailored to your specific needs. With our intuitive interface, you can easily upload your own content, including 3D models, animations, and images, to bring your vision to life.</p>
-            <p>Our team of experts is dedicated to providing you with the support and guidance you need to make the most of our platform. We offer comprehensive training and resources to help you get started, as well as ongoing support to ensure your continued success.</p>
-        </div>
+        <h1 class="mb-3">@Localizer["Hero_Title"]</h1>
+        <p class="lead">
+            @Localizer["Hero_Description"]
+        </p>
+        <a href="@Url.Action("support", "home")" class="btn btn-primary">
+            @Localizer["Hero_GetStarted"]
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        <h2>@Localizer["Content_Title"]</h2>
+        <p>
+            @Localizer["Content_Paragraph1"]
+        </p>
+        <p>
+            @Localizer["Content_Paragraph2"]
+        </p>
+        <p>
+            @Localizer["Content_Paragraph3"]
+        </p>
     </div>
 </section>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using OpenVision.Shared;
 using OpenVision.Shared.Responses;
+using OpenVision.Shared.Types;
 using Error = OpenVision.Shared.Responses.Error;
 
 namespace OpenVision.Server.Core.Filters;

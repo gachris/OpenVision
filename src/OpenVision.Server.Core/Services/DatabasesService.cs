@@ -35,7 +35,14 @@ public class DatabasesService : IDatabasesService
     #region Methods
 
     /// <inheritdoc/>
-    public async Task<IQueryable<DatabaseDto>> GetAsync(CancellationToken cancellationToken = default)
+    public async Task<IQueryable<DatabaseDto>> GetQueryableAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Dispatching GetQueryableDatabaseQuery");
+        return await _mediator.Send(new GetQueryableDatabaseQuery(), cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<DatabaseDto>> GetAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Dispatching GetDatabasesQuery");
         return await _mediator.Send(new GetDatabasesQuery(), cancellationToken);

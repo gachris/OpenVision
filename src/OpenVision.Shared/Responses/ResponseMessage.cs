@@ -1,28 +1,25 @@
-﻿using System.Text.Json.Serialization;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents the base class for all API response messages.
 /// </summary>
-public class ResponseMessage : IResponseMessage
+public record ResponseMessage : IResponseMessage
 {
     /// <summary>
     /// Gets the unique identifier for the API transaction.
     /// </summary>
-    [JsonPropertyName("transaction_id")]
     public virtual Guid TransactionId { get; }
 
     /// <summary>
     /// Gets the status code that indicates the success or failure of the API transaction.
     /// </summary>
-    [JsonPropertyName("status_code")]
     public virtual StatusCode StatusCode { get; }
 
     /// <summary>
     /// Gets the list of errors associated with the response.
     /// </summary>
-    [JsonPropertyName("errors")]
     public virtual IReadOnlyCollection<Error> Errors { get; }
 
     /// <summary>
@@ -45,12 +42,11 @@ public class ResponseMessage : IResponseMessage
 /// Represents an API response message that contains a response payload of type <typeparamref name="TResult"/>.
 /// </summary>
 /// <typeparam name="TResult">The type of the response data.</typeparam>
-public class ResponseMessage<TResult> : ResponseMessage, IResponseMessage, IResponseMessage<TResult>
+public record ResponseMessage<TResult> : ResponseMessage, IResponseMessage, IResponseMessage<TResult>
 {
     /// <summary>
     /// Gets the response payload of type <typeparamref name="TResult"/>.
     /// </summary>
-    [JsonPropertyName("response")]
     public virtual ResponseDoc<TResult> Response { get; }
 
     /// <summary>

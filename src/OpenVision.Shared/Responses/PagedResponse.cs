@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Shared.Responses;
 
@@ -6,54 +6,46 @@ namespace OpenVision.Shared.Responses;
 /// Represents a paged response message with data returned by the API.
 /// </summary>
 /// <typeparam name="TResult">The type of the response data.</typeparam>
-public class PagedResponse<TResult> : ResponseMessage<TResult>, IPagedResponse<TResult>
+public record PagedResponse<TResult> : ResponseMessage<TResult>, IPagedResponse<TResult>
 {
     /// <summary>
     /// Gets the page number of the current page.
     /// </summary>
-    [JsonPropertyName("page")]
     public virtual int Page { get; }
 
     /// <summary>
     /// Gets the number of items per page.
     /// </summary>
-    [JsonPropertyName("size")]
     public virtual int Size { get; }
 
     /// <summary>
     /// Gets the URI of the first page.
     /// </summary>
-    [JsonPropertyName("first_page")]
     public virtual Uri? FirstPage { get; }
 
     /// <summary>
     /// Gets the URI of the last page.
     /// </summary>
-    [JsonPropertyName("last_page")]
     public virtual Uri? LastPage { get; }
 
     /// <summary>
     /// Gets the total number of pages.
     /// </summary>
-    [JsonPropertyName("total_pages")]
     public virtual int TotalPages { get; }
 
     /// <summary>
     /// Gets the total number of records.
     /// </summary>
-    [JsonPropertyName("total_records")]
     public virtual int TotalRecords { get; }
 
     /// <summary>
     /// Gets the URI of the next page.
     /// </summary>
-    [JsonPropertyName("next_page")]
     public virtual Uri? NextPage { get; }
 
     /// <summary>
     /// Gets the URI of the previous page.
     /// </summary>
-    [JsonPropertyName("previous_page")]
     public virtual Uri? PreviousPage { get; }
 
     /// <summary>
@@ -71,18 +63,19 @@ public class PagedResponse<TResult> : ResponseMessage<TResult>, IPagedResponse<T
     /// <param name="transactionId">The unique identifier for the API transaction.</param>
     /// <param name="statusCode">The status code that indicates the success or failure of the API transaction.</param>
     /// <param name="errors">The list of errors associated with the response.</param>
-    public PagedResponse(int page,
-                         int size,
-                         Uri? firstPage,
-                         Uri? lastPage,
-                         int totalPages,
-                         int totalRecords,
-                         Uri? nextPage,
-                         Uri? previousPage,
-                         ResponseDoc<TResult> response,
-                         Guid transactionId,
-                         StatusCode statusCode,
-                         IReadOnlyCollection<Error> errors) : base(response, transactionId, statusCode, errors)
+    public PagedResponse(
+        int page,
+        int size,
+        Uri? firstPage,
+        Uri? lastPage,
+        int totalPages,
+        int totalRecords,
+        Uri? nextPage,
+        Uri? previousPage,
+        ResponseDoc<TResult> response,
+        Guid transactionId,
+        StatusCode statusCode,
+        IReadOnlyCollection<Error> errors) : base(response, transactionId, statusCode, errors)
     {
         Page = page;
         Size = size;

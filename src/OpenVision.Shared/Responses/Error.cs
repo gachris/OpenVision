@@ -1,22 +1,20 @@
-﻿using System.Text.Json.Serialization;
+﻿using OpenVision.Shared.Types;
 
 namespace OpenVision.Shared.Responses;
 
 /// <summary>
 /// Represents an error that occurred during the processing of a request.
 /// </summary>
-public class Error
+public record Error
 {
     /// <summary>
     /// Gets the result code associated with the error.
     /// </summary>
-    [JsonPropertyName("result_code")]
     public virtual ResultCode ResultCode { get; }
 
     /// <summary>
     /// Gets the error message.
     /// </summary>
-    [JsonPropertyName("message")]
     public virtual string Message { get; }
 
     /// <summary>

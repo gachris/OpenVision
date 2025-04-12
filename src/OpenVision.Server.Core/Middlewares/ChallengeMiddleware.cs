@@ -2,8 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
-using OpenVision.Shared;
 using OpenVision.Shared.Responses;
+using OpenVision.Shared.Types;
 using Error = OpenVision.Shared.Responses.Error;
 
 namespace OpenVision.Server.Core.Middlewares;

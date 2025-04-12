@@ -1,0 +1,45 @@
+﻿@using OpenVision.Shared.Types
+@model PostDatabaseViewModel
+@inject IViewLocalizer Localizer
+
+<form id="create-database-form" asp-controller="databases" asp-action="create" Method="post">
+    <div class="modal fade" id="create-database-modal" tabindex="-1" role="dialog" aria-labelledby="create-database-modal-label">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title font-weight-semi-bold" id="create-database-modal-label">@Localizer["Create_database_dialog_title"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div>
+                        @Html.TextBoxFor(model => model.Name, new { @placeholder = Localizer["Database_name_label"].Value + " *", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger small" })
+                    </div>
+                    <div class="mt-3">
+                        @Html.LabelFor(model => model.Type)
+                        <div>
+                            @{
+                                var deviceId = ViewData.TemplateInfo.GetFullHtmlFieldName("radioButton_Device");
+                                @Html.RadioButtonFor(model => model.Type, DatabaseType.Device, new { @checked="checked", @id = deviceId })
+                                @Html.Label(deviceId, Localizer["Database_type_device_label"].Value, new { @class="ml-2" })
+                            }
+                        </div>
+                        <div>
+                            @{
+                                var cloudId = ViewData.TemplateInfo.GetFullHtmlFieldName("radioButton_Cloud");
+                                @Html.RadioButtonFor(model => model.Type, DatabaseType.Cloud, new { @id = cloudId })
+                                @Html.Label(cloudId, Localizer["Database_type_cloud_label"].Value, new { @class="ml-2" })
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Type, null, new { @class = "text-danger small" })
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">@Localizer["Cancel_button"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Create_button"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

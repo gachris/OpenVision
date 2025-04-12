@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenVision.Server.Core.Contracts;
+using OpenVision.Server.Core.Repositories.Specifications;
 
 namespace OpenVision.Server.Core.Commands;
 
@@ -44,16 +44,21 @@ public class DeleteDatabaseCommandHandler : IRequestHandler<DeleteDatabaseComman
     /// <returns>A boolean value indicating whether the deletion was successful.</returns>
     public async Task<bool> Handle(DeleteDatabaseCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserService.UserId
+            ?? throw new ArgumentException("User identifier not found.");
+
         _logger.LogInformation("Deleting database {DatabaseId} for user {UserId}", request.DatabaseId, userId);
 
-        var databasesQueryable = await _databasesRepository.GetAsync();
-
-        var database = await databasesQueryable
-            .Where(x => x.Id == request.DatabaseId && x.UserId == userId)
-            .Include(a => a.ImageTargets)
-            .Include(a => a.ApiKeys)
-            .SingleOrDefaultAsync(cancellationToken);
+        var databaseForUserSpecification = new DatabaseForUserSpecification(request.DatabaseId, userId)
+        {
+            Includes =
+            {
+                database => database.ImageTargets,
+                database => database.ApiKeys
+            }
+        };
+        var databases = await _databasesRepository.GetBySpecificationAsync(databaseForUserSpecification, cancellationToken);
+        var database = databases.SingleOrDefault();
 
         if (database is null)
         {

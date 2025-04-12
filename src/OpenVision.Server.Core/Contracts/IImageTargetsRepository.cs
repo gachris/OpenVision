@@ -2,13 +2,9 @@
 
 namespace OpenVision.Server.Core.Contracts;
 
-public interface IImageTargetsRepository
+/// <summary>
+/// Provides asynchronous methods to access and manipulate image target data.
+/// </summary>
+public interface IImageTargetsRepository : IGenericRepository<ImageTarget>
 {
-    Task<IQueryable<ImageTarget>> GetAsync();
-
-    Task<bool> CreateAsync(ImageTarget imageTarget, CancellationToken cancellationToken = default);
-
-    Task<bool> UpdateAsync(ImageTarget imageTarget, CancellationToken cancellationToken = default);
-
-    Task<bool> RemoveAsync(ImageTarget imageTarget, CancellationToken cancellationToken = default);
 }

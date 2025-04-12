@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
-using OpenVision.Shared;
+using OpenVision.Shared.Types;
 
 namespace OpenVision.Client.Core.ViewModels;
 

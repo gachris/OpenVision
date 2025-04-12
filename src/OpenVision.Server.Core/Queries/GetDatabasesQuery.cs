@@ -6,4 +6,4 @@ namespace OpenVision.Server.Core.Queries;
 /// <summary>
 /// Represents a query to retrieve all databases.
 /// </summary>
-public record GetDatabasesQuery() : IRequest<IQueryable<DatabaseDto>>;
+public record GetDatabasesQuery() : IRequest<IEnumerable<DatabaseDto>>;

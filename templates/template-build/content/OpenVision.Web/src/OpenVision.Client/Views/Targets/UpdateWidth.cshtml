@@ -1,0 +1,27 @@
+﻿@model UpdateTargetWidthViewModel
+@inject IViewLocalizer Localizer
+
+<form id="update-target-width-form" asp-controller="targets" asp-action="updateWidth" asp-route-databaseId="@Model.DatabaseId" asp-route-targetId="@Model.TargetId" Method="post">
+    <div class="modal fade" id="update-target-width-modal" tabindex="-1" role="dialog" aria-labelledby="update-target-width-modal-label">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title font-weight-semi-bold" id="update-target-width-modal-label">@Localizer["Edit_width_title"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.TextBoxFor(model => model.TargetId, new { @type = "hidden" })
+                     <div class="mb-3">
+                        @Html.TextBoxFor(model => model.Width, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Width, null, new { @class = "text-danger small" })
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">@Localizer["Cancel_button"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Save_button"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

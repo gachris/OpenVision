@@ -1,0 +1,116 @@
+﻿@using OpenVision.Shared.Types
+
+@{
+    ViewData["Title"] = @Localizer["Page_title"];
+}
+
+@model PagedResponse<IEnumerable<DatabaseResponse>>
+@inject IViewLocalizer Localizer
+
+<section class="content">
+    <div class="container">
+        <div>
+            <div class="ng-star-inserted">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1 id="page-main-title">@Localizer["Databases_title"]</h1>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#create-database-modal">@Localizer["Add_database_button"]</a>
+                    </div>
+                </div>
+                <div class="ng-star-inserted">
+                    <hr>
+                    <h5 id="page-sub-title">@Localizer["Databases_subtitle"]</h5>
+                </div>
+                <div>
+                    <div style="height: 25px;"></div>
+                </div>
+            </div>
+            <div>
+                <div class="list-actions-wrapper">
+                    <span class="left">
+                        <form asp-controller="databases" asp-action="index" method="get">
+                            <div class="form-row d-flex">
+                                <div class="mb-3 flex-grow-1">
+                                    <input name="search" value="@ViewBag.Search" type="text" placeholder="@Localizer["Search_input"]" class="form-control" />
+                                </div>
+                                <div class="ml-2 mb-3">
+                                    <input type="submit" class="btn btn-primary" value="@Localizer["Search_button"]" />
+                                </div>
+                            </div>
+                        </form>
+                    </span>
+                </div>
+                <div>
+                    <div style="height: 25px;"></div>
+                </div>
+                <div class="row" style="min-height:60vh">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>@Localizer["Database_name_column_header"]</th>
+                                        <th>@Localizer["Database_type_column_header"]</th>
+                                        <th>@Localizer["Database_targets_count_column_header"]</th>
+                                        <th>@Localizer["Database_modified_column_header"]</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var database in Model.Response.Result)
+                                    {
+                                        <tr class="tr-clickable" onclick="location.href='@Url.Action("details", "databases", new { id = database.Id })'">
+                                            <td>@database.Name</td>
+                                            <td>@database.Type</td>
+                                            <td>@database.Targets.Count()</td>
+                                            <td>@database.Updated.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <a href="#" class="link-danger" data-toggle="modal" data-target="#delete-database-modal" data-database-id="@database.Id" data-database-name="@database.Name" onclick="showDeleteModal(event, this);">
+                                                    <span class="oi oi-trash"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        @await Html.PartialAsync("Common/Pager", new Pager() { Action = "databases", Size = Model.Size, TotalCount = Model.TotalRecords })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("Create", new PostDatabaseViewModel() { Type = DatabaseType.Device })
+
+@await Html.PartialAsync("Delete", new DeleteDatabaseViewModel())
+
+@section scripts {
+    <script>
+        function showDeleteModal(event, element) {
+            event.stopImmediatePropagation();
+            var modal = $('#delete-database-modal');
+            var databaseId = $(element).attr('data-database-id');
+            var databaseName = $(element).attr('data-database-name');
+
+            // Update the modal display information
+            modal.find('#delete-database-name').text(databaseName);
+            modal.find('#delete-hidden-input-database-id').val(databaseId);
+            modal.find('#delete-hidden-input-database-name').val(databaseName);
+
+            // Update the form's action URL to replace the placeholder with the actual database ID.
+            var form = $('#delete-database-form');
+            var newAction = '/databases/' + databaseId + '/delete';
+            form.attr('action', newAction);
+
+            modal.modal('show');
+        }
+    </script>
+}
