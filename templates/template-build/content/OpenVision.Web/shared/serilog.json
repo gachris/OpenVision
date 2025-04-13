@@ -5,8 +5,7 @@
       "Default": "Debug",
       "Override": {
         "Microsoft": "Information",
-        "System": "Error",
-        "OpenVision": "Information"
+        "System": "Error"
       }
     },
     "WriteTo": [

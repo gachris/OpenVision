@@ -21,6 +21,9 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\OpenVision.Client\OpenVision.Client.csproj" />
+	  <ProjectReference Include="..\OpenVision.IdentityServer.Admin.Api\OpenVision.IdentityServer.Admin.Api.csproj" />
+	  <ProjectReference Include="..\OpenVision.IdentityServer.Admin\OpenVision.IdentityServer.Admin.csproj" />
+	  <ProjectReference Include="..\OpenVision.IdentityServer.STS.Identity\OpenVision.IdentityServer.STS.Identity.csproj" />
 	  <ProjectReference Include="..\OpenVision.Server\OpenVision.Server.csproj" />
 	</ItemGroup>
 

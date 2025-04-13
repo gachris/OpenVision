@@ -13,6 +13,22 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.ServiceDefaults", "src\OpenVision.ServiceDefaults\OpenVision.ServiceDefaults.csproj", "{0FD59B2D-D655-C30A-B171-12134AA2CCE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Admin", "src\OpenVision.IdentityServer.Admin\OpenVision.IdentityServer.Admin.csproj", "{2F250307-8705-CF9E-0D06-492AF96FD3E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Admin.Api", "src\OpenVision.IdentityServer.Admin.Api\OpenVision.IdentityServer.Admin.Api.csproj", "{DB6F6452-1945-8903-09BE-3C3D8823D34F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Admin.EntityFramework.MySql", "src\OpenVision.IdentityServer.Admin.EntityFramework.MySql\OpenVision.IdentityServer.Admin.EntityFramework.MySql.csproj", "{C6798A55-F447-5846-9DE1-80E07DA5E68D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL", "src\OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL\OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL.csproj", "{0221CB85-9592-1D91-A8C0-63E397F6DB49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Admin.EntityFramework.Shared", "src\OpenVision.IdentityServer.Admin.EntityFramework.Shared\OpenVision.IdentityServer.Admin.EntityFramework.Shared.csproj", "{843DFDD7-EC05-9737-AD82-AD61D17F448A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Admin.EntityFramework.SqlServer", "src\OpenVision.IdentityServer.Admin.EntityFramework.SqlServer\OpenVision.IdentityServer.Admin.EntityFramework.SqlServer.csproj", "{FF6B404A-2A57-9749-9F84-3F9C088C1C2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.Shared", "src\OpenVision.IdentityServer.Shared\OpenVision.IdentityServer.Shared.csproj", "{67D1C3BF-A80A-81B7-A4A1-729AC5B5AC39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVision.IdentityServer.STS.Identity", "src\OpenVision.IdentityServer.STS.Identity\OpenVision.IdentityServer.STS.Identity.csproj", "{061E4071-DA20-1D60-C732-9EA1CB924B47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +55,38 @@ Global
 		{0FD59B2D-D655-C30A-B171-12134AA2CCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FD59B2D-D655-C30A-B171-12134AA2CCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FD59B2D-D655-C30A-B171-12134AA2CCE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F250307-8705-CF9E-0D06-492AF96FD3E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F250307-8705-CF9E-0D06-492AF96FD3E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F250307-8705-CF9E-0D06-492AF96FD3E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F250307-8705-CF9E-0D06-492AF96FD3E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB6F6452-1945-8903-09BE-3C3D8823D34F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB6F6452-1945-8903-09BE-3C3D8823D34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB6F6452-1945-8903-09BE-3C3D8823D34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB6F6452-1945-8903-09BE-3C3D8823D34F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6798A55-F447-5846-9DE1-80E07DA5E68D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6798A55-F447-5846-9DE1-80E07DA5E68D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6798A55-F447-5846-9DE1-80E07DA5E68D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6798A55-F447-5846-9DE1-80E07DA5E68D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0221CB85-9592-1D91-A8C0-63E397F6DB49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0221CB85-9592-1D91-A8C0-63E397F6DB49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0221CB85-9592-1D91-A8C0-63E397F6DB49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0221CB85-9592-1D91-A8C0-63E397F6DB49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{843DFDD7-EC05-9737-AD82-AD61D17F448A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{843DFDD7-EC05-9737-AD82-AD61D17F448A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{843DFDD7-EC05-9737-AD82-AD61D17F448A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{843DFDD7-EC05-9737-AD82-AD61D17F448A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF6B404A-2A57-9749-9F84-3F9C088C1C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF6B404A-2A57-9749-9F84-3F9C088C1C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF6B404A-2A57-9749-9F84-3F9C088C1C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF6B404A-2A57-9749-9F84-3F9C088C1C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D1C3BF-A80A-81B7-A4A1-729AC5B5AC39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D1C3BF-A80A-81B7-A4A1-729AC5B5AC39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D1C3BF-A80A-81B7-A4A1-729AC5B5AC39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D1C3BF-A80A-81B7-A4A1-729AC5B5AC39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{061E4071-DA20-1D60-C732-9EA1CB924B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{061E4071-DA20-1D60-C732-9EA1CB924B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{061E4071-DA20-1D60-C732-9EA1CB924B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{061E4071-DA20-1D60-C732-9EA1CB924B47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,43 +12,29 @@ services:
       - './shared/nginx/certs:/etc/nginx/certs:ro'
     networks:
       proxy: null
-      visionui:
+      openvisionui:
         aliases:
-          - portal.vision.local
-          - api.vision.local
+          - sts.skoruba.local
+          - admin.skoruba.local
+          - admin-api.skoruba.local
+          - api.openvision.com
+          - www.openvision.com
     restart: always
-  vision.portal:
-    image: '${DOCKER_REGISTRY-}vision-portal'
-    build:
-      context: .
-      dockerfile: src/OpenVision.Client/Dockerfile
-    container_name: vision-portal
-    environment:
-      - VIRTUAL_HOST=portal.vision.local
-      - 'AppConfiguration__CloudApiUrl=https://api.vision.local'
-      - 'AppConfiguration__IdentityAdminRedirectUri=https://portal.vision.local'
-      - 'AppConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
-      - DockerConfiguration__UpdateCaCertificate=true
-      - ASPNETCORE_ENVIRONMENT=Development
-    depends_on:
-      - vision.api
-    volumes:
-      - './shared/serilog.json:/app/serilog.json'
-      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
-    networks:
-      visionui: null
-  vision.api:
-    image: '${DOCKER_REGISTRY-}vision-api'
+  openvision.server:
+    image: '${DOCKER_REGISTRY-}openvision-server'
     build:
       context: .
       dockerfile: src/OpenVision.Server/Dockerfile
-    container_name: vision-api
+    container_name: openvision-server
     environment:
-      - VIRTUAL_HOST=api.vision.local
-      - ApiConfiguration__RequireHttpsMetadata=false
-      - 'ApiConfiguration__Authority=https://sts.skoruba.local'
-      - 'ApiConfiguration__ApiBaseUrl=https://api.vision.local'
-      - 'ConnectionStrings__vision=Server=db;Database=vision;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=true'
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=api.openvision.com
+      - 'ConnectionStrings__DataDbConnection=Server=db;Database=OpenVision;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=true'
+      - 'OidcConfiguration__Authority=https://sts.skoruba.local'
+      - OidcConfiguration__RequireHttpsMetadata=false
+      - 'SwaggerConfiguration__SwaggerEndpoint=https://api.openvision.com/swagger/v1/swagger.json'
+      - 'SwaggerConfiguration__AuthorizationUrl=https://sts.skoruba.local/connect/authorize'
+      - 'SwaggerConfiguration__TokenUrl=https://sts.skoruba.local/connect/token'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
@@ -57,24 +43,140 @@ services:
       - './shared/serilog.json:/app/serilog.json'
       - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
     networks:
-      visionui: null
+      openvisionui: null
+  openvision.client:
+    image: '${DOCKER_REGISTRY-}openvision-client'
+    build:
+      context: .
+      dockerfile: src/OpenVision.Client/Dockerfile
+    container_name: openvision-client
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=www.openvision.com
+      - 'OpenVisionApiOptions__BaseUri=https://api.openvision.com'
+      - 'OidcConfiguration__Authority=https://sts.skoruba.local'
+      - 'OidcConfiguration__RedirectUri=https://www.openvision.com/signin-oidc'
+      - DockerConfiguration__UpdateCaCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - openvision.server
+    volumes:
+      - './shared/serilog.json:/app/serilog.json'
+      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    networks:
+      openvisionui: null
+  openvision.identityserver.admin:
+    image: '${DOCKER_REGISTRY-}openvision-identityserver-admin'
+    build:
+      context: .
+      dockerfile: src/OpenVision.IdentityServer.Admin/Dockerfile
+    container_name: openvision-identityserver-admin
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=admin.skoruba.local
+      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__AdminLogDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.skoruba.local'
+      - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.skoruba.local/signin-oidc'
+      - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - AdminConfiguration__RequireHttpsMetadata=false
+      - 'IdentityServerData__Clients__0__ClientUri=https://admin.skoruba.local'
+      - 'IdentityServerData__Clients__0__RedirectUris__0=https://admin.skoruba.local/signin-oidc'
+      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://admin.skoruba.local/signin-oidc'
+      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.skoruba.local/signout-callback-oidc'
+      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.skoruba.local'
+      - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.skoruba.local/swagger/oauth2-redirect.html'
+      - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - DockerConfiguration__UpdateCaCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    command: dotnet OpenVision.IdentityServer.Admin.dll /seed
+    depends_on:
+      - db
+      - openvision.identityserver.sts.identity
+    volumes:
+      - './shared/serilog.json:/app/serilog.json'
+      - './shared/identitydata.json:/app/identitydata.json'
+      - './shared/identityserverdata.json:/app/identityserverdata.json'
+      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    networks:
+      openvisionui: null
+  openvision.identityserver.admin.api:
+    image: '${DOCKER_REGISTRY-}openvision-identityserver-admin-api'
+    build:
+      context: .
+      dockerfile: src/OpenVision.IdentityServer.Admin.Api/Dockerfile
+    container_name: openvision-identityserver-admin-api
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=admin-api.skoruba.local
+      - AdminApiConfiguration__RequireHttpsMetadata=false
+      - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.skoruba.local'
+      - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__AdminLogDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - DockerConfiguration__UpdateCaCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - './shared/serilog.json:/app/serilog.json'
+      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    networks:
+      openvisionui: null
+  openvision.identityserver.sts.identity:
+    image: '${DOCKER_REGISTRY-}openvision-identityserver-sts-identity'
+    build:
+      context: .
+      dockerfile: src/OpenVision.IdentityServer.STS.Identity/Dockerfile
+    container_name: openvision-identityserver-sts-identity
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=sts.skoruba.local
+      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.skoruba.local'
+      - 'IdentityServerOptions__IssuerUri=https://sts.skoruba.local'
+      - IdentityServerOptions__KeyManagement__Enabled=true
+      - IdentityServerOptions__Events__RaiseErrorEvents=true
+      - IdentityServerOptions__Events__RaiseInformationEvents=true
+      - IdentityServerOptions__Events__RaiseFailureEvents=true
+      - IdentityServerOptions__Events__RaiseSuccessEvents=true
+      - DockerConfiguration__UpdateCaCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+    volumes:
+      - './shared/serilog.json:/app/serilog.json'
+      - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    networks:
+      openvisionui:
+        aliases:
+          - sts.skoruba.local
   db:
     image: 'mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04'
     ports:
       - '7900:1433'
-    container_name: vision-db
+    container_name: openvision-db
     environment:
       SA_PASSWORD: '${DB_PASSWORD:-Password_123}'
       ACCEPT_EULA: 'Y'
     volumes:
       - 'dbdata:/var/opt/mssql'
     networks:
-      visionui: null
+      openvisionui: null
 volumes:
   dbdata:
     driver: local
 networks:
   proxy:
     driver: bridge
-  visionui:
+  openvisionui:
     driver: bridge

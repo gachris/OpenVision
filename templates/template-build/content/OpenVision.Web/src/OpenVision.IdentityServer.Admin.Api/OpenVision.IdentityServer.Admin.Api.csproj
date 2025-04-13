@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+	    <TargetFramework>net8.0</TargetFramework>
+		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+        <UserSecretsId>1cc472a2-4e4b-48ce-846b-5219f71fc643</UserSecretsId>
+        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OpenVision.IdentityServer.Admin.EntityFramework.MySql\OpenVision.IdentityServer.Admin.EntityFramework.MySql.csproj" />
+      <ProjectReference Include="..\OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL\OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL.csproj" />
+      <ProjectReference Include="..\OpenVision.IdentityServer.Admin.EntityFramework.SqlServer\OpenVision.IdentityServer.Admin.EntityFramework.SqlServer.csproj" />
+      <ProjectReference Include="..\OpenVision.IdentityServer.Shared\OpenVision.IdentityServer.Shared.csproj" />
+      <ProjectReference Include="..\OpenVision.ServiceDefaults\OpenVision.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+    
+    <ItemGroup>
+		<PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="9.2.0" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.2.0" />
+		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.0" />
+		<PackageReference Include="Aspire.Pomelo.EntityFrameworkCore.MySql" Version="9.2.0" />
+        <PackageReference Include="NSwag.CodeGeneration" Version="14.3.0" />
+        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.3.0" />
+        <PackageReference Include="NSwag.Generation" Version="14.3.0" />
+        <PackageReference Include="NSwag.Generation.AspNetCore" Version="14.3.0" />
+        <PackageReference Include="NSwag.Generation.WebApi" Version="14.3.0" />
+        <PackageReference Include="NSwag.AspNetCore" Version="14.3.0" />
+        <PackageReference Include="NSwag.MSBuild" Version="14.3.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Skoruba.Duende.IdentityServer.Admin.UI.Api" Version="2.5.0" />
+    </ItemGroup>
+    
+    <Target Name="NSwag" BeforeTargets="AfterBuild" Condition="'$(Configuration)'=='Debug'">
+        <Exec ConsoleToMSBuild="true" ContinueOnError="true" Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)">
+            <Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
+            <Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
+        </Exec>
+
+        <Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
+        <Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
+    </Target>
+    
+
+</Project>
+
+
+
+
+
+
+
+
+
+
+
+

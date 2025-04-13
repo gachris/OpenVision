@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+	    <TargetFramework>net8.0</TargetFramework>
+		<Description>Entity Framework layer for the administration of the Duende IdentityServer and Asp.Net Core Identity with PostrgreSQL support</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+	    <ProjectReference Include="..\OpenVision.IdentityServer.Admin.EntityFramework.Shared\OpenVision.IdentityServer.Admin.EntityFramework.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

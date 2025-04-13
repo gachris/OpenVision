@@ -1,0 +1,11 @@
+@using System.Reflection
+@using OpenVision.IdentityServer.STS.Identity
+
+@{
+    var runtimeVersion = typeof(Program)
+        .GetTypeInfo()
+        .Assembly
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+}
+
+@runtimeVersion

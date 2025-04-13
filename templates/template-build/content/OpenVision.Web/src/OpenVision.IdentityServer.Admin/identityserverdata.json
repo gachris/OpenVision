@@ -1,0 +1,196 @@
+﻿{
+  "IdentityServerData": {
+    "IdentityResources": [
+      {
+        "Name": "roles",
+        "Enabled": true,
+        "DisplayName": "Roles",
+        "UserClaims": [
+          "role"
+        ]
+      },
+      {
+        "Name": "openid",
+        "Enabled": true,
+        "Required": true,
+        "DisplayName": "Your user identifier",
+        "UserClaims": [
+          "sub"
+        ]
+      },
+      {
+        "Name": "profile",
+        "Enabled": true,
+        "DisplayName": "User profile",
+        "Description": "Your user profile information (first name, last name, etc.)",
+        "Emphasize": true,
+        "UserClaims": [
+          "name",
+          "family_name",
+          "given_name",
+          "middle_name",
+          "nickname",
+          "preferred_username",
+          "profile",
+          "picture",
+          "website",
+          "gender",
+          "birthdate",
+          "zoneinfo",
+          "locale",
+          "updated_at"
+        ]
+      },
+      {
+        "Name": "email",
+        "Enabled": true,
+        "DisplayName": "Your email address",
+        "Emphasize": true,
+        "UserClaims": [
+          "email",
+          "email_verified"
+        ]
+      },
+      {
+        "Name": "address",
+        "Enabled": true,
+        "DisplayName": "Your address",
+        "Emphasize": true,
+        "UserClaims": [
+          "address"
+        ]
+      }
+    ],
+    "ApiScopes": [
+      {
+        "Name": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api",
+        "DisplayName": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api",
+        "Required": true,
+        "UserClaims": [
+          "role",
+          "name"
+        ]
+      },
+      {
+        "Name": "openvision.write",
+        "DisplayName": "OpenVision.Write",
+        "Description": "Allow to write resources on OpenVision",
+        "Required": true,
+        "UserClaims": [
+          "role",
+          "name"
+        ]
+      },
+      {
+        "Name": "openvision.read",
+        "DisplayName": "OpenVision.Read",
+        "Description": "Allow to read resources on OpenVision",
+        "Required": true,
+        "UserClaims": [
+          "role",
+          "name"
+        ]
+      }
+    ],
+    "ApiResources": [
+      {
+        "Name": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api",
+        "Scopes": [
+          "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api"
+        ]
+      },
+      {
+        "Name": "openvision.api",
+        "DisplayName": "OpenVision.Api",
+        "Description": "The audience value for OpenVision.Api",
+        "Scopes": [
+          "openvision.read",
+          "openvision.write"
+        ]
+      }
+    ],
+    "Clients": [
+      {
+        "ClientId": "6B1E2F46-C94D-4FAD-96B6-F776C4113992",
+        "ClientName": "6B1E2F46-C94D-4FAD-96B6-F776C4113992",
+        "ClientUri": "https://localhost:44303",
+        "AllowedGrantTypes": [
+          "authorization_code"
+        ],
+        "RequirePkce": true,
+        "ClientSecrets": [
+          {
+            "Value": "F9903DDE-82FB-4A8F-8BB3-3A3FC6101ACD"
+          }
+        ],
+        "RedirectUris": [
+          "https://localhost:44303/signin-oidc"
+        ],
+        "FrontChannelLogoutUri": "https://localhost:44303/signout-oidc",
+        "PostLogoutRedirectUris": [
+          "https://localhost:44303/signout-callback-oidc"
+        ],
+        "AllowedCorsOrigins": [
+          "https://localhost:44303"
+        ],
+        "AllowedScopes": [
+          "openid",
+          "email",
+          "profile",
+          "roles"
+        ]
+      },
+      {
+        "ClientId": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api_swaggerui",
+        "ClientName": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api_swaggerui",
+        "AllowedGrantTypes": [
+          "authorization_code"
+        ],
+        "RequireClientSecret": false,
+        "RequirePkce": true,
+        "RedirectUris": [
+          "https://localhost:44302/swagger/oauth2-redirect.html"
+        ],
+        "AllowedScopes": [
+          "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api"
+        ],
+        "AllowedCorsOrigins": [
+          "https://localhost:44302"
+        ]
+      },
+      {
+        "ClientId": "e5ba6bac-b7e3-4992-9cc2-b7b377d92105",
+        "ClientName": "OpenVision.Client",
+        "ClientUri": "https://localhost:44333",
+        "AllowedGrantTypes": [
+          "authorization_code"
+        ],
+        "RequirePkce": true,
+        "AllowOfflineAccess": true,
+        "ClientSecrets": [
+          {
+            "Value": "8aa6983d-5ed5-bcff-ece2-16c4c301cb7b"
+          }
+        ],
+        "RedirectUris": [
+          "https://localhost:44333/signin-oidc"
+        ],
+        "FrontChannelLogoutUri": "https://localhost:44333/signout-oidc",
+        "PostLogoutRedirectUris": [
+          "https://localhost:44333/signout-callback-oidc"
+        ],
+        "AllowedCorsOrigins": [
+          "https://localhost:44333"
+        ],
+        "AllowedScopes": [
+          "openid",
+          "email",
+          "profile",
+          "roles",
+          "openvision.read",
+          "openvision.write"
+        ]
+      }
+    ]
+  }
+}
