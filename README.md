@@ -86,7 +86,7 @@ dotnet new install OpenVision.Web.Template
 ### 2. Create a New Project
 
 ```bash
-dotnet new OpenVision.Web.Template -n MyOpenVisionApp
+dotnet new OpenVision.Web -n MyOpenVisionApp
 ```
 
 ---
