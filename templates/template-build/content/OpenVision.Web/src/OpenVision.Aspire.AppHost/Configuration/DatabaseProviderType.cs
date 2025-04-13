@@ -1,4 +1,4 @@
-﻿namespace OpenVision.Aspire.AppHost.Configuration;
+namespace OpenVision.Aspire.AppHost.Configuration;
 
 /// <summary>
 /// Enum representing different types of database providers.

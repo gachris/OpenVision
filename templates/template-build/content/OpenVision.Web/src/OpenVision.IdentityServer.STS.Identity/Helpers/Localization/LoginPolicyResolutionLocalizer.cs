@@ -1,23 +1,16 @@
-// Copyright (c) Jan Škoruba. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0.
-
 using Skoruba.Duende.IdentityServer.Shared.Configuration.Configuration.Identity;
 
-namespace OpenVision.IdentityServer.STS.Identity.Helpers.Localization
+namespace OpenVision.IdentityServer.STS.Identity.Helpers.Localization;
+
+public static class LoginPolicyResolutionLocalizer
 {
-    public static class LoginPolicyResolutionLocalizer
+    public static string GetUserNameLocalizationKey(LoginResolutionPolicy policy)
     {
-        public static string GetUserNameLocalizationKey(LoginResolutionPolicy policy)
+        return policy switch
         {
-            switch (policy)
-            {
-                case LoginResolutionPolicy.Username:
-                    return "Username";
-                case LoginResolutionPolicy.Email:
-                    return "Email";
-                default:
-                    return "Username";
-            }
-        }
+            LoginResolutionPolicy.Username => "Username",
+            LoginResolutionPolicy.Email => "Email",
+            _ => "Username",
+        };
     }
 }

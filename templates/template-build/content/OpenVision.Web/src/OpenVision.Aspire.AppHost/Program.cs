@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using OpenVision.Aspire.AppHost.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);

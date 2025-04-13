@@ -1,14 +1,10 @@
-// Copyright (c) Jan Škoruba. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0.
-
 using Skoruba.Duende.IdentityServer.Shared.Configuration.Configuration.Identity;
 
-namespace OpenVision.IdentityServer.STS.Identity.Configuration.Interfaces
-{
-    public interface IRootConfiguration
-    {
-        AdminConfiguration AdminConfiguration { get; }
+namespace OpenVision.IdentityServer.STS.Identity.Configuration.Interfaces;
 
-        RegisterConfiguration RegisterConfiguration { get; }
-    }
+public interface IRootConfiguration
+{
+    AdminConfiguration AdminConfiguration { get; }
+
+    RegisterConfiguration RegisterConfiguration { get; }
 }

@@ -1,7 +1,6 @@
-namespace OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL.Helpers
+namespace OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL.Helpers;
+
+public class MigrationAssembly
 {
-    public class MigrationAssembly
-    {
-        
-    }
+
 }

@@ -4,10 +4,9 @@
 // Original file: https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI
 // Modified by Jan Škoruba
 
-namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Account
+namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Account;
+
+public class RedirectViewModel
 {
-    public class RedirectViewModel
-    {
-        public string RedirectUrl { get; set; }
-    }
+    public string RedirectUrl { get; set; }
 }

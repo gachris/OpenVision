@@ -9,6 +9,7 @@ WORKDIR /src
 COPY ["src/OpenVision.IdentityServer.STS.Identity/OpenVision.IdentityServer.STS.Identity.csproj", "src/OpenVision.IdentityServer.STS.Identity/"]
 COPY ["src/OpenVision.IdentityServer.Admin.EntityFramework.Shared/OpenVision.IdentityServer.Admin.EntityFramework.Shared.csproj", "src/OpenVision.IdentityServer.Admin.EntityFramework.Shared/"]
 COPY ["src/OpenVision.IdentityServer.Shared/OpenVision.IdentityServer.Shared.csproj", "src/OpenVision.IdentityServer.Shared/"]
+COPY ["src/OpenVision.ServiceDefaults/OpenVision.ServiceDefaults.csproj", "src/OpenVision.ServiceDefaults/"]
 RUN dotnet restore -a $TARGETARCH "src/OpenVision.IdentityServer.STS.Identity/OpenVision.IdentityServer.STS.Identity.csproj"
 COPY . .
 WORKDIR "/src/src/OpenVision.IdentityServer.STS.Identity"

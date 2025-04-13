@@ -4,11 +4,10 @@
 // Original file: https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI
 // Modified by Jan Škoruba
 
-namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Account
+namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Account;
+
+public class ExternalProvider
 {
-    public class ExternalProvider
-    {
-        public string DisplayName { get; set; }
-        public string AuthenticationScheme { get; set; }
-    }
+    public string DisplayName { get; set; }
+    public string AuthenticationScheme { get; set; }
 }

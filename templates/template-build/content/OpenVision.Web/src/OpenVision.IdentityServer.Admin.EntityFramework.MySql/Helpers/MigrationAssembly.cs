@@ -1,7 +1,6 @@
-namespace OpenVision.IdentityServer.Admin.EntityFramework.MySql.Helpers
+namespace OpenVision.IdentityServer.Admin.EntityFramework.MySql.Helpers;
+
+public class MigrationAssembly
 {
-    public class MigrationAssembly
-    {
-        
-    }
+
 }

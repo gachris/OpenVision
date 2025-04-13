@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
@@ -8,8 +8,13 @@
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<NoWarn>$(NoWarn);NU5128</NoWarn>
 		<NoDefaultExcludes>true</NoDefaultExcludes>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Description>A .NET library for computer vision and image processing.</Description>
+		<Tags>computer-vision image-processing opencv image-sharp</Tags>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -26,7 +31,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="" />
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>

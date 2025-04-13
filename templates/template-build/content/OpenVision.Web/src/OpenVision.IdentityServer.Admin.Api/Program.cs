@@ -1,5 +1,3 @@
-// Copyright (c) Jan Škoruba. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0.
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;

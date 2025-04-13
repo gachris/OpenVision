@@ -1,8 +1,4 @@
-// Copyright (c) Jan Škoruba. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0.
-
 using System;
-using System.Configuration;
 using System.IO;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;

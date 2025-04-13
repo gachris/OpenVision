@@ -4,54 +4,53 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace OpenVision.IdentityServer.Admin.EntityFramework.MySql.Migrations.IdentityServerGrants
+namespace OpenVision.IdentityServer.Admin.EntityFramework.MySql.Migrations.IdentityServerGrants;
+
+/// <inheritdoc />
+public partial class IdentityServerV7 : Migration
 {
     /// <inheritdoc />
-    public partial class IdentityServerV7 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql(@"ALTER TABLE ServerSideSessions MODIFY id INT NOT NULL;
+        migrationBuilder.Sql(@"ALTER TABLE ServerSideSessions MODIFY id INT NOT NULL;
             ALTER TABLE ServerSideSessions DROP PRIMARY KEY;
             ALTER TABLE ServerSideSessions MODIFY Id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT;");
-            
-            migrationBuilder.CreateTable(
-                    name: "PushedAuthorizationRequests",
-                    columns: table => new
-                    {
-                        Id = table.Column<long>(type: "bigint", nullable: false)
-                            .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                        ReferenceValueHash = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        ExpiresAtUtc = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                        Parameters = table.Column<string>(type: "longtext", nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4")
-                    },
-                    constraints: table => { table.PrimaryKey("PK_PushedAuthorizationRequests", x => x.Id); })
-                .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PushedAuthorizationRequests_ExpiresAtUtc",
-                table: "PushedAuthorizationRequests",
-                column: "ExpiresAtUtc");
+        migrationBuilder.CreateTable(
+                name: "PushedAuthorizationRequests",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ReferenceValueHash = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ExpiresAtUtc = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Parameters = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table => { table.PrimaryKey("PK_PushedAuthorizationRequests", x => x.Id); })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PushedAuthorizationRequests_ReferenceValueHash",
-                table: "PushedAuthorizationRequests",
-                column: "ReferenceValueHash",
-                unique: true);
-        }
+        migrationBuilder.CreateIndex(
+            name: "IX_PushedAuthorizationRequests_ExpiresAtUtc",
+            table: "PushedAuthorizationRequests",
+            column: "ExpiresAtUtc");
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "PushedAuthorizationRequests");
+        migrationBuilder.CreateIndex(
+            name: "IX_PushedAuthorizationRequests_ReferenceValueHash",
+            table: "PushedAuthorizationRequests",
+            column: "ReferenceValueHash",
+            unique: true);
+    }
 
-            migrationBuilder.Sql(@"ALTER TABLE ServerSideSessions MODIFY id BIGINT NOT NULL;
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(
+            name: "PushedAuthorizationRequests");
+
+        migrationBuilder.Sql(@"ALTER TABLE ServerSideSessions MODIFY id BIGINT NOT NULL;
             ALTER TABLE ServerSideSessions DROP PRIMARY KEY;
             ALTER TABLE ServerSideSessions MODIFY Id INT NOT NULL PRIMARY KEY AUTO_INCREMENT;");
-        }
     }
 }
