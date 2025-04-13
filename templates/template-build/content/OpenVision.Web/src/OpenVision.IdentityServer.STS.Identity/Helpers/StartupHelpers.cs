@@ -204,8 +204,6 @@ public static class StartupHelpers
         var persistedGrantsConnectionString = configuration.GetConnectionString(ConfigurationConsts.PersistedGrantDbConnectionStringKey);
         var dataProtectionConnectionString = configuration.GetConnectionString(ConfigurationConsts.DataProtectionDbConnectionStringKey);
 
-        Thread.Sleep(5000);
-
         switch (databaseProvider.ProviderType)
         {
             case DatabaseProviderType.SqlServer:
