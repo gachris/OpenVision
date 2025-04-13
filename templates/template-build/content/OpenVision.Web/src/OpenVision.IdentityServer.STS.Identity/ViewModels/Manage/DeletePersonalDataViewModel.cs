@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Manage
-{
-    public class DeletePersonalDataViewModel
-    {
-        public bool RequirePassword { get; set; }
+namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Manage;
 
-        [DataType(DataType.Password)]
-        [Required]
-        public string Password { get; set; }
-    }
+public class DeletePersonalDataViewModel
+{
+    public bool RequirePassword { get; set; }
+
+    [DataType(DataType.Password)]
+    [Required]
+    public string Password { get; set; }
 }

@@ -1,14 +1,8 @@
-using System;
-using System.Linq;
 using Duende.IdentityServer.Hosting.DynamicProviders;
 using Duende.IdentityServer.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
-using OpenVision.IdentityServer.STS.Identity.Helpers;
-using System.Security.Claims;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace OpenVision.IdentityServer.STS.Identity.Services;
 
@@ -17,7 +11,7 @@ public class OpenIdClaimsMappingConfig : ConfigureAuthenticationOptions<OpenIdCo
     public OpenIdClaimsMappingConfig(IHttpContextAccessor httpContextAccessor, ILogger<ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>> logger) : base(httpContextAccessor, logger)
     {
     }
-    
+
     protected override void Configure(ConfigureAuthenticationContext<OpenIdConnectOptions, OidcProvider> context)
     {
         var oidcProvider = context.IdentityProvider;

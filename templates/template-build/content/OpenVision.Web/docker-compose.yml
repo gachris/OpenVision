@@ -14,9 +14,9 @@ services:
       proxy: null
       openvisionui:
         aliases:
-          - sts.skoruba.local
-          - admin.skoruba.local
-          - admin-api.skoruba.local
+          - auth.openvision.com
+          - account.openvision.com
+          - account-api.openvision.com
           - api.openvision.com
           - www.openvision.com
     restart: always
@@ -30,11 +30,11 @@ services:
       - VIRTUAL_PORT=8080
       - VIRTUAL_HOST=api.openvision.com
       - 'ConnectionStrings__DataDbConnection=Server=db;Database=OpenVision;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=true'
-      - 'OidcConfiguration__Authority=https://sts.skoruba.local'
+      - 'OidcConfiguration__Authority=https://auth.openvision.com'
       - OidcConfiguration__RequireHttpsMetadata=false
       - 'SwaggerConfiguration__SwaggerEndpoint=https://api.openvision.com/swagger/v1/swagger.json'
-      - 'SwaggerConfiguration__AuthorizationUrl=https://sts.skoruba.local/connect/authorize'
-      - 'SwaggerConfiguration__TokenUrl=https://sts.skoruba.local/connect/token'
+      - 'SwaggerConfiguration__AuthorizationUrl=https://auth.openvision.com/connect/authorize'
+      - 'SwaggerConfiguration__TokenUrl=https://auth.openvision.com/connect/token'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
@@ -54,7 +54,7 @@ services:
       - VIRTUAL_PORT=8080
       - VIRTUAL_HOST=www.openvision.com
       - 'OpenVisionApiOptions__BaseUri=https://api.openvision.com'
-      - 'OidcConfiguration__Authority=https://sts.skoruba.local'
+      - 'OidcConfiguration__Authority=https://auth.openvision.com'
       - 'OidcConfiguration__RedirectUri=https://www.openvision.com/signin-oidc'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
@@ -73,23 +73,23 @@ services:
     container_name: openvision-identityserver-admin
     environment:
       - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=admin.skoruba.local
+      - VIRTUAL_HOST=account.openvision.com
       - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__AdminLogDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
-      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.skoruba.local'
-      - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.skoruba.local/signin-oidc'
-      - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://account.openvision.com'
+      - 'AdminConfiguration__IdentityAdminRedirectUri=https://account.openvision.com/signin-oidc'
+      - 'AdminConfiguration__IdentityServerBaseUrl=https://auth.openvision.com'
       - AdminConfiguration__RequireHttpsMetadata=false
-      - 'IdentityServerData__Clients__0__ClientUri=https://admin.skoruba.local'
-      - 'IdentityServerData__Clients__0__RedirectUris__0=https://admin.skoruba.local/signin-oidc'
-      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://admin.skoruba.local/signin-oidc'
-      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.skoruba.local/signout-callback-oidc'
-      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.skoruba.local'
-      - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.skoruba.local/swagger/oauth2-redirect.html'
+      - 'IdentityServerData__Clients__0__ClientUri=https://account.openvision.com'
+      - 'IdentityServerData__Clients__0__RedirectUris__0=https://account.openvision.com/signin-oidc'
+      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://account.openvision.com/signin-oidc'
+      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://account.openvision.com/signout-callback-oidc'
+      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://account.openvision.com'
+      - 'IdentityServerData__Clients__1__RedirectUris__0=https://account-api.openvision.com/swagger/oauth2-redirect.html'
       - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
@@ -112,10 +112,10 @@ services:
     container_name: openvision-identityserver-admin-api
     environment:
       - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=admin-api.skoruba.local
+      - VIRTUAL_HOST=account-api.openvision.com
       - AdminApiConfiguration__RequireHttpsMetadata=false
-      - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.skoruba.local'
-      - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - 'AdminApiConfiguration__ApiBaseUrl=https://account-api.openvision.com'
+      - 'AdminApiConfiguration__IdentityServerBaseUrl=https://auth.openvision.com'
       - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
@@ -137,13 +137,13 @@ services:
     container_name: openvision-identityserver-sts-identity
     environment:
       - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=sts.skoruba.local
+      - VIRTUAL_HOST=auth.openvision.com
       - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
       - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServerAdmin;User Id=sa;Password=${DB_PASSWORD:-Password_123};MultipleActiveResultSets=true;TrustServerCertificate=True'
-      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.skoruba.local'
-      - 'IdentityServerOptions__IssuerUri=https://sts.skoruba.local'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://account.openvision.com'
+      - 'IdentityServerOptions__IssuerUri=https://auth.openvision.com'
       - IdentityServerOptions__KeyManagement__Enabled=true
       - IdentityServerOptions__Events__RaiseErrorEvents=true
       - IdentityServerOptions__Events__RaiseInformationEvents=true
@@ -159,7 +159,7 @@ services:
     networks:
       openvisionui:
         aliases:
-          - sts.skoruba.local
+          - auth.openvision.com
   db:
     image: 'mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04'
     ports:

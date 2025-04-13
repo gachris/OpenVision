@@ -1,22 +1,18 @@
-// Copyright (c) Jan Škoruba. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0.
-
 using System.Threading.Tasks;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Services;
 using Microsoft.Extensions.Logging;
 
-namespace OpenVision.IdentityServer.STS.Identity.Services
-{
-    public class AuditEventSink : DefaultEventSink
-    {
-        public AuditEventSink(ILogger<DefaultEventService> logger) : base(logger)
-        {
-        }
+namespace OpenVision.IdentityServer.STS.Identity.Services;
 
-        public override Task PersistAsync(Event evt)
-        {
-            return base.PersistAsync(evt);
-        }
+public class AuditEventSink : DefaultEventSink
+{
+    public AuditEventSink(ILogger<DefaultEventService> logger) : base(logger)
+    {
+    }
+
+    public override Task PersistAsync(Event evt)
+    {
+        return base.PersistAsync(evt);
     }
 }

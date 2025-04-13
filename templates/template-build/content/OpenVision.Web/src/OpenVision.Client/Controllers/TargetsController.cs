@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

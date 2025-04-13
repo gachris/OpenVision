@@ -1,149 +1,212 @@
 ﻿# OpenVision
 
-**OpenVision** is designed for computer vision applications. It provides various feature extraction, matching, recognition, and AR camera functionalities. The project is modular and allows users to integrate robust vision features into their applications, supporting platforms like .NET MAUI, WPF, and WinUI.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/gachris/OpenVision)  
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-## Table of Contents
+**OpenVision** is a powerful and modular Computer Vision SDK and full-stack web platform. It enables developers to build scalable, real-time, vision-powered applications for both desktop and web environments. With integrated support for authentication, containerization, and deployment, OpenVision accelerates your journey from prototype to production.
 
-- [Project Overview](#project-overview)
+---
+
+## 📚 Table of Contents
+
+- [Overview](#overview)
 - [Features](#features)
-- [Dependencies](#dependencies)
-- [Building and Running](#building-and-running)
-- [Usage](#usage)
-- [Using NuGet Packages](#using-nuget-packages)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Running the Project](#running-the-project)
+- [Client Library Installation](#client-library-installation)
 - [Contributing](#contributing)
 - [License](#license)
+- [Acknowledgments](#acknowledgments)
 
-## Project Overview
+---
 
-OpenVision is a versatile project focused on feature detection, matching, and image recognition for computer vision tasks. It is built to provide core vision-related functionalities and supports both cloud and on-device recognition through a modular structure.
+## 🧬 Overview
 
-## Features
+OpenVision offers both a versatile Computer Vision SDK and a production-ready web template (`OpenVision.Web.Template`) to streamline development of computer vision solutions.
 
-- **Feature Detection:** Support for various feature detectors such as AKAZE, ORB, BRISK, and SIFT.
-- **Feature Matching:** Configurable feature matchers using different algorithms such as BFMatcher (Brute Force) and others.
-- **Image Recognition:** Local and cloud-based image recognition systems.
-- **Homography & AR:** Built-in support for homography calculations and integration with augmented reality (AR) camera setups for MAUI, WPF, and WinUI platforms.
-- **Dataset Handling:** Efficient methods for handling and serializing datasets related to computer vision tasks.
-- **WebSocket Communication:** Supports WebSocket communication to interact with external systems for results and recognition tasks.
+### 🔧 Web Template Components
 
-### Key Directories
+- **`OpenVision.Server`** – Backend APIs and core logic  
+- **`OpenVision.Client`** – ASP.NET Core frontend  
+- **`OpenVision.IdentityServer`** – Authentication and authorization using [Skoruba Duende IdentityServer](https://github.com/skoruba/Duende.IdentityServer.Admin)  
+- **Docker & Aspire Integration** – For containerized and cloud-native workflows
 
-- **Configuration**: Holds various feature detector and matcher option configurations (e.g., AKAZE, BRISK, ORB, SIFT).
-- **Dataset**: Manages dataset-related functionalities such as target handling and serialization.
-- **DataTypes**: Core data models like `FeatureMatchingResult`, `ImageRequest`, and `HomographyResult`.
-- **Features2d**: Contains feature extraction and matching utilities.
-- **Reco**: Recognition-related functionalities, including cloud and local recognition implementations.
-- **OpenVision.Maui**: Platform-specific implementation for .NET MAUI.
-- **OpenVision.Wpf**: Platform-specific implementation for WPF applications.
-- **OpenVision.WinUI**: Platform-specific implementation for WinUI applications.
-- **OpenVision.Shared**: Shared utilities and responses used across platforms.
+### 🔬 SDK Capabilities
 
-## Dependencies
+- Feature detection: AKAZE, ORB, SIFT, BRISK  
+- Feature matching & homography estimation  
+- Augmented Reality (AR) overlays  
+- WebSocket support for real-time interactions  
+- Cross-platform support (MAUI, WPF, WinUI)
 
-- **.NET 8.0 or later**
-- **MAUI** for cross-platform UI and AR components
-- **WPF** for desktop-based AR and image recognition
-- **WinUI** for modern Windows UI support
+---
 
-## Building and Running
+## 🚀 Features
 
-### Prerequisites
+### Web Template
 
-Ensure you have the following installed:
+- ✅ Modular, scalable architecture  
+- 🔐 Integrated identity management (SSO, OAuth2, OIDC)  
+- 🐳 Docker-ready for cloud and on-prem deployments  
+- 🧹 Extensible for enterprise or startup use cases  
 
-- .NET SDK (8.0 or later)
-- Visual Studio 2022 or later (with MAUI, WPF, and WinUI workloads installed)
+### SDK
 
-### Steps to Build:
+- 🎯 Feature Detection: AKAZE, ORB, BRISK, SIFT  
+- 🔗 Feature Matching: Brute Force, FLANN, etc.  
+- 🧠 Homography & AR: Planar object detection, marker-based tracking  
+- 🔍 Image Recognition: On-device or cloud-integrated  
+- 🖥️ UI Frameworks: MAUI, WPF, WinUI  
+- 🔄 Real-Time: Bi-directional vision task updates via WebSocket  
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/gachris/OpenVision.git
-   ```
+---
 
-2. Open the solution in Visual Studio:
-   ```bash
-   cd OpenVision
-   open OpenVision.sln
-   ```
+## 🧰 Prerequisites
 
-3. Restore dependencies:
-   ```bash
-   dotnet restore
-   ```
+Ensure the following tools are installed:
 
-4. Build the solution:
-   ```bash
-   dotnet build
-   ```
+- [.NET SDK 8.0+](https://dotnet.microsoft.com/download)
+- Visual Studio 2022+ (with ASP.NET + Docker workloads)
+- Docker Desktop
+- Node.js (for frontend builds)
+- Git
+- [mkcert](https://github.com/FiloSottile/mkcert) (for local HTTPS)
 
-## Usage
+---
 
-After building and running the project, you can access the following features:
+## 🏁 Getting Started
 
-- **Feature Extraction**: Detect and extract features from images.
-- **Feature Matching**: Match features across multiple images using different algorithms.
-- **Homography Calculation**: Perform homography for planar object detection.
-- **AR Integration**: Integrate augmented reality features with camera input.
+### 1. Install the Web Template
 
-## Using NuGet Packages
+```bash
+dotnet new install OpenVision.Web.Template
+```
 
-You can also use **OpenVision** via NuGet packages instead of cloning and building the repository manually. This method simplifies integration into your project and ensures that you're always using the latest version.
+### 2. Create a New Project
 
-### Steps to Install from NuGet:
+```bash
+dotnet new OpenVision.Web.Template -n MyOpenVisionApp
+```
 
-1. In your project, open the **NuGet Package Manager** in Visual Studio:
-   - Go to **Tools > NuGet Package Manager > Manage NuGet Packages for Solution**.
+---
 
-2. Search for the relevant **OpenVision** packages:
-   - `OpenVision.Core` for core vision features.
-   - `OpenVision.Maui` for MAUI-specific functionality.
-   - `OpenVision.Wpf` for WPF-specific functionality.
-   - `OpenVision.WinUI` for WinUI-specific functionality.
+## ▶️ Running the Project
 
-3. Install the desired packages by clicking the **Install** button.
+### 🔹 Option 1: Docker Compose (Recommended)
 
-Alternatively, you can use the **.NET CLI** to install the packages directly:
+#### Update Hosts File
 
-- For Core:
-   ```bash
-   dotnet add package OpenVision.Core
-   ```
+Add these entries to your system's hosts file:
 
-- For MAUI platform:
-   ```bash
-   dotnet add package OpenVision.Maui
-   ```
+```txt
+127.0.0.1 openvision.com www.openvision.com api.openvision.com auth.openvision.com account.openvision.com account-api.openvision.com
+```
 
-- For WPF platform:
-   ```bash
-   dotnet add package OpenVision.Wpf
-   ```
+- **Linux**: `/etc/hosts`  
+- **Windows**: `C:\Windows\System32\drivers\etc\hosts`
 
-- For WinUI platform:
-   ```bash
-   dotnet add package OpenVision.WinUI
-   ```
+#### Certificate Setup
 
-Once the packages are installed, you can access the same functionality, such as feature detection, matching, and AR integration, within your project without needing to clone the repository.
+##### Create the Root Certificate
 
-## Contributing
+Use [mkcert](https://github.com/FiloSottile/mkcert) to generate local self-signed certificates.
 
-We welcome contributions! Please submit a pull request or raise an issue if you encounter any bugs or have suggestions for improvements.
+> **Note:** On Windows, `mkcert --install` must be executed under **elevated Administrator** privileges.
 
-### Steps for Contributing:
+```powershell
+cd shared/nginx/certs
+mkcert --install
+copy $env:LOCALAPPDATA\mkcert\rootCA-key.pem ./cacerts.pem
+copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.crt
+```
 
-1. Fork the repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature/new-feature
-   ```
-3. Commit your changes and push:
-   ```bash
-   git push origin feature/new-feature
-   ```
-4. Submit a pull request.
+##### Create Certificates for openvision.com
 
-## License
+Generate certificates for `openvision.com` including wildcards for subdomains. This ensures compatibility with the nginx proxy setup.
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
+```powershell
+cd shared/nginx/certs
+mkcert -cert-file openvision.com.crt -key-file openvision.com.key openvision.com *.openvision.com
+mkcert -pkcs12 openvision.com.pfx openvision.com *.openvision.com
+```
+
+#### Start Services
+
+```bash
+docker-compose build
+docker-compose up -d
+```
+
+---
+
+### 🔹 Option 2: Aspire AppHost (Cloud-native Dev)
+
+```bash
+cd src/OpenVision.Aspire.AppHost
+dotnet run
+```
+
+---
+
+### 🔹 Option 3: Manual Startup (Debug/Dev Mode)
+
+Start these projects individually:
+
+- `OpenVision.Server`  
+- `OpenVision.Client`  
+- `OpenVision.IdentityServer.Admin`  
+- `OpenVision.IdentityServer.STS.Identity`  
+- `OpenVision.IdentityServer.Admin.Api`
+
+Use Visual Studio or `dotnet run` CLI.
+
+---
+
+## 📦 Client Library Installation
+
+Install JavaScript dependencies for IdentityServer UIs:
+
+```bash
+cd src/OpenVision.IdentityServer.Admin
+npm install
+
+cd src/OpenVision.IdentityServer.STS.Identity
+npm install
+```
+
+For advanced identity customization, see the [Skoruba IdentityServer Admin Guide](https://github.com/skoruba/Duende.IdentityServer.Admin).
+
+---
+
+## 🤝 Contributing
+
+We love contributions! To get started:
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/OpenVision.git
+cd OpenVision
+
+# Create a feature branch
+git checkout -b feature/my-feature
+
+# Push changes
+git push origin feature/my-feature
+```
+
+Then open a pull request 🚀
+
+---
+
+## 📄 License
+
+OpenVision is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙌 Acknowledgments
+
+- OpenVision Community & Contributors  
+- Inspired by modern .NET, DevOps, and Computer Vision engineering best practices
+

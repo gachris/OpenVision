@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
-		<PackageReference Include="OpenVision.Client.Core" Version="1.0.0.9-alpha" />
+		<PackageReference Include="OpenVision.Client.Core" Version="1.0.0.10-alpha" />
 		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
 		<PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />

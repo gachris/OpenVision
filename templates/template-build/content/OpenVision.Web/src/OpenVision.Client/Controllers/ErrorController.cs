@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,8 +33,8 @@ public class ErrorController : Controller
     /// An <see cref="IActionResult"/> that renders the "Error" view with error details.
     /// </returns>
     /// <remarks>
-    /// This action is executed when an unhandled exception occurs. It retrieves the exception details 
-    /// from the current HTTP context and logs the error, including the request identifier and the path 
+    /// This action is executed when an unhandled exception occurs. It retrieves the exception details
+    /// from the current HTTP context and logs the error, including the request identifier and the path
     /// where the error occurred.
     /// </remarks>
     [Route("error")]
@@ -71,7 +71,7 @@ public class ErrorController : Controller
     /// An <see cref="IActionResult"/> that renders the "Error" view with a corresponding error message.
     /// </returns>
     /// <remarks>
-    /// This action is executed for HTTP status code errors (for example, 404 errors) using the status code 
+    /// This action is executed for HTTP status code errors (for example, 404 errors) using the status code
     /// pages middleware. The action logs the error and displays a customized message depending on the status code.
     /// </remarks>
     [Route("error/{code}")]

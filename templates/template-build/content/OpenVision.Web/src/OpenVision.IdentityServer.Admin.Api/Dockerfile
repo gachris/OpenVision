@@ -12,6 +12,7 @@ COPY ["src/OpenVision.IdentityServer.Admin.EntityFramework.SqlServer/OpenVision.
 COPY ["src/OpenVision.IdentityServer.Shared/OpenVision.IdentityServer.Shared.csproj", "src/OpenVision.IdentityServer.Shared/"]
 COPY ["src/OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL/OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL.csproj", "src/OpenVision.IdentityServer.Admin.EntityFramework.PostgreSQL/"]
 COPY ["src/OpenVision.IdentityServer.Admin.EntityFramework.MySql/OpenVision.IdentityServer.Admin.EntityFramework.MySql.csproj", "src/OpenVision.IdentityServer.Admin.EntityFramework.MySql/"]
+COPY ["src/OpenVision.ServiceDefaults/OpenVision.ServiceDefaults.csproj", "src/OpenVision.ServiceDefaults/"]
 RUN dotnet restore -a $TARGETARCH "src/OpenVision.IdentityServer.Admin.Api/OpenVision.IdentityServer.Admin.Api.csproj"
 COPY . .
 WORKDIR "/src/src/OpenVision.IdentityServer.Admin.Api"

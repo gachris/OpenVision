@@ -63,8 +63,8 @@
     ],
     "ApiScopes": [
       {
-        "Name": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api",
-        "DisplayName": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api",
+        "Name": "openvision.identityserver.admin.api",
+        "DisplayName": "OpenVision.IdentityServer.Admin.Api",
         "Required": true,
         "UserClaims": [
           "role",
@@ -94,9 +94,10 @@
     ],
     "ApiResources": [
       {
-        "Name": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api",
+        "Name": "openvision.identityserver.admin.api",
+        "DisplayName": "OpenVision.IdentityServer.Admin.Api",
         "Scopes": [
-          "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api"
+          "openvision.identityserver.admin.api"
         ]
       },
       {
@@ -111,8 +112,8 @@
     ],
     "Clients": [
       {
-        "ClientId": "6B1E2F46-C94D-4FAD-96B6-F776C4113992",
-        "ClientName": "6B1E2F46-C94D-4FAD-96B6-F776C4113992",
+        "ClientId": "6b1e2f46-c94d-4fad-96b6-f776c4113992",
+        "ClientName": "OpenVision.IdentityServer.Admin",
         "ClientUri": "https://localhost:44303",
         "AllowedGrantTypes": [
           "authorization_code"
@@ -120,7 +121,7 @@
         "RequirePkce": true,
         "ClientSecrets": [
           {
-            "Value": "F9903DDE-82FB-4A8F-8BB3-3A3FC6101ACD"
+            "Value": "f9903dde-82fb-4a8f-8bb3-3a3fc6101acd"
           }
         ],
         "RedirectUris": [
@@ -141,8 +142,8 @@
         ]
       },
       {
-        "ClientId": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api_swaggerui",
-        "ClientName": "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api_swaggerui",
+        "ClientId": "77dff4e2-3964-48d5-91fc-0b401731b4ee",
+        "ClientName": "OpenVision.IdentityServer.Admin.API.SwaggerUI",
         "AllowedGrantTypes": [
           "authorization_code"
         ],
@@ -152,7 +153,7 @@
           "https://localhost:44302/swagger/oauth2-redirect.html"
         ],
         "AllowedScopes": [
-          "6B1E2F46-C94D-4FAD-96B6-F776C4113992_api"
+          "openvision.identityserver.admin.api"
         ],
         "AllowedCorsOrigins": [
           "https://localhost:44302"
@@ -189,6 +190,30 @@
           "roles",
           "openvision.read",
           "openvision.write"
+        ]
+      },
+      {
+        "ClientId": "c5309598-4231-4cc3-bddc-e374ad5509fc",
+        "ClientName": "OpenVision.API.SwaggerUI",
+        "AllowedGrantTypes": [
+          "authorization_code"
+        ],
+        "RequireClientSecret": false,
+        "RequirePkce": true,
+        "AllowOfflineAccess": true,
+        "RedirectUris": [
+          "https://localhost:44320/swagger/oauth2-redirect.html"
+        ],
+        "AllowedScopes": [
+          "openid",
+          "email",
+          "profile",
+          "roles",
+          "openvision.read",
+          "openvision.write"
+        ],
+        "AllowedCorsOrigins": [
+          "https://localhost:44320"
         ]
       }
     ]

@@ -12,22 +12,21 @@ using Microsoft.AspNetCore.Mvc;
 using OpenVision.IdentityServer.STS.Identity.Helpers;
 using OpenVision.IdentityServer.STS.Identity.ViewModels.Diagnostics;
 
-namespace OpenVision.IdentityServer.STS.Identity.Controllers
-{
-    [SecurityHeaders]
-    [Authorize]
-    public class DiagnosticsController : Controller
-    {
-        public async Task<IActionResult> Index()
-        {
-            var localAddresses = new string[] { "127.0.0.1", "::1", HttpContext.Connection?.LocalIpAddress?.ToString() };
-            if (!localAddresses.Contains(HttpContext.Connection?.RemoteIpAddress?.ToString()))
-            {
-                return NotFound();
-            }
+namespace OpenVision.IdentityServer.STS.Identity.Controllers;
 
-            var model = new DiagnosticsViewModel(await HttpContext.AuthenticateAsync());
-            return View(model);
+[SecurityHeaders]
+[Authorize]
+public class DiagnosticsController : Controller
+{
+    public async Task<IActionResult> Index()
+    {
+        var localAddresses = new string[] { "127.0.0.1", "::1", HttpContext.Connection?.LocalIpAddress?.ToString() };
+        if (!localAddresses.Contains(HttpContext.Connection?.RemoteIpAddress?.ToString()))
+        {
+            return NotFound();
         }
+
+        var model = new DiagnosticsViewModel(await HttpContext.AuthenticateAsync());
+        return View(model);
     }
 }

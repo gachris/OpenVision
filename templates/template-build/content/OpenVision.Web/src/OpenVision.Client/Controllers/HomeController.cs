@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OpenVision.Client.Core.Controllers;
 using OpenVision.Client.Core.ViewModels;
 

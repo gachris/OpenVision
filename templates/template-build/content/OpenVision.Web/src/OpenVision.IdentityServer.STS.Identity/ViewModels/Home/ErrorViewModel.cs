@@ -6,10 +6,9 @@
 
 using Duende.IdentityServer.Models;
 
-namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Home
+namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Home;
+
+public class ErrorViewModel
 {
-    public class ErrorViewModel
-    {
-        public ErrorMessage Error { get; set; }
-    }
+    public ErrorMessage Error { get; set; }
 }

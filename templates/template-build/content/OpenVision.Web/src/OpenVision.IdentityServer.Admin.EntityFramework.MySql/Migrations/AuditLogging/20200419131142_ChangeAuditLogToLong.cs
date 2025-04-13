@@ -1,32 +1,31 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace OpenVision.IdentityServer.Admin.EntityFramework.MySql.Migrations.AuditLogging
-{
-    public partial class ChangeAuditLogToLong : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<long>(
-                name: "Id",
-                table: "AuditLog",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
-        }
+namespace OpenVision.IdentityServer.Admin.EntityFramework.MySql.Migrations.AuditLogging;
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "AuditLog",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(long))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
-        }
+public partial class ChangeAuditLogToLong : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AlterColumn<long>(
+            name: "Id",
+            table: "AuditLog",
+            nullable: false,
+            oldClrType: typeof(int),
+            oldType: "int")
+            .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+            .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+    }
+
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AlterColumn<int>(
+            name: "Id",
+            table: "AuditLog",
+            type: "int",
+            nullable: false,
+            oldClrType: typeof(long))
+            .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+            .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
     }
 }

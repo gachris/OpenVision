@@ -1,7 +1,6 @@
-namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Manage
+namespace OpenVision.IdentityServer.STS.Identity.ViewModels.Manage;
+
+public class ShowRecoveryCodesViewModel
 {
-    public class ShowRecoveryCodesViewModel
-    {
-        public string[] RecoveryCodes { get; set; }
-    }
+    public string[] RecoveryCodes { get; set; }
 }
