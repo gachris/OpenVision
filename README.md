@@ -15,6 +15,7 @@
 - [Getting Started](#getting-started)
 - [Running the Project](#running-the-project)
 - [Client Library Installation](#client-library-installation)
+- [Known Issues](#known-issues)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -27,7 +28,7 @@ OpenVision offers both a versatile Computer Vision SDK and a production-ready we
 
 ### 🔧 Web Template Components
 
-- **`OpenVision.Server`** – Backend APIs and core logic  
+- **`OpenVision.Server`** – Backend APIs and core logic (exposes **REST** and **GraphQL** APIs)
 - **`OpenVision.Client`** – ASP.NET Core frontend  
 - **`OpenVision.IdentityServer`** – Authentication and authorization using [Skoruba Duende IdentityServer](https://github.com/skoruba/Duende.IdentityServer.Admin)  
 - **Docker & Aspire Integration** – For containerized and cloud-native workflows
@@ -58,7 +59,7 @@ OpenVision offers both a versatile Computer Vision SDK and a production-ready we
 - 🧠 Homography & AR: Planar object detection, marker-based tracking  
 - 🔍 Image Recognition: On-device or cloud-integrated  
 - 🖥️ UI Frameworks: MAUI, WPF, WinUI  
-- 🔄 Real-Time: Bi-directional vision task updates via WebSocket  
+- 🔄 Real-Time: Bi-directional vision task updates via WebSocket
 
 ---
 
@@ -179,6 +180,12 @@ For advanced identity customization, see the [Skoruba IdentityServer Admin Guide
 
 ---
 
+## 🚧 Known Issues
+
+- OpenVision Client does not run in Linux Docker containers. Use Aspire AppHost or start the client via manual run (see Option 3 above).
+
+---
+
 ## 🤝 Contributing
 
 We love contributions! To get started:
@@ -209,4 +216,3 @@ OpenVision is licensed under the MIT License – see the [LICENSE](LICENSE) file
 
 - OpenVision Community & Contributors  
 - Inspired by modern .NET, DevOps, and Computer Vision engineering best practices
-
